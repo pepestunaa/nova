@@ -1,0 +1,19 @@
+.{
+    // Receive and send buffer sizes, in bytes.
+    .recv_buffer_size = 16384,
+    .send_buffer_size = 16384,
+
+    // SDK HTTP listen address. Can be overridden by `-a` or `--address`.
+    .listen_address = "127.0.0.1:20001",
+
+    // game-server's client-facing address, used to build the agent-zone URL embedded
+    // in the server list response. Can be overridden by `-g` or
+    // `--game-server-address`.
+    .game_server_address = "127.0.0.1:20002",
+
+    // First UID handed out by the SDK account store.
+    .initial_uid = 1,
+
+    // The region key embedded in ClientConfig, used for `/meta/*.html`.
+    .server_meta_key = "ma5Dn2FhC*Xhxy%c",
+}

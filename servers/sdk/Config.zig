@@ -1,0 +1,6 @@
+recv_buffer_size: usize,
+send_buffer_size: usize,
+listen_address: []const u8,
+game_server_address: []const u8,
+initial_uid: u64,
+server_meta_key: []const u8,

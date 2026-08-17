@@ -1,0 +1,24 @@
+.{
+    // Receive and send buffer sizes, in bytes.
+    .recv_buffer_size = 16384,
+    .send_buffer_size = 16384,
+
+    // Experimental: registrations mark every guide group complete, allowing
+    // gender and nickname selection without entering the prologue flow.
+    .skip_tutorial = true,
+
+    // TCP listen address. Can be overridden by `-a` option.
+    .listen_address = "127.0.0.1:20002",
+
+    // SDK server used to validate account credentials during player login.
+    .sdk_server_address = "127.0.0.1:20001",
+
+    // How long a session survives without traffic. The game pings every 120
+    // seconds and resets that timer on any other request, so this only
+    // triggers once the client is really gone.
+    .session_ttl_seconds = 300,
+
+    // The region key embedded in ClientConfig. It protects the initial IKE
+    // exchange before the per-session key is negotiated.
+    .server_garble_key = "xNdVF^XTa6T3HCUATMQ@sKMLzAw&%L!3",
+}

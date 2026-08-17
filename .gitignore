@@ -1,0 +1,12 @@
+/.zed
+
+/.zig-cache
+/zig-out
+
+/.tmp
+/tools/*
+/assets/protocol
+
+!/tools/serve_all.zig
+
+/store/
