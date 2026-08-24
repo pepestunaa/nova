@@ -62,11 +62,11 @@ pub fn char_upgrade_req(scope: *Scope) !void {
         &achievement_changes,
     );
 
-    var change: change_info.CharacterProgression = .{};
+    var change: change_info.Progression = .{};
     try scope.respond(proto.pb.CharUpgradeResp{
         .Level = character.level(),
         .Exp = character.exp(),
-        .Change = try change.build(&receipt, scope.arena),
+        .Change = try change.build(&receipt.progression, scope.arena),
     });
 
     try quest_notify.refreshLineupTutorial(scope);
@@ -94,8 +94,8 @@ pub fn char_advance_req(scope: *Scope) !void {
         &achievement_changes,
     );
 
-    var change: change_info.CharacterProgression = .{};
-    try scope.respond(try change.build(&receipt, scope.arena));
+    var change: change_info.Progression = .{};
+    try scope.respond(try change.build(&receipt.progression, scope.arena));
 
     try quest_notify.refreshLineupTutorial(scope);
     try achievement_notify.send(scope, &achievement_changes);
@@ -126,8 +126,8 @@ pub fn char_skill_upgrade_req(scope: *Scope) !void {
         &achievement_changes,
     );
 
-    var change: change_info.CharacterProgression = .{};
-    try scope.respond(try change.build(&receipt, scope.arena));
+    var change: change_info.Progression = .{};
+    try scope.respond(try change.build(&receipt.progression, scope.arena));
 
     try quest_notify.refreshLineupTutorial(scope);
     try achievement_notify.send(scope, &achievement_changes);

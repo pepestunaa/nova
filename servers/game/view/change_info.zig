@@ -7,6 +7,7 @@ const Io = std.Io;
 const character_progression = @import("../gameplay/character_progression.zig");
 const Player = @import("../store/Player.zig");
 const player_view = @import("player.zig");
+const progression = @import("../gameplay/progression.zig");
 const proto = @import("proto");
 const reward = @import("../gameplay/reward.zig");
 const tables = @import("../tables.zig");
@@ -149,14 +150,14 @@ pub const ResearchProject = struct {
     }
 };
 
-pub const CharacterProgression = struct {
+pub const Progression = struct {
     builder: Builder = .{},
-    items: [character_progression.max_item_changes]proto.pb.Item = undefined,
+    items: [progression.max_item_changes]proto.pb.Item = undefined,
     gold: proto.pb.Res = .{},
 
     pub fn build(
-        formatter: *CharacterProgression,
-        receipt: *const character_progression.Receipt,
+        formatter: *Progression,
+        receipt: *const progression.Receipt,
         arena: Allocator,
     ) Error!proto.pb.ChangeInfo {
         formatter.builder.len = 0;
@@ -170,7 +171,7 @@ pub const CharacterProgression = struct {
         }
         if (receipt.gold != 0) {
             formatter.gold = .{
-                .Tid = tables.character_progression.gold_id,
+                .Tid = progression.gold_id,
                 .Qty = receipt.gold,
             };
             try formatter.builder.append(arena, proto.pb.Res, &formatter.gold);

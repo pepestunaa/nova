@@ -4,6 +4,7 @@ const Allocator = std.mem.Allocator;
 const Player = @import("../store/Player.zig");
 const TalentIndex = Player.Character.TalentNodes.Index;
 
+const progression = @import("progression.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -11,7 +12,7 @@ const tables = @import("../tables.zig");
 // `CharacterAdvance` currently provides advancement requirements and costs
 // only, the table has no reward fields (at least yet).
 
-pub const max_item_changes = tables.character_progression.max_item_changes;
+pub const max_item_changes = progression.max_item_changes;
 pub const max_talent_changes = tables.character_progression.max_talent_changes;
 
 pub const Error = error{
@@ -28,15 +29,10 @@ pub const Error = error{
     TalentGroupComplete,
 } || Allocator.Error;
 
-pub const ItemAmount = struct {
-    id: u32,
-    quantity: i32,
-};
+pub const ItemAmount = progression.ItemAmount;
 
 pub const Receipt = struct {
-    items: [max_item_changes]ItemAmount = undefined,
-    item_count: u8 = 0,
-    gold: i32 = 0,
+    progression: progression.Receipt = .{},
     unlocked_advance_skin: bool = false,
 };
 
@@ -113,11 +109,11 @@ pub fn upgrade(
 
     for (items, 0..) |item, index| {
         player.consumeItem(item.id, item.quantity) catch unreachable;
-        receipt.items[index] = .{ .id = item.id, .quantity = -item.quantity };
+        receipt.progression.items[index] = .{ .id = item.id, .quantity = -item.quantity };
     }
-    receipt.item_count = @intCast(items.len);
+    receipt.progression.item_count = @intCast(items.len);
     player.consumeResource(tables.character_progression.gold_id, gold) catch unreachable;
-    receipt.gold = -gold;
+    receipt.progression.gold = -gold;
     character.bits.level = @enumFromInt(level);
     character.bits.exp = @enumFromInt(exp);
 }
@@ -313,11 +309,11 @@ fn applyCosts(
 ) void {
     for (costs, 0..) |cost, index| {
         player.consumeItem(cost.item_id, cost.quantity) catch unreachable;
-        receipt.items[index] = .{ .id = cost.item_id, .quantity = -cost.quantity };
+        receipt.progression.items[index] = .{ .id = cost.item_id, .quantity = -cost.quantity };
     }
-    receipt.item_count = @intCast(costs.len);
+    receipt.progression.item_count = @intCast(costs.len);
     player.consumeResource(tables.character_progression.gold_id, gold) catch unreachable;
-    receipt.gold = -gold;
+    receipt.progression.gold = -gold;
 }
 
 fn validateTalentGroup(character: *const Player.Character, group: *const tables.character_progression.TalentGroup) Error!void {

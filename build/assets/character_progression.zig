@@ -140,30 +140,14 @@ pub fn generate(_: std.process.Init, writer: *Io.Writer) anyerror!void {
         },
     );
     try writer.writeAll(
-        \\pub const Cost = struct {
-        \\    material: u8,
-        \\    quantity: i32,
-        \\};
-        \\
-        \\pub const Character = struct {
-        \\    id: u32,
-        \\    grade: u8,
-        \\    advance_materials: u8,
-        \\    skill_materials: u8,
-        \\};
-        \\
+        \\pub const Character = struct { id: u32, grade: u8, advance_materials: u8, skill_materials: u8 };
+        \\pub const Cost = struct { material: u8, quantity: i32 };
+        \\pub const Costs = struct { entries: [max_costs]Cost, count: u8 };
         \\pub const LevelCost = struct { level: u8, exp: u32 };
         \\pub const LevelCap = struct { advance: u8, level: u8, player_level: u8 };
         \\pub const ExpItem = struct { item_id: u32, exp: u32 };
-        \\
-        \\pub const Costs = struct {
-        \\    entries: [max_costs]Cost,
-        \\    count: u8,
-        \\};
-        \\
         \\pub const AdvanceStep = struct { gold: i32, costs: Costs };
         \\pub const SkillStep = struct { required_advance: u8, gold: i32, costs: Costs };
-        \\
         \\pub const Grade = struct { id: u8, fragments_per_node: i32 };
         \\
         \\
@@ -299,6 +283,7 @@ fn buildLevelCosts() !LevelCostData {
     inline for (raw_upgrades) |raw| {
         if (!@hasField(@TypeOf(raw), "exp"))
             continue;
+
         const key = levelCostGroup(raw);
         var curve_index: usize = 0;
         while (curve_index < curve_count and curve_keys[curve_index] != key) curve_index += 1;

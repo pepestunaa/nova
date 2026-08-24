@@ -95,12 +95,16 @@ pub fn register(
     player.basic.level = .max;
 
     // TODO: Remove this
-    try player.resources.append(allocator, .{ .id = 1, .quantity = 99_999_999 }); // Dorra
+    try player.resources.append(allocator, .{ .id = 1, .quantity = 999_999_999 }); // Dorra
     // TODO: Remove this
     try player.resources.append(allocator, .{ .id = 2, .quantity = 999_999 }); // Stellanite Dust
 
     // TODO: Remove this
     inline for (tables.character_progression.material_ids) |item_id|
+        try player.addItem(allocator, item_id, 999_999);
+
+    // TODO: Remove this
+    inline for (tables.disc_progression.material_ids) |item_id|
         try player.addItem(allocator, item_id, 999_999);
 
     // TODO: Remove this

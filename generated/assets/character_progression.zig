@@ -12,30 +12,14 @@ pub const talent_group_count = 5;
 pub const max_talent_index = 80;
 pub const max_talents_per_group = 11;
 
-pub const Cost = struct {
-    material: u8,
-    quantity: i32,
-};
-
-pub const Character = struct {
-    id: u32,
-    grade: u8,
-    advance_materials: u8,
-    skill_materials: u8,
-};
-
+pub const Character = struct { id: u32, grade: u8, advance_materials: u8, skill_materials: u8 };
+pub const Cost = struct { material: u8, quantity: i32 };
+pub const Costs = struct { entries: [max_costs]Cost, count: u8 };
 pub const LevelCost = struct { level: u8, exp: u32 };
 pub const LevelCap = struct { advance: u8, level: u8, player_level: u8 };
 pub const ExpItem = struct { item_id: u32, exp: u32 };
-
-pub const Costs = struct {
-    entries: [max_costs]Cost,
-    count: u8,
-};
-
 pub const AdvanceStep = struct { gold: i32, costs: Costs };
 pub const SkillStep = struct { required_advance: u8, gold: i32, costs: Costs };
-
 pub const Grade = struct { id: u8, fragments_per_node: i32 };
 
 pub const characters = [_]Character{
