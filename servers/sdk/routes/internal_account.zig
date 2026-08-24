@@ -1,8 +1,7 @@
 const std = @import("std");
 const Io = std.Io;
 
-const Account = @import("../store.zig").Account;
-const AccountStore = @import("../AccountStore.zig");
+const Account = @import("../Account.zig");
 
 //
 
@@ -10,7 +9,7 @@ const max_request_body_size = 128;
 
 pub fn validate(
     io: Io,
-    accounts: *AccountStore,
+    accounts: *Account.Store,
     request: *std.http.Server.Request,
 ) !void {
     var body_buffer: [max_request_body_size]u8 = undefined;

@@ -1,8 +1,7 @@
 const std = @import("std");
 const Io = std.Io;
 
-const Account = @import("../store.zig").Account;
-const AccountStore = @import("../AccountStore.zig");
+const Account = @import("../Account.zig");
 const http = @import("../http.zig");
 
 //
@@ -44,7 +43,7 @@ fn userInfo(uid_buf: []u8, account: *const Account) struct {
 pub fn login(
     io: Io,
     gpa: std.mem.Allocator,
-    accounts: *AccountStore,
+    accounts: *Account.Store,
     request: *std.http.Server.Request,
 ) !void {
     var body_buffer: [max_request_body_size]u8 = undefined;
@@ -102,11 +101,11 @@ fn respondLoginError(request: *std.http.Server.Request, code: u32, msg: []const 
     try http.respondJson(request, response);
 }
 
-pub fn quickLogin(io: Io, accounts: *AccountStore, request: *std.http.Server.Request) !void {
+pub fn quickLogin(io: Io, accounts: *Account.Store, request: *std.http.Server.Request) !void {
     return detail(io, accounts, request);
 }
 
-pub fn detail(io: Io, accounts: *AccountStore, request: *std.http.Server.Request) !void {
+pub fn detail(io: Io, accounts: *Account.Store, request: *std.http.Server.Request) !void {
     const authorization = findAuthorization(request) orelse {
         return try respondLoginError(request, 100403, "The login has expired, please log in again.");
     };

@@ -1,20 +1,39 @@
+const builtin = @import("builtin");
+
 const std = @import("std");
+const Allocator = std.mem.Allocator;
+const debug = std.debug;
+const DebugAllocator = std.heap.DebugAllocator;
 const Io = std.Io;
 const net = std.Io.net;
 const process = std.process;
 
-const app = @import("app.zig");
+const agent_zone = @import("agent_zone.zig");
+const Auth = @import("auth.zig");
 const common = @import("common");
+const config: @import("Config.zig") = @import("config");
+const PlayerCache = @import("store/PlayerCache.zig");
+const session = @import("session.zig");
+
+//
+
+pub const std_options: std.Options = .{
+    .unexpected_error_tracing = false,
+    .http_disable_tls = true,
+};
 
 //
 
 const log = std.log.scoped(.@"game-server");
 
-const config: @import("Config.zig") = @import("config");
+const is_debug = builtin.mode == .Debug;
+var debug_allocator: DebugAllocator(.{
+    .never_unmap = true,
+    .retain_metadata = true,
+}) = .init;
 
-pub const std_options: std.Options = .{
-    .unexpected_error_tracing = false,
-    .http_disable_tls = true,
+const accept_delay: Io.Timeout = .{
+    .duration = .{ .raw = .fromSeconds(1), .clock = .awake },
 };
 
 const Args = struct {
@@ -23,9 +42,13 @@ const Args = struct {
 };
 
 pub fn main(init: process.Init.Minimal) u8 {
-    const gpa = std.heap.smp_allocator;
+    const gpa = if (is_debug)
+        debug_allocator.allocator()
+    else
+        std.heap.smp_allocator;
+    defer if (is_debug) debug.assert(.ok == debug_allocator.deinit());
 
-    var args_arena: std.heap.ArenaAllocator = .init(gpa);
+    var args_arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
     defer args_arena.deinit();
     const args_slice = init.args.toSlice(args_arena.allocator()) catch {
         log.err("unable to read command-line arguments", .{});
@@ -55,18 +78,92 @@ pub fn main(init: process.Init.Minimal) u8 {
     const io = threaded.io();
 
     common.printStartupSplash();
-    return common.io.runUntilShutdown(
-        io,
-        app.serve,
+
+    var server = io.concurrent(
+        serve,
         .{ io, gpa, address, args.sdk_server_address },
-    ) catch |err| switch (err) {
-        error.Canceled => 0,
+    ) catch |err| process.fatal("unable to start game server: {t}", .{err});
+    defer server.cancel(io) catch |err| switch (err) {
+        error.Canceled => {},
     };
+
+    common.io.waitForShutdown(io) catch |err| switch (err) {
+        error.Canceled => {},
+    };
+
+    return 0;
 }
 
+fn serve(
+    io: Io,
+    gpa: Allocator,
+    address: net.IpAddress,
+    sdk_server_address: []const u8,
+) Io.Cancelable!void {
+    var listener = address.listen(io, .{ .reuse_address = true }) catch |err| switch (err) {
+        error.Canceled => |e| return e,
+        error.AddressInUse => process.fatal("address {f} is already in use", .{address}),
+        else => process.fatal("failed to listen at {f}: {t}", .{ address, err }),
+    };
+    defer listener.deinit(io);
+
+    var clients: Io.Group = .init;
+    var http_client: std.http.Client = .{ .allocator = gpa, .io = io };
+    var auth: Auth = .{
+        .http = &http_client,
+        .sdk_server_address = sdk_server_address,
+    };
+    var sessions: session.Store = .{};
+    const restored_sessions = sessions.load(io, gpa) catch |err| blk: {
+        log.warn("could not restore saved sessions: {t}", .{err});
+        break :blk 0;
+    };
+    var player_cache: PlayerCache = .{};
+    defer player_cache.deinit(gpa);
+    defer sessions.deinit(gpa);
+    defer http_client.deinit();
+    defer {
+        clients.cancel(io);
+        sessions.save(io) catch |err|
+            log.warn("could not save active sessions: {t}", .{err});
+    }
+
+    log.info("agent-zone listener ready at http://{f}", .{address});
+    if (restored_sessions != 0)
+        log.info("restored {d} active session(s)", .{restored_sessions});
+    defer log.info("shutting down...", .{});
+
+    while (true) {
+        if (listener.accept(io)) |stream| {
+            clients.concurrent(
+                io,
+                agent_zone.run,
+                .{ io, gpa, stream, &auth, &sessions, &player_cache },
+            ) catch |err| switch (err) {
+                error.ConcurrencyUnavailable => {
+                    log.warn(
+                        "connection limit reached; dropping {f}",
+                        .{stream.socket.address},
+                    );
+                    stream.close(io);
+                },
+            };
+        } else |err| switch (err) {
+            error.Canceled => |e| return e,
+            error.SystemResources,
+            error.SystemFdQuotaExceeded,
+            error.ProcessFdQuotaExceeded,
+            => try accept_delay.sleep(io),
+            else => |e| log.warn("accept failed: {t}", .{e}),
+        }
+    }
+}
+
+//
+
 test {
-    _ = @import("store/Player.zig");
-    _ = @import("store/PlayerCache.zig");
     _ = @import("Scope.zig");
     _ = @import("session.zig");
+    _ = @import("store/Player.zig");
+    _ = @import("store/PlayerCache.zig");
 }

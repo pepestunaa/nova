@@ -54,26 +54,28 @@ pub fn run(
     var buffers: Buffers = .{};
     var stream_reader = stream.reader(io, &read_buffer);
     var stream_writer = stream.writer(io, &write_buffer);
-    var server = std.http.Server.init(&stream_reader.interface, &stream_writer.interface);
+    var server: std.http.Server = .init(&stream_reader.interface, &stream_writer.interface);
 
     while (true) {
-        var request = server.receiveHead() catch |err| {
-            if (err == error.HttpConnectionClosing)
+        var request = server.receiveHead() catch |err| switch (err) {
+            error.HttpConnectionClosing => return,
+            error.ReadFailed => switch (stream_reader.err.?) {
+                error.Canceled, error.ConnectionResetByPeer, error.Unexpected => return,
+                else => |read_err| {
+                    log.debug(
+                        "failed to read HTTP request from {f}: {t}",
+                        .{ stream.socket.address, read_err },
+                    );
+                    return;
+                },
+            },
+            else => |e| {
+                log.debug(
+                    "invalid HTTP request from {f}: {t}",
+                    .{ stream.socket.address, e },
+                );
                 return;
-
-            if (err == error.ReadFailed) {
-                if (stream_reader.err) |read_err| switch (read_err) {
-                    error.Canceled, error.ConnectionResetByPeer, error.Unexpected => return,
-                    else => {},
-                };
-            }
-
-            log.debug(
-                "invalid HTTP request from {f}: {t}",
-                .{ stream.socket.address, err },
-            );
-
-            return;
+            },
         };
 
         handle(
@@ -82,25 +84,28 @@ pub fn run(
             auth,
             sessions,
             player_cache,
+            stream.socket.address,
             &request,
             &buffers,
-        ) catch |err| {
-            if (err == error.WriteFailed)
+        ) catch |err| switch (err) {
+            error.WriteFailed => return,
+            error.ReadFailed => switch (stream_reader.err.?) {
+                error.Canceled, error.ConnectionResetByPeer, error.Unexpected => return,
+                else => |read_err| {
+                    log.warn(
+                        "failed to read HTTP request from {f}: {t}",
+                        .{ stream.socket.address, read_err },
+                    );
+                    return;
+                },
+            },
+            else => |e| {
+                log.warn(
+                    "failed to handle HTTP request from {f}: {t}",
+                    .{ stream.socket.address, e },
+                );
                 return;
-
-            if (err == error.ReadFailed) {
-                if (stream_reader.err) |read_err| switch (read_err) {
-                    error.Canceled, error.ConnectionResetByPeer, error.Unexpected => return,
-                    else => {},
-                };
-            }
-
-            log.warn(
-                "failed to handle HTTP request from {f}: {t}",
-                .{ stream.socket.address, err },
-            );
-
-            return;
+            },
         };
     }
 }
@@ -111,6 +116,7 @@ fn handle(
     auth: *Auth,
     sessions: *session.Store,
     player_cache: *PlayerCache,
+    client_address: net.IpAddress,
     request: *std.http.Server.Request,
     buffers: *Buffers,
 ) !void {
@@ -120,7 +126,10 @@ fn handle(
 
     const request_token = if (findHeader(request, "X-Token")) |value|
         session.Token.fromSlice(value) orelse {
-            log.warn("received malformed X-Token", .{});
+            log.warn(
+                "received malformed X-Token from {f}",
+                .{client_address},
+            );
 
             // TODO: Send an error code maybe?
             return try request.respond("", .{ .status = .unauthorized }); // Idk if it's the correct way
@@ -140,12 +149,13 @@ fn handle(
     };
 
     if (request_token != null and request_session == null) {
-        log.warn("received request with an unknown X-Token", .{});
-
-        return try request.respond(
-            "",
-            .{ .status = .unauthorized },
+        log.warn(
+            "received request with an unknown X-Token from {f}",
+            .{client_address},
         );
+
+        // TODO: Send an error code maybe?
+        return try request.respond("", .{ .status = .unauthorized }); // Idk if it's the correct way
     }
 
     const content_length = request.head.content_length orelse {
