@@ -91,18 +91,22 @@ pub fn register(
     inline for (starter_board) |handbook_id|
         try player.board.append(allocator, .{ .handbook_id = handbook_id });
 
-    try player.resources.append(allocator, .{ .id = 1, .quantity = 50_000 });
     // TODO: Remove this
-    try player.resources.append(allocator, .{ .id = 2, .quantity = 999_999 }); // Stellanite
+    player.basic.level = .max;
+
+    // TODO: Remove this
+    try player.resources.append(allocator, .{ .id = 1, .quantity = 99_999_999 }); // Dorra
+    // TODO: Remove this
+    try player.resources.append(allocator, .{ .id = 2, .quantity = 999_999 }); // Stellanite Dust
+
+    // TODO: Remove this
+    inline for (tables.character_progression.material_ids) |item_id|
+        try player.addItem(allocator, item_id, 999_999);
 
     // TODO: Remove this
     // Banner tickets and currency
     inline for ([_]u32{ 502, 503, 602, 603 }) |ticket_id|
-        try player.items.append(allocator, .{
-            .id = ticket_id,
-            .template_id = ticket_id,
-            .quantity = 999_999,
-        });
+        try player.addItem(allocator, ticket_id, 999_999);
 
     inline for (starter_titles) |id|
         try player.titles.append(allocator, .{ .id = id });

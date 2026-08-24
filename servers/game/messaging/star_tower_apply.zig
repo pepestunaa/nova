@@ -41,6 +41,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
     const gem_attributes = try scope.arena.alloc([3][4]u32, character_count);
     const gem_overlocks = try scope.arena.alloc([3][4]u32, character_count);
     const skill_levels = try scope.arena.alloc([5]u32, character_count);
+    const talent_nodes = try scope.arena.alloc([Player.Character.TalentNodes.wire_max_len]u8, character_count);
     @memset(std.mem.sliceAsBytes(gem_attributes), 0);
     @memset(std.mem.sliceAsBytes(gem_overlocks), 0);
     for (formation.character_ids[0..character_count], 0..) |character_id, index| {
@@ -60,7 +61,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
             .SkillLvs = .fromOwnedSlice(&skill_levels[index]),
             .AffinityLevel = character.affinityLevel(),
             .Advance = character.advance(),
-            .TalentNodes = &character.talent_nodes,
+            .TalentNodes = character.writeTalentNodes(&talent_nodes[index]),
         };
     }
 

@@ -50,6 +50,7 @@ pub fn main(init: process.Init) u8 {
 }
 
 fn generate(init: process.Init, generator: registry.Generator) !void {
+    const allocator = init.arena.allocator();
     var path_buffer: [Io.Dir.max_path_bytes]u8 = undefined;
     const path = std.fmt.bufPrint(
         &path_buffer,
@@ -57,6 +58,19 @@ fn generate(init: process.Init, generator: registry.Generator) !void {
         .{generator.name},
     ) catch
         return error.NameTooLong;
+
+    var generated: Io.Writer.Allocating = .init(allocator);
+    defer generated.deinit();
+    try generator.generate(init, &generated.writer);
+    const source = try generated.toOwnedSliceSentinel(0);
+    defer allocator.free(source);
+
+    var tree = try std.zig.Ast.parse(allocator, source, .zig);
+    defer tree.deinit(allocator);
+    if (tree.errors.len != 0)
+        return error.InvalidGeneratedSource;
+    const formatted = try tree.renderAlloc(allocator);
+    defer allocator.free(formatted);
 
     var atomic_file = try Io.Dir.createFileAtomic(.cwd(), init.io, path, .{
         .replace = true,
@@ -66,7 +80,7 @@ fn generate(init: process.Init, generator: registry.Generator) !void {
 
     var buffer: [4096]u8 = undefined;
     var writer = atomic_file.file.writer(init.io, &buffer);
-    try generator.generate(init, &writer.interface);
+    try writer.interface.writeAll(formatted);
     try writer.interface.flush();
     try atomic_file.replace(init.io);
 

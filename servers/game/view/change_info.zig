@@ -4,6 +4,7 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const Io = std.Io;
 
+const character_progression = @import("../gameplay/character_progression.zig");
 const Player = @import("../store/Player.zig");
 const player_view = @import("player.zig");
 const proto = @import("proto");
@@ -142,6 +143,60 @@ pub const ResearchProject = struct {
         for (receipt.items[0..receipt.item_count], 0..) |entry, index| {
             formatter.items[index] = .{ .Id = entry.id, .Tid = entry.id, .Qty = entry.quantity };
             try formatter.builder.append(arena, proto.pb.Item, &formatter.items[index]);
+        }
+
+        return formatter.builder.finish();
+    }
+};
+
+pub const CharacterProgression = struct {
+    builder: Builder = .{},
+    items: [character_progression.max_item_changes]proto.pb.Item = undefined,
+    gold: proto.pb.Res = .{},
+
+    pub fn build(
+        formatter: *CharacterProgression,
+        receipt: *const character_progression.Receipt,
+        arena: Allocator,
+    ) Error!proto.pb.ChangeInfo {
+        formatter.builder.len = 0;
+        for (receipt.items[0..receipt.item_count], 0..) |entry, index| {
+            formatter.items[index] = .{
+                .Id = entry.id,
+                .Tid = entry.id,
+                .Qty = entry.quantity,
+            };
+            try formatter.builder.append(arena, proto.pb.Item, &formatter.items[index]);
+        }
+        if (receipt.gold != 0) {
+            formatter.gold = .{
+                .Tid = tables.character_progression.gold_id,
+                .Qty = receipt.gold,
+            };
+            try formatter.builder.append(arena, proto.pb.Res, &formatter.gold);
+        }
+
+        return formatter.builder.finish();
+    }
+};
+
+pub const Talent = struct {
+    builder: Builder = .{},
+    item: proto.pb.Item = .{},
+
+    pub fn build(
+        formatter: *Talent,
+        receipt: *const character_progression.TalentReceipt,
+        arena: Allocator,
+    ) Error!proto.pb.ChangeInfo {
+        formatter.builder.len = 0;
+        if (receipt.cost.quantity != 0) {
+            formatter.item = .{
+                .Id = receipt.cost.id,
+                .Tid = receipt.cost.id,
+                .Qty = receipt.cost.quantity,
+            };
+            try formatter.builder.append(arena, proto.pb.Item, &formatter.item);
         }
 
         return formatter.builder.finish();

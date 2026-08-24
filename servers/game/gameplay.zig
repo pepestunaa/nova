@@ -1,5 +1,6 @@
 pub const achievement = @import("gameplay/achievement.zig");
 pub const activity = @import("gameplay/activity.zig");
+pub const character_progression = @import("gameplay/character_progression.zig");
 pub const energy = @import("gameplay/energy.zig");
 pub const gacha = @import("gameplay/gacha.zig");
 pub const quest = @import("gameplay/quest.zig");

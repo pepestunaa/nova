@@ -2,6 +2,7 @@ const std = @import("std");
 const Io = std.Io;
 
 const achievement = @import("../gameplay/achievement.zig");
+const achievement_notify = @import("../notify/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const gacha = @import("../gameplay/gacha.zig");
 const quest_notify = @import("../notify/quest.zig");
@@ -24,13 +25,15 @@ pub fn gacha_information_req(scope: *Scope) !void {
         entries[index] = infoFor(banner, banner_state, storage_state);
     }
 
-    try scope.respond(proto.pb.GachaInformationResp{ .Information = .fromOwnedSlice(&entries) });
+    try scope.respond(proto.pb.GachaInformationResp{
+        .Information = .fromOwnedSlice(&entries),
+    });
 }
 
 pub fn gacha_spin_req(scope: *Scope) !void {
     const log = scope.logger(.gacha_spin_req);
-
     const request = try scope.source.read(proto.pb.GachaSpinReq);
+
     const banner = tables.gacha.banner(request.Id) orelse
         return scope.reject(.invalid_req);
     const pull_count: u8 = switch (request.Mode) {
@@ -83,7 +86,7 @@ pub fn gacha_spin_req(scope: *Scope) !void {
     // Collection achievements use lifetime acquisitions, so normal draws and
     // Beginner Limited Banner claims advance them in the same way.
     var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refreshCollection(player, scope.gpa, now.toSeconds(), &achievement_changes);
+    try achievement.refresh(player, scope.gpa, now.toSeconds(), &achievement_changes);
     try appendHistory(scope, banner, now.toSeconds(), &spin);
 
     scope.markDirty();
@@ -106,7 +109,7 @@ pub fn gacha_spin_req(scope: *Scope) !void {
     });
     try quest_notify.refreshLineupTutorial(scope);
     try quest_notify.sendNewTrekkerAffinityQuests(scope, &receipt);
-    try sendAchievementChanges(scope, &achievement_changes);
+    try achievement_notify.send(scope, &achievement_changes);
     if (receipt.handbook_changed)
         try player_data.response.sendHandbookChanges(scope);
 
@@ -143,8 +146,8 @@ pub fn gacha_histories_req(scope: *Scope) !void {
 
 pub fn gacha_guarantee_reward_receive_req(scope: *Scope) !void {
     const log = scope.logger(.gacha_guarantee_reward_receive_req);
-
     const request = try scope.source.read(proto.pb.UI32);
+
     const banner = tables.gacha.banner(request.Value) orelse
         return scope.reject(.invalid_req);
     const current_state = findBannerStateConst(scope.player, banner.id) orelse
@@ -168,7 +171,7 @@ pub fn gacha_guarantee_reward_receive_req(scope: *Scope) !void {
     const state = findBannerState(player, banner.id).?;
     try reward.applyGachaCards(player, scope.gpa, &cards, now, &receipt);
     var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refreshCollection(player, scope.gpa, now, &achievement_changes);
+    try achievement.refresh(player, scope.gpa, now, &achievement_changes);
     state.claim_reward_received = true;
 
     scope.markDirty();
@@ -177,7 +180,7 @@ pub fn gacha_guarantee_reward_receive_req(scope: *Scope) !void {
     try scope.respond(try change.build(scope.player, &receipt, scope.arena));
     try quest_notify.refreshLineupTutorial(scope);
     try quest_notify.sendNewTrekkerAffinityQuests(scope, &receipt);
-    try sendAchievementChanges(scope, &achievement_changes);
+    try achievement_notify.send(scope, &achievement_changes);
     if (receipt.handbook_changed)
         try player_data.response.sendHandbookChanges(scope);
 
@@ -256,7 +259,6 @@ fn getOrCreateStorageState(
 fn findBannerState(player: *Player, id: u32) ?*Player.GachaBanner {
     for (player.gacha_banners.entries[0..player.gacha_banners.len]) |*state| if (state.id == id)
         return state;
-
     return null;
 }
 
@@ -297,22 +299,4 @@ fn infoFor(
         .TotalTimes = banner_value.total_pulls,
         .AupGuaranteeTimes = banner_value.a_up_count,
     };
-}
-
-fn sendAchievementChanges(scope: *Scope, changes: *const achievement.ChangeSet) !void {
-    for (changes.slice()) |state| {
-        const definition = tables.achievement.get(state.id) orelse
-            continue;
-        var progress: [1]proto.pb.QuestProgress = .{.{
-            .Cur = state.progress,
-            .Max = definition.target,
-        }};
-        const message: proto.pb.Achievement = .{
-            .Id = state.id,
-            .Status = @intFromEnum(state.status),
-            .Completed = state.completed_at,
-            .Progress = .fromOwnedSlice(&progress),
-        };
-        try scope.sink.sendProto(.achievement_change_notify, &message);
-    }
 }

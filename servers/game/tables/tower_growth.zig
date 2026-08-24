@@ -23,7 +23,7 @@ pub const detail_words = blk: {
 
     break :blk result;
 };
-pub const max_world_class = blk: {
+pub const max_player_level = blk: {
     var result: u8 = 0;
     for (raw_groups) |group|
         result = @max(result, @as(u8, @intCast(group.world_class)));

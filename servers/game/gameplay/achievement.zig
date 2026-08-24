@@ -6,7 +6,7 @@ const tables = @import("../tables.zig");
 //
 
 pub const ChangeSet = struct {
-    entries: [tables.achievement.collection_entry_count]Player.Achievement = undefined,
+    entries: [tables.achievement.tracked_entry_count]Player.Achievement = undefined,
     len: usize = 0,
     dirty: bool = false,
 
@@ -15,11 +15,17 @@ pub const ChangeSet = struct {
     }
 };
 
-/// Rebuilds the collection achievements from the player's lifetime
-/// acquisitions, so the result remains correct after a restart.
-pub fn refreshCollection(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
+/// Rebuilds every supported achievement from persistent state.
+/// This keeps the result correct after a restart and lets character changes
+/// satisfy milestones that were added after the player first leveled up.
+pub fn refresh(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
     changes.* = .{};
 
+    try refreshCollection(player, allocator, now, changes);
+    try refreshCharacterProgression(player, allocator, now, changes);
+}
+
+fn refreshCollection(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
     var counts: [@typeInfo(tables.achievement.CollectionKind).@"enum".fields.len]u32 = @splat(0);
     for (player.acquisitions.slice()) |acquisition| {
         const card = tables.gacha.maybeClassifyCard(acquisition.id) orelse
@@ -39,35 +45,99 @@ pub fn refreshCollection(player: *Player, allocator: Allocator, now: i64, change
     }
 
     for (tables.achievement.collection_groups, 0..) |group, group_index| {
-        for (group.entries) |definition| {
-            const state = try getOrCreate(player, allocator, definition.id);
-            const previous_status = state.status;
-            const status: Player.Achievement.Status = if (previous_status == .reward_received)
-                .reward_received
-            else if (counts[group_index] >= definition.target)
-                .reward_available
-            else
-                .in_progress;
-            const completed_at: i64 = if (status != .in_progress and state.completed_at == 0)
-                now
-            else
-                state.completed_at;
-            if (state.progress == counts[group_index] and state.status == status and state.completed_at == completed_at)
-                continue;
-
-            state.progress = counts[group_index];
-            state.status = status;
-            state.completed_at = completed_at;
-            changes.dirty = true;
-
-            // Any non-in-progress update opens a new completion banner. Keep
-            // saving later progress, but notify only on the first completion.
-            if (previous_status != .in_progress)
-                continue;
-            changes.entries[changes.len] = state.*;
-            changes.len += 1;
+        for (tables.achievement.collectionEntries(group)) |definition| {
+            try refreshState(player, allocator, now, definition, counts[group_index], changes);
         }
     }
+}
+
+fn refreshCharacterProgression(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
+    for (tables.achievement.character_progressions) |definition| {
+        const progress = switch (definition.kind) {
+            .advance_total => advancementTotal(player),
+            .character_level => characterLevelCount(player, definition.minimum_level, null),
+            .element_level => characterLevelCount(player, definition.minimum_level, definition.element),
+            .skill_level => skillLevelCount(player, definition.minimum_level),
+        };
+        const entry = tables.achievement.entry(definition.entry_index);
+        try refreshState(player, allocator, now, entry, progress, changes);
+    }
+}
+
+fn advancementTotal(player: *const Player) u32 {
+    var total: u32 = 0;
+    var characters = player.characters.iterator();
+    while (characters.next()) |entry|
+        total +|= entry.value.advance();
+
+    return total;
+}
+
+fn characterLevelCount(player: *const Player, minimum_level: u8, element_filter: ?u8) u32 {
+    var count: u32 = 0;
+    var characters = player.characters.iterator();
+    while (characters.next()) |entry| {
+        if (entry.value.level() < minimum_level)
+            continue;
+        if (element_filter) |element| {
+            const character_element = tables.character.element(entry.id()) orelse unreachable;
+            if (@intFromEnum(character_element) != element)
+                continue;
+        }
+        count += 1;
+    }
+
+    return count;
+}
+
+fn skillLevelCount(player: *const Player, minimum_level: u8) u32 {
+    var count: u32 = 0;
+    var characters = player.characters.iterator();
+    while (characters.next()) |entry| {
+        const levels = entry.value.skillLevels();
+        for (levels[0..4]) |level| {
+            if (level >= minimum_level)
+                count += 1;
+        }
+    }
+
+    return count;
+}
+
+fn refreshState(
+    player: *Player,
+    allocator: Allocator,
+    now: i64,
+    definition: tables.achievement.Entry,
+    progress: u32,
+    changes: *ChangeSet,
+) !void {
+    const state = try getOrCreate(player, allocator, definition.id);
+    const previous_status = state.status;
+    const status: Player.Achievement.Status = if (previous_status == .reward_received)
+        .reward_received
+    else if (progress >= definition.target)
+        .reward_available
+    else
+        .in_progress;
+    const completed_at: i64 = if (status != .in_progress and state.completed_at == 0)
+        now
+    else
+        state.completed_at;
+    if (state.progress == progress and
+        state.status == status and
+        state.completed_at == completed_at)
+        return;
+
+    state.progress = progress;
+    state.status = status;
+    state.completed_at = completed_at;
+    changes.dirty = true;
+
+    if (previous_status != .in_progress)
+        return;
+    changes.entries[changes.len] = state.*;
+    changes.len += 1;
 }
 
 fn getOrCreate(player: *Player, allocator: Allocator, id: u32) !*Player.Achievement {

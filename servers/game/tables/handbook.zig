@@ -56,6 +56,7 @@ pub const skin_type = 1;
 /// Gallery type 2 contains Runic Discs and uses the Runic Disc ID directly.
 pub const disc_type = 2;
 const character_unlock_condition = 10;
+const advance_skin_unlock_condition = 13;
 
 /// Base-skin rows keyed by Trekker.
 const default_skins: []const Entry = blk: {
@@ -78,6 +79,28 @@ const by_default_skin_character = lookup.Lookup(
 pub fn defaultSkin(character_id: u32) ?Entry {
     const row = by_default_skin_character.find(character_id) orelse return null;
     return default_skins[row];
+}
+
+const advance_skins: []const Entry = blk: {
+    var result: []const Entry = &.{};
+    for (list) |entry| {
+        if (entry.type == skin_type and
+            entry.condition == advance_skin_unlock_condition)
+            result = result ++ [1]Entry{entry};
+    }
+    const final = result[0..result.len].*;
+
+    break :blk &final;
+};
+
+const by_advance_skin_character = lookup.Lookup(
+    u32,
+    lookup.fieldKeys(u32, advance_skins, "character_id"),
+);
+
+pub fn advanceSkin(character_id: u32) ?Entry {
+    const row = by_advance_skin_character.find(character_id) orelse return null;
+    return advance_skins[row];
 }
 
 /// The client stores Gallery flags in big-endian byte order within each

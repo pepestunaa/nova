@@ -218,6 +218,13 @@ pub fn unlockDefaultSkin(player: *Player, allocator: Allocator, character_id: u3
     return player.unlockHandbook(allocator, entry.id);
 }
 
+pub fn unlockAdvanceSkin(player: *Player, allocator: Allocator, character_id: u32) !bool {
+    const entry = tables.handbook.advanceSkin(character_id) orelse
+        return false;
+
+    return player.unlockHandbook(allocator, entry.id);
+}
+
 pub fn addResource(player: *Player, allocator: Allocator, id: u32, quantity: i32) !void {
     if (quantity == 0)
         return;
@@ -240,6 +247,22 @@ pub fn resourceQuantity(player: *const Player, id: u32) i32 {
     }
 
     return 0;
+}
+
+pub fn consumeResource(player: *Player, id: u32, quantity: i32) error{InsufficientResources}!void {
+    if (quantity < 0) unreachable;
+
+    for (player.resources.entries[0..player.resources.len]) |*resource| {
+        if (resource.id != id)
+            continue;
+        if (resource.quantity < quantity)
+            return error.InsufficientResources;
+
+        resource.quantity -= quantity;
+        return;
+    }
+
+    return error.InsufficientResources;
 }
 
 pub fn getFormation(player: *const Player, number: u32) ?*const Formation {
@@ -375,14 +398,19 @@ pub fn addItem(player: *Player, allocator: Allocator, template_id: u32, quantity
 pub fn consumeItem(player: *Player, template_id: u32, quantity: i32) error{InsufficientItems}!void {
     if (quantity < 0) unreachable;
 
-    for (player.items.entries[0..player.items.len]) |*item| {
+    var index: usize = 0;
+    while (index < player.items.len) : (index += 1) {
+        const item = &player.items.entries[index];
         if (item.template_id != template_id)
             continue;
 
         if (item.quantity < quantity)
             return error.InsufficientItems;
 
-        item.quantity -= quantity;
+        if (item.quantity == quantity)
+            _ = player.items.swapRemove(index)
+        else
+            item.quantity -= quantity;
 
         return;
     }

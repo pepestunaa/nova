@@ -28,6 +28,17 @@ pub fn List(comptime Entry: type) type {
             list.len += 1;
         }
 
+        pub fn swapRemove(list: *@This(), index: usize) Entry {
+            std.debug.assert(index < list.len);
+
+            const entry = list.entries[index];
+            list.len -= 1;
+            if (index != list.len)
+                list.entries[index] = list.entries[list.len];
+
+            return entry;
+        }
+
         pub fn ensureTotalCapacity(list: *@This(), allocator: Allocator, count: usize) Allocator.Error!void {
             if (count <= list.entries.len)
                 return;

@@ -2,12 +2,13 @@ const std = @import("std");
 const Io = std.Io;
 
 const achievement = @import("../gameplay/achievement.zig");
+const achievement_notify = @import("../notify/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const gacha_rules = @import("../gameplay/gacha.zig");
-const quest_notify = @import("../notify/quest.zig");
 const Player = @import("../store/Player.zig");
 const player_data = @import("player_data.zig");
 const proto = @import("proto");
+const quest_notify = @import("../notify/quest.zig");
 const reward = @import("../gameplay/reward.zig");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
@@ -16,6 +17,7 @@ const tables = @import("../tables.zig");
 
 pub fn gacha_newbie_info_req(scope: *Scope) !void {
     _ = try scope.source.read(proto.pb.Nil);
+
     const gacha = &scope.player.newbie_gacha;
     var saved: [tables.gacha_newbie.max_saved_results]proto.pb.UI32s = undefined;
     for (gacha.saved[0..gacha.saved_count], 0..) |*cards, index| {
@@ -42,9 +44,10 @@ pub fn gacha_newbie_info_req(scope: *Scope) !void {
 
 pub fn gacha_newbie_spin_req(scope: *Scope) !void {
     const log = scope.logger(.gacha_newbie_spin_req);
-
     const request = try scope.source.read(proto.pb.UI32);
-    if (request.Value != tables.gacha_newbie.id) return scope.reject(.invalid_req);
+
+    if (request.Value != tables.gacha_newbie.id)
+        return scope.reject(.invalid_req);
     const player = scope.playerMut();
     var cards = gacha_rules.spinNewbieGacha(&player.newbie_gacha) catch
         return scope.reject(.invalid_req);
@@ -78,8 +81,8 @@ pub fn gacha_newbie_save_req(scope: *Scope) !void {
 
 pub fn gacha_newbie_obtain_req(scope: *Scope) !void {
     const log = scope.logger(.gacha_newbie_obtain_req);
-
     const request = try scope.source.read(proto.pb.GachaNewbieObtainReq);
+
     if (request.Id != tables.gacha_newbie.id)
         return scope.reject(.invalid_req);
     const cards = gacha_rules.selectedNewbieGachaResult(&scope.player.newbie_gacha, request.Idx) catch
@@ -92,7 +95,7 @@ pub fn gacha_newbie_obtain_req(scope: *Scope) !void {
     var receipt: reward.GachaReceipt = .{};
     try reward.applyGachaCards(player, scope.gpa, &drawn_cards, now, &receipt);
     var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refreshCollection(player, scope.gpa, now, &achievement_changes);
+    try achievement.refresh(player, scope.gpa, now, &achievement_changes);
     gacha_rules.markNewbieGachaReceived(&player.newbie_gacha);
 
     scope.markDirty();
@@ -102,27 +105,9 @@ pub fn gacha_newbie_obtain_req(scope: *Scope) !void {
 
     try quest_notify.refreshLineupTutorial(scope);
     try quest_notify.sendNewTrekkerAffinityQuests(scope, &receipt);
-    try sendAchievementChanges(scope, &achievement_changes);
+    try achievement_notify.send(scope, &achievement_changes);
     if (receipt.handbook_changed)
         try player_data.response.sendHandbookChanges(scope);
 
     log.info("selected newbie gacha result {d}", .{request.Idx});
-}
-
-fn sendAchievementChanges(scope: *Scope, changes: *const achievement.ChangeSet) !void {
-    for (changes.slice()) |state| {
-        const definition = tables.achievement.get(state.id) orelse
-            continue;
-        var progress: [1]proto.pb.QuestProgress = .{.{
-            .Cur = state.progress,
-            .Max = definition.target,
-        }};
-        const achievement_change: proto.pb.Achievement = .{
-            .Id = state.id,
-            .Status = @intFromEnum(state.status),
-            .Completed = state.completed_at,
-            .Progress = .fromOwnedSlice(&progress),
-        };
-        try scope.sink.sendProto(.achievement_change_notify, &achievement_change);
-    }
 }

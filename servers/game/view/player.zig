@@ -10,6 +10,7 @@ const gem_preset_count = 3;
 
 pub const CharacterBuffers = struct {
     skill_levels: [skill_level_count]u32 = undefined,
+    talent_nodes: [Player.Character.TalentNodes.wire_max_len]u8 = undefined,
     affinity_quests: [tables.affinity_quest.max_per_character]proto.pb.Quest = undefined,
     affinity_progress: [tables.affinity_quest.max_per_character]proto.pb.QuestProgress = undefined,
     gem_slots: [gem_slot_count]proto.pb.CharGemSlot = undefined,
@@ -47,7 +48,8 @@ pub fn character(id: u32, value: *const Player.Character, buffers: *CharacterBuf
         .AffinityExp = value.affinityExp(),
         .Advance = value.advance(),
         .AffinityQuests = .{ .List = .fromOwnedSlice(buffers.affinity_quests[0..definitions.len]) },
-        .TalentNodes = &value.talent_nodes,
+        .TalentNodes = value.writeTalentNodes(&buffers.talent_nodes),
+        .TalentBackground = value.talent_background,
         .CharGemSlots = .fromOwnedSlice(&buffers.gem_slots),
         .CharGemPresets = .{ .CharGemPresets = .fromOwnedSlice(&buffers.gem_presets) },
         .IsFavorite = value.isFavorite(),

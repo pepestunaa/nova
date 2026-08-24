@@ -17,7 +17,7 @@ pub fn achievement_info_req(scope: *Scope) !void {
     const now = Io.Timestamp.now(scope.io, .real).toSeconds();
     var changes: achievement.ChangeSet = .{};
     const player = scope.playerMut();
-    try achievement.refreshCollection(player, scope.gpa, now, &changes);
+    try achievement.refresh(player, scope.gpa, now, &changes);
 
     if (changes.dirty) scope.markDirty();
 

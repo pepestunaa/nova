@@ -11,7 +11,7 @@ const tables = @import("../../tables.zig");
 pub const max_characters = tables.character.count;
 pub const max_formation_characters = StarTower.max_formation_characters;
 pub const max_formation_discs = StarTower.max_formation_discs;
-pub const max_achievements = tables.achievement.collection_entry_count;
+pub const max_achievements = tables.achievement.tracked_entry_count;
 pub const max_star_tower_builds = tables.config.unsignedList(usize, "StarTowerBuildNumberMax")[0];
 
 const Nickname = common.mem.LimitedString(64);
@@ -67,7 +67,7 @@ pub const Basic = extern struct {
 
     pub const Level = enum(u8) {
         min = 1,
-        max = tables.tower_growth.max_world_class,
+        max = tables.tower_growth.max_player_level,
         _,
     };
 
@@ -105,9 +105,10 @@ pub const Character = extern struct {
     gem_presets: [3 * 3]i32 = @splat(-1),
     skin: u32 = 0,
     skill_levels: SkillLevels = .init,
-    talent_nodes: [8]u8 = @splat(0),
+    talent_nodes: TalentNodes = .init,
+    talent_background: u8 = 0,
 
-    padding: [4]u8 = @splat(0),
+    padding: [3]u8 = @splat(0),
 
     comptime {
         common.mem.assertNoImplicitPadding(@This());
@@ -166,14 +167,28 @@ pub const Character = extern struct {
         _,
     };
 
-    pub const SkillLevels = packed struct(u32) {
-        normal: SkillLevel = .min,
-        skill_b: SkillLevel = .min,
-        skill_c: SkillLevel = .min,
-        skill_d: SkillLevel = .min,
-        extra: SkillLevel = .min,
+    pub const Skill = enum(u3) {
+        attack = 1,
+        main = 2,
+        support = 3,
+        ultimate = 4,
 
-        _: u12 = 0,
+        pub fn fromWire(value: u32) ?Skill {
+            return switch (value) {
+                1 => .attack,
+                2 => .main,
+                3 => .support,
+                4 => .ultimate,
+                else => null,
+            };
+        }
+    };
+
+    pub const SkillLevels = packed struct(u16) {
+        attack: SkillLevel = .min,
+        main: SkillLevel = .min,
+        support: SkillLevel = .min,
+        ultimate: SkillLevel = .min,
 
         comptime {
             common.mem.assertNoImplicitPadding(@This());
@@ -183,12 +198,68 @@ pub const Character = extern struct {
 
         pub fn toArray(levels: SkillLevels) [5]u32 {
             return .{
-                @intFromEnum(levels.normal),
-                @intFromEnum(levels.skill_b),
-                @intFromEnum(levels.skill_c),
-                @intFromEnum(levels.skill_d),
-                @intFromEnum(levels.extra),
+                @intFromEnum(levels.attack),
+                @intFromEnum(levels.main),
+                @intFromEnum(levels.support),
+                @intFromEnum(levels.ultimate),
+                @intFromEnum(SkillLevel.min),
             };
+        }
+    };
+
+    pub const TalentNodes = extern struct {
+        pub const group_count = tables.character_progression.talent_group_count;
+        pub const wire_max_len = 16;
+
+        groups: [group_count]u16 = @splat(0),
+
+        comptime {
+            std.debug.assert(group_count == 5);
+            common.mem.assertNoImplicitPadding(@This());
+            std.debug.assert(@sizeOf(@This()) == group_count * @sizeOf(u16));
+        }
+
+        pub const init: TalentNodes = .{};
+
+        pub const Index = enum(u8) {
+            _,
+
+            pub fn fromInt(value: u8) Index {
+                std.debug.assert(value != 0 and value <= group_count * 16);
+                return @enumFromInt(value);
+            }
+        };
+
+        pub fn writeWire(nodes: *const TalentNodes, buffer: *[wire_max_len]u8) []const u8 {
+            @memset(buffer, 0);
+            for (nodes.groups, 0..) |group, index| {
+                const byte_index: usize = if (index < 4)
+                    7 - index * 2
+                else
+                    15;
+                buffer[byte_index] = @truncate(group);
+                buffer[byte_index - 1] = @truncate(group >> 8);
+            }
+
+            return if (nodes.groups[group_count - 1] == 0)
+                buffer[0..8]
+            else
+                buffer;
+        }
+
+        pub fn has(nodes: *const TalentNodes, index: Index) bool {
+            const zero_based: usize = @intFromEnum(index) - 1;
+            return nodes.groups[zero_based / 16] & (@as(u16, 1) << @intCast(zero_based % 16)) != 0;
+        }
+
+        pub fn set(nodes: *TalentNodes, index: Index) bool {
+            const zero_based: usize = @intFromEnum(index) - 1;
+            const group = &nodes.groups[zero_based / 16];
+            const mask = @as(u16, 1) << @intCast(zero_based % 16);
+            const was_set = group.* & mask != 0;
+            group.* |= mask;
+
+            return !was_set;
         }
     };
 
@@ -219,7 +290,57 @@ pub const Character = extern struct {
     pub fn skillLevels(character: *const Character) [5]u32 {
         return character.skill_levels.toArray();
     }
+
+    pub fn skillLevel(character: *const Character, skill: Skill) u8 {
+        return @intFromEnum(switch (skill) {
+            .attack => character.skill_levels.attack,
+            .main => character.skill_levels.main,
+            .support => character.skill_levels.support,
+            .ultimate => character.skill_levels.ultimate,
+        });
+    }
+
+    pub fn setSkillLevel(character: *Character, skill: Skill, new_level: u8) void {
+        const value: SkillLevel = @enumFromInt(new_level);
+        switch (skill) {
+            .attack => character.skill_levels.attack = value,
+            .main => character.skill_levels.main = value,
+            .support => character.skill_levels.support = value,
+            .ultimate => character.skill_levels.ultimate = value,
+        }
+    }
+
+    pub fn writeTalentNodes(character: *const Character, buffer: *[TalentNodes.wire_max_len]u8) []const u8 {
+        return character.talent_nodes.writeWire(buffer);
+    }
+
+    pub fn hasTalent(character: *const Character, index: TalentNodes.Index) bool {
+        return character.talent_nodes.has(index);
+    }
+
+    pub fn setTalent(character: *Character, index: TalentNodes.Index) bool {
+        return character.talent_nodes.set(index);
+    }
 };
+
+comptime {
+    var nodes: Character.TalentNodes = .init;
+    var buffer: [Character.TalentNodes.wire_max_len]u8 = undefined;
+
+    std.debug.assert(nodes.set(.fromInt(1)));
+    std.debug.assert(nodes.set(.fromInt(64)));
+    const first_chunk = nodes.writeWire(&buffer);
+    std.debug.assert(first_chunk.len == 8);
+    std.debug.assert(first_chunk[7] == 1);
+    std.debug.assert(first_chunk[0] == 0x80);
+
+    std.debug.assert(nodes.set(.fromInt(65)));
+    std.debug.assert(nodes.set(.fromInt(80)));
+    const both_chunks = nodes.writeWire(&buffer);
+    std.debug.assert(both_chunks.len == 16);
+    std.debug.assert(both_chunks[15] == 1);
+    std.debug.assert(both_chunks[14] == 0x80);
+}
 
 pub const Guide = extern struct {
     group_id: u32 = 0,

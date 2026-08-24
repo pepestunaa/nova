@@ -15,49 +15,170 @@ pub const Entry = struct {
     reward_quantity: i32,
 };
 
-pub const Group = struct {
+pub const CollectionGroup = struct {
     kind: CollectionKind,
-    entries: []const Entry,
+    first: u8,
+    count: u8,
 };
-const all_discs = [_]Entry{
+
+pub const ProgressKind = enum(u8) {
+    advance_total,
+    character_level,
+    element_level,
+    skill_level,
+};
+
+pub const Progression = struct {
+    entry_index: u8,
+    kind: ProgressKind,
+    minimum_level: u8,
+    element: u8,
+};
+
+pub const entries = [_]Entry{
     .{ .id = 377, .target = 10, .reward_id = 2, .reward_quantity = 5 },
     .{ .id = 378, .target = 20, .reward_id = 2, .reward_quantity = 5 },
     .{ .id = 379, .target = 30, .reward_id = 2, .reward_quantity = 10 },
     .{ .id = 380, .target = 40, .reward_id = 2, .reward_quantity = 10 },
     .{ .id = 381, .target = 50, .reward_id = 2, .reward_quantity = 20 },
-};
-
-const five_star_discs = [_]Entry{
     .{ .id = 382, .target = 5, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 383, .target = 10, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 384, .target = 15, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 385, .target = 20, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 386, .target = 25, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 387, .target = 30, .reward_id = 2, .reward_quantity = 20 },
-};
-
-const all_trekkers = [_]Entry{
     .{ .id = 388, .target = 10, .reward_id = 2, .reward_quantity = 5 },
     .{ .id = 389, .target = 20, .reward_id = 2, .reward_quantity = 5 },
     .{ .id = 390, .target = 30, .reward_id = 2, .reward_quantity = 10 },
     .{ .id = 391, .target = 40, .reward_id = 2, .reward_quantity = 10 },
     .{ .id = 392, .target = 50, .reward_id = 2, .reward_quantity = 20 },
-};
-
-const five_star_trekkers = [_]Entry{
     .{ .id = 393, .target = 5, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 394, .target = 10, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 395, .target = 15, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 396, .target = 20, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 397, .target = 25, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 398, .target = 30, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 325, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 326, .target = 20, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 327, .target = 30, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 328, .target = 40, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 329, .target = 50, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 335, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 336, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 337, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 338, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 339, .target = 6, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 340, .target = 9, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 341, .target = 12, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 342, .target = 15, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 343, .target = 18, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 344, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 345, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 346, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 347, .target = 3, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 348, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 349, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 350, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 351, .target = 3, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 352, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 353, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 354, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 355, .target = 3, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 356, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 357, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 358, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 359, .target = 3, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 360, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 361, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 362, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 363, .target = 3, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 364, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 365, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 366, .target = 3, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 367, .target = 3, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 399, .target = 3, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 400, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 401, .target = 15, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 402, .target = 20, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 403, .target = 25, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 404, .target = 30, .reward_id = 2, .reward_quantity = 20 },
 };
 
-pub const collection_groups = [_]Group{
-    .{ .kind = .all_discs, .entries = &all_discs },
-    .{ .kind = .five_star_discs, .entries = &five_star_discs },
-    .{ .kind = .all_trekkers, .entries = &all_trekkers },
-    .{ .kind = .five_star_trekkers, .entries = &five_star_trekkers },
+pub const collection_groups = [_]CollectionGroup{
+    .{ .kind = .all_discs, .first = 0, .count = 5 },
+    .{ .kind = .five_star_discs, .first = 5, .count = 6 },
+    .{ .kind = .all_trekkers, .first = 11, .count = 5 },
+    .{ .kind = .five_star_trekkers, .first = 16, .count = 6 },
+};
+
+pub const character_progressions = [_]Progression{
+    .{ .entry_index = 22, .kind = .advance_total, .minimum_level = 0, .element = 0 },
+    .{ .entry_index = 23, .kind = .advance_total, .minimum_level = 0, .element = 0 },
+    .{ .entry_index = 24, .kind = .advance_total, .minimum_level = 0, .element = 0 },
+    .{ .entry_index = 25, .kind = .advance_total, .minimum_level = 0, .element = 0 },
+    .{ .entry_index = 26, .kind = .advance_total, .minimum_level = 0, .element = 0 },
+    .{ .entry_index = 27, .kind = .character_level, .minimum_level = 20, .element = 0 },
+    .{ .entry_index = 28, .kind = .character_level, .minimum_level = 30, .element = 0 },
+    .{ .entry_index = 29, .kind = .character_level, .minimum_level = 50, .element = 0 },
+    .{ .entry_index = 30, .kind = .character_level, .minimum_level = 90, .element = 0 },
+    .{ .entry_index = 31, .kind = .character_level, .minimum_level = 90, .element = 0 },
+    .{ .entry_index = 32, .kind = .character_level, .minimum_level = 90, .element = 0 },
+    .{ .entry_index = 33, .kind = .character_level, .minimum_level = 90, .element = 0 },
+    .{ .entry_index = 34, .kind = .character_level, .minimum_level = 90, .element = 0 },
+    .{ .entry_index = 35, .kind = .character_level, .minimum_level = 90, .element = 0 },
+    .{ .entry_index = 36, .kind = .element_level, .minimum_level = 20, .element = 1 },
+    .{ .entry_index = 37, .kind = .element_level, .minimum_level = 30, .element = 1 },
+    .{ .entry_index = 38, .kind = .element_level, .minimum_level = 50, .element = 1 },
+    .{ .entry_index = 39, .kind = .element_level, .minimum_level = 90, .element = 1 },
+    .{ .entry_index = 40, .kind = .element_level, .minimum_level = 20, .element = 2 },
+    .{ .entry_index = 41, .kind = .element_level, .minimum_level = 30, .element = 2 },
+    .{ .entry_index = 42, .kind = .element_level, .minimum_level = 50, .element = 2 },
+    .{ .entry_index = 43, .kind = .element_level, .minimum_level = 90, .element = 2 },
+    .{ .entry_index = 44, .kind = .element_level, .minimum_level = 20, .element = 3 },
+    .{ .entry_index = 45, .kind = .element_level, .minimum_level = 30, .element = 3 },
+    .{ .entry_index = 46, .kind = .element_level, .minimum_level = 50, .element = 3 },
+    .{ .entry_index = 47, .kind = .element_level, .minimum_level = 90, .element = 3 },
+    .{ .entry_index = 48, .kind = .element_level, .minimum_level = 20, .element = 4 },
+    .{ .entry_index = 49, .kind = .element_level, .minimum_level = 30, .element = 4 },
+    .{ .entry_index = 50, .kind = .element_level, .minimum_level = 50, .element = 4 },
+    .{ .entry_index = 51, .kind = .element_level, .minimum_level = 90, .element = 4 },
+    .{ .entry_index = 52, .kind = .element_level, .minimum_level = 20, .element = 5 },
+    .{ .entry_index = 53, .kind = .element_level, .minimum_level = 30, .element = 5 },
+    .{ .entry_index = 54, .kind = .element_level, .minimum_level = 50, .element = 5 },
+    .{ .entry_index = 55, .kind = .element_level, .minimum_level = 90, .element = 5 },
+    .{ .entry_index = 56, .kind = .element_level, .minimum_level = 20, .element = 6 },
+    .{ .entry_index = 57, .kind = .element_level, .minimum_level = 30, .element = 6 },
+    .{ .entry_index = 58, .kind = .element_level, .minimum_level = 50, .element = 6 },
+    .{ .entry_index = 59, .kind = .element_level, .minimum_level = 90, .element = 6 },
+    .{ .entry_index = 60, .kind = .skill_level, .minimum_level = 4, .element = 0 },
+    .{ .entry_index = 61, .kind = .skill_level, .minimum_level = 4, .element = 0 },
+    .{ .entry_index = 62, .kind = .skill_level, .minimum_level = 4, .element = 0 },
+    .{ .entry_index = 63, .kind = .skill_level, .minimum_level = 7, .element = 0 },
+    .{ .entry_index = 64, .kind = .skill_level, .minimum_level = 7, .element = 0 },
+    .{ .entry_index = 65, .kind = .skill_level, .minimum_level = 7, .element = 0 },
 };
 
 pub const collection_entry_count = 22;
+pub const tracked_entry_count = 66;
+
+const first_entry_id = 325;
+const entry_index_by_id = [_]u8{ 23, 24, 25, 26, 27, 0, 0, 0, 0, 0, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 61, 62, 63, 64, 65, 66 };
+
+pub fn collectionEntries(group: CollectionGroup) []const Entry {
+    return entries[group.first..][0..group.count];
+}
+
+pub fn entry(index: u8) Entry {
+    return entries[index];
+}
+
+pub fn get(id: u32) ?Entry {
+    if (id < first_entry_id)
+        return null;
+    const offset = id - first_entry_id;
+    if (offset >= entry_index_by_id.len)
+        return null;
+    const index = entry_index_by_id[offset];
+
+    return if (index == 0) null else entries[index - 1];
+}

@@ -138,7 +138,7 @@ fn assistProgress(player: *const Player, id: u32) ?u32 {
             7 => elementalDiscCount(player, trackElement(track), 30, 0),
             8 => elementalCharacterCount(player, trackElement(track), 30),
             9 => characterNormalSkillLevel(player, trackPrimary(track)),
-            10 => characterSupportSkillLevel(player, trackSupport(track)),
+            10 => characterMainSkillLevel(player, trackSupport(track)),
             else => null,
         },
         4 => switch (objective) {
@@ -149,7 +149,7 @@ fn assistProgress(player: *const Player, id: u32) ?u32 {
             5 => elementalDiscCount(player, trackElement(track), 40, 0),
             6 => elementalCharacterCount(player, trackElement(track), 40),
             7 => characterNormalSkillLevel(player, trackPrimary(track)),
-            8 => characterSupportSkillLevel(player, trackSupport(track)),
+            8 => characterMainSkillLevel(player, trackSupport(track)),
             else => null,
         },
         5 => switch (objective) {
@@ -160,7 +160,7 @@ fn assistProgress(player: *const Player, id: u32) ?u32 {
             5 => elementalDiscCount(player, trackElement(track), 50, 0),
             6 => elementalCharacterCount(player, trackElement(track), 50),
             7 => characterNormalSkillLevel(player, trackPrimary(track)),
-            8 => characterSupportSkillLevel(player, trackSupport(track)),
+            8 => characterMainSkillLevel(player, trackSupport(track)),
             else => null,
         },
         else => null,
@@ -224,13 +224,13 @@ fn characterAdvance(player: *const Player, id: u32) u32 {
 fn characterNormalSkillLevel(player: *const Player, id: u32) u32 {
     const character = player.characters.get(id) orelse return 0;
 
-    return @intFromEnum(character.skill_levels.normal);
+    return character.skillLevel(.attack);
 }
 
-fn characterSupportSkillLevel(player: *const Player, id: u32) u32 {
+fn characterMainSkillLevel(player: *const Player, id: u32) u32 {
     const character = player.characters.get(id) orelse return 0;
 
-    return @intFromEnum(character.skill_levels.skill_b);
+    return character.skillLevel(.main);
 }
 
 fn elementalCharacterCount(

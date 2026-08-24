@@ -291,8 +291,6 @@ pub fn buildScore(run: *const Player.StarTowerRun) u32 {
     return score;
 }
 
-/// The table is one-based: `scores[0]` represents 1 Musical Note. Larger
-/// quantities keep the final authored score, matching the client.
 fn noteScore(id: u32, quantity: u32) u32 {
     if (quantity == 0)
         return 0;
@@ -300,6 +298,7 @@ fn noteScore(id: u32, quantity: u32) u32 {
         if (entry.id != id)
             continue;
         const index = @min(@as(usize, quantity - 1), entry.score_count - 1);
+
         return entry.scores[index];
     }
 

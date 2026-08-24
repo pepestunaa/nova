@@ -33,6 +33,10 @@ Astralis currently focuses on Recruitment and Ascension.
 
 - Newbie and regular gacha banners, including pulls, costs, rewards, guarantees, and collection progress.
 
+### Character progression
+
+- Leveling, skill upgrades, talents.
+
 ### Ascension
 
 - Starting, resuming, leaving, and completing runs.
@@ -48,8 +52,8 @@ official server:
 
 - A few advanced Monolith Research effects and unusual Ascension events need more refinement.
 - Fate Cards and Cataclysm Survivor are not implemented yet.
-- Character upgrade systems such as leveling, advancement, skill upgrades, emblems, and talent nodes are not implemented yet.
 - Daily and weekly missions are listed and reset on schedule, but their gameplay progress and rewards are not implemented yet.
+- Disc progression and character emblems are not implemented yet.
 
 ## Client patch
 
@@ -140,7 +144,7 @@ Include steps to reproduce the problem, what you expected to happen, what
 happened instead, and the relevant server or client logs (if any). Mention the Astralis
 and Asterism version or commit you are using.
 
-You can also report issues in the [Reversed Rooms discord server](https://discord.xeondev.com/).
+You can also report issues in the [Reversed Rooms Discord server](https://discord.xeondev.com/).
 
 ## Contributing
 
@@ -148,7 +152,7 @@ Focused pull requests are welcome. For larger features or changes to core
 protocol or gameplay behavior, open an issue first so the approach can be
 discussed before you spend time implementing it.
 
-If you don't have an account you can submit patches in the discord server.
+If you don't have an account you can submit patches in the Discord server.
 
 ## License
 
