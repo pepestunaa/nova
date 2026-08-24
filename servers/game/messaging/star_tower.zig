@@ -4,9 +4,11 @@ const Io = std.Io;
 
 const gameplay = @import("../gameplay.zig");
 const tower = gameplay.star_tower;
+
 const event_interaction = @import("star_tower/event.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
+const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const settlement = @import("star_tower/settlement.zig");
 const shop = @import("star_tower/shop.zig");
@@ -422,6 +424,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .BattleTime = victory.Time,
                 } },
             });
+            try research_project_notify.send(scope);
 
             log.info("completed Ascension floor {d}; offered {d} potential(s){s}", .{
                 run.floor,
@@ -536,6 +539,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                         .BuySucceed = false,
                     },
                 });
+                try research_project_notify.send(scope);
 
                 return;
             }
@@ -577,6 +581,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 .Data = .{},
                 .StrengthenMachineResp = .{ .BuySucceed = true },
             });
+            try research_project_notify.send(scope);
 
             log.info("opened Potential strengthening selector for {d} currency", .{price});
 
@@ -647,6 +652,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .Data = .{},
                     .NilResp = .{},
                 });
+                try research_project_notify.send(scope);
 
                 log.info("rerolled Ascension potential choices for {d} currency", .{reroll_price});
 
@@ -724,6 +730,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     current_potential_level,
                     tower_book_changed,
                 );
+                try research_project_notify.send(scope);
 
                 log.info("selected shop potential {d}", .{potential_id});
                 return;
@@ -772,6 +779,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     current_potential_level,
                     tower_book_changed,
                 );
+                try research_project_notify.send(scope);
 
                 log.info(
                     "selected final-room potential {d}; offering core potential",
@@ -871,6 +879,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 current_potential_level,
                 tower_book_changed,
             );
+            try research_project_notify.send(scope);
 
             log.info("selected Ascension potential {d}", .{potential_id});
 

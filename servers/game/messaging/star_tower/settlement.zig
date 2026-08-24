@@ -7,11 +7,12 @@ const Allocator = std.mem.Allocator;
 const gameplay = @import("../../gameplay.zig");
 const tower = gameplay.star_tower;
 
+const Player = @import("../../store/Player.zig");
+const proto = @import("proto");
+const research_project_notify = @import("../../notify/research_project.zig");
 const Scope = @import("../../Scope.zig");
 const star_tower_record = @import("../../gameplay/star_tower/record.zig");
-const Player = @import("../../store/Player.zig");
 const tables = @import("../../tables.zig");
-const proto = @import("proto");
 
 //
 
@@ -196,6 +197,7 @@ pub fn send(
             .TotalDamages = .fromOwnedSlice(run.total_damages[0..run.total_damage_count]),
         },
     });
+    try research_project_notify.send(scope);
 
     log.info("completed Ascension {d}; awarded {d} run and {d} record Journey Ticket(s)", .{
         completed_tower_id,

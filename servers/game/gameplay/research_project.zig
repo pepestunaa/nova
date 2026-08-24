@@ -1,10 +1,13 @@
 //! Tracks Research Project progress earned through Ascension.
 
-const Allocator = @import("std").mem.Allocator;
+const std = @import("std");
+const Allocator = std.mem.Allocator;
 
 const Player = @import("../store/Player.zig");
 const tables = @import("../tables.zig");
 const tower_growth = @import("tower_growth.zig");
+
+//
 
 const quest_type = @intFromEnum(tables.quest.Type.tower);
 
@@ -78,7 +81,8 @@ pub fn usedEnhancementMachine(player: *Player) void {
 }
 
 pub fn activatedHarmonySkills(player: *Player, count: u32) void {
-    if (count == 0) return;
+    if (count == 0)
+        return;
     player.research_project.harmony_skills +|= count;
     refreshActive(player);
 }
@@ -123,16 +127,18 @@ pub fn savedRecord(player: *Player, rating: u8) void {
 }
 
 pub fn claimable(player: *Player, id: u32) ?*Player.Quest {
-    const quest = find(player, id) orelse return null;
+    const quest = find(player, id) orelse
+        return null;
     if (quest.claimed or quest.progress_current < quest.progress_max)
         return null;
+
     return quest;
 }
 
 pub const RewardReceipt = struct {
-    resources: [2]RewardDelta = undefined,
+    resources: [max_reward_deltas]RewardDelta = undefined,
     resource_count: usize = 0,
-    items: [2]RewardDelta = undefined,
+    items: [max_reward_deltas]RewardDelta = undefined,
     item_count: usize = 0,
 
     pub const RewardDelta = struct {
@@ -141,6 +147,8 @@ pub const RewardReceipt = struct {
     };
 };
 
+pub const max_reward_deltas = tables.research_project.list.len * 2;
+
 /// Claims a completed task and lets `sync` expose anything it unlocks.
 pub fn claim(
     player: *Player,
@@ -148,8 +156,45 @@ pub fn claim(
     id: u32,
     receipt: *RewardReceipt,
 ) Allocator.Error!bool {
-    const quest = claimable(player, id) orelse return false;
-    const definition = tables.research_project.get(id) orelse return false;
+    receipt.* = .{};
+
+    if (id == 0) {
+        var claimed = false;
+        const quests = player.quests.entries[0..player.quests.len];
+        for (quests) |*quest| {
+            if (quest.quest_type != quest_type or
+                quest.claimed or
+                quest.progress_current < quest.progress_max)
+                continue;
+
+            try claimQuest(player, allocator, quest, receipt);
+            claimed = true;
+        }
+
+        if (!claimed)
+            return false;
+
+        _ = try sync(player, allocator);
+
+        return true;
+    }
+
+    const quest = claimable(player, id) orelse
+        return false;
+    try claimQuest(player, allocator, quest, receipt);
+    _ = try sync(player, allocator);
+
+    return true;
+}
+
+fn claimQuest(
+    player: *Player,
+    allocator: Allocator,
+    quest: *Player.Quest,
+    receipt: *RewardReceipt,
+) Allocator.Error!void {
+    const definition = tables.research_project.get(quest.id) orelse
+        return;
     quest.claimed = true;
 
     for (definition.rewards) |reward| {
@@ -157,23 +202,42 @@ pub fn claim(
             continue;
         if (tables.item.isResource(reward.item_id)) {
             try player.addResource(allocator, reward.item_id, reward.quantity);
-            receipt.resources[receipt.resource_count] = .{
-                .id = reward.item_id,
-                .quantity = reward.quantity,
-            };
-            receipt.resource_count += 1;
+            appendDelta(
+                receipt.resources[0..],
+                &receipt.resource_count,
+                reward.item_id,
+                reward.quantity,
+            );
         } else {
             try player.addItem(allocator, reward.item_id, reward.quantity);
-            receipt.items[receipt.item_count] = .{
-                .id = reward.item_id,
-                .quantity = reward.quantity,
-            };
-            receipt.item_count += 1;
+            appendDelta(
+                receipt.items[0..],
+                &receipt.item_count,
+                reward.item_id,
+                reward.quantity,
+            );
         }
     }
+}
 
-    _ = try sync(player, allocator);
-    return true;
+fn appendDelta(
+    entries: []RewardReceipt.RewardDelta,
+    count: *usize,
+    id: u32,
+    quantity: i32,
+) void {
+    for (entries[0..count.*]) |*entry| {
+        if (entry.id != id)
+            continue;
+
+        entry.quantity +|= quantity;
+
+        return;
+    }
+
+    std.debug.assert(count.* < entries.len);
+    entries[count.*] = .{ .id = id, .quantity = quantity };
+    count.* += 1;
 }
 
 fn refreshActive(player: *Player) void {
@@ -205,6 +269,7 @@ fn progressFor(player: *const Player, definition: *const tables.research_project
         .refresh_potentials => state.potential_refreshes,
         .restock_shop => state.shop_restocks,
     };
+
     return @min(progress, definition.target);
 }
 
@@ -213,18 +278,22 @@ fn activatedNodeCount(
     definition: *const tables.research_project.Definition,
 ) u32 {
     var count: u32 = 0;
+
     for (definition.required_nodes[0..definition.required_node_count]) |node_id| {
         if (tower_growth.has(player, node_id)) count += 1;
     }
+
     return count;
 }
 
 fn clearsAtLeast(clears: []const u32, minimum_difficulty: u32) u32 {
     if (minimum_difficulty == 0 or minimum_difficulty > clears.len)
         return 0;
+
     var total: u32 = 0;
     for (clears[minimum_difficulty - 1 ..]) |count|
         total +|= count;
+
     return total;
 }
 
@@ -240,6 +309,7 @@ fn anecdoteCount(player: *const Player) u32 {
             continue;
         count += 1;
     }
+
     return count;
 }
 
@@ -248,9 +318,12 @@ fn prerequisitesClaimed(
     definition: *const tables.research_project.Definition,
 ) bool {
     for (definition.prerequisites[0..definition.prerequisite_count]) |id| {
-        const quest = find(player, id) orelse return false;
-        if (!quest.claimed) return false;
+        const quest = find(player, id) orelse
+            return false;
+        if (!quest.claimed)
+            return false;
     }
+
     return true;
 }
 
@@ -259,5 +332,6 @@ fn find(player: *const Player, id: u32) ?*Player.Quest {
         if (quest.quest_type == quest_type and quest.id == id)
             return quest;
     }
+
     return null;
 }

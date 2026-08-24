@@ -3,8 +3,10 @@ const Io = std.Io;
 
 const gameplay = @import("../gameplay.zig");
 const tower = gameplay.star_tower;
+
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
+const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const settlement = @import("star_tower/settlement.zig");
 const shop = @import("star_tower/shop.zig");
@@ -243,6 +245,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
         .SweepTicketUndated = @intCast(@max(player.resourceQuantity(settlement.sweep_ticket_undated_id), 0)),
         .Change = .{ .Props = .fromOwnedSlice(sweep_changes[0..sweep_change_count]) },
     });
+    try research_project_notify.send(scope);
 
     scope.markDirty();
 

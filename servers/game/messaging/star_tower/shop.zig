@@ -3,8 +3,10 @@ const Io = std.Io;
 
 const gameplay = @import("../../gameplay.zig");
 const tower = gameplay.star_tower;
+
 const Player = @import("../../store/Player.zig");
 const proto = @import("proto");
+const research_project_notify = @import("../../notify/research_project.zig");
 const Scope = @import("../../Scope.zig");
 const tables = @import("../../tables.zig");
 
@@ -185,6 +187,7 @@ pub fn interact(
         scope.markDirty();
 
         try respondShopReroll(scope, request_id, run, reroll_price);
+        try research_project_notify.send(scope);
         log.info("refreshed Ascension shop for {d} currency; {d} refresh(es) remain", .{
             reroll_price,
             run.shop_rerolls,
@@ -234,6 +237,7 @@ pub fn interact(
             scope.markDirty();
 
             try respondTowerItemPurchase(scope, request_id, item_id, item_quantity, is_new, price, secondary_change_slice);
+            try research_project_notify.send(scope);
 
             log.info("bought Ascension shop item {d} x{d} for {d} currency", .{
                 item_id,
@@ -272,6 +276,7 @@ pub fn interact(
             scope.markDirty();
 
             try respondPotentialPurchase(scope, request_id, run, potential_case_id, price);
+            try research_project_notify.send(scope);
 
             if (character_override) |character_id| {
                 log.info("bought Ascension shop good {d} for {d} currency (character {d})", .{

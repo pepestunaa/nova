@@ -29,5 +29,8 @@ pub fn quest_tower_reward_receive_req(scope: *Scope) !void {
     try scope.respond(try change.build(&receipt, scope.arena));
     try research_project_notify.send(scope);
 
-    log.info("claimed Research Project quest {d}", .{request.Value});
+    if (request.Value == 0)
+        log.info("claimed all completed Research Project quests", .{})
+    else
+        log.info("claimed Research Project quest {d}", .{request.Value});
 }

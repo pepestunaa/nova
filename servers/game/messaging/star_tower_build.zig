@@ -7,6 +7,7 @@ const journey_ticket_id = star_tower_record.journey_ticket_id;
 const gameplay = @import("../gameplay.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
+const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
 
@@ -223,6 +224,7 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
         scope.markDirty();
 
         try scope.respond(proto.pb.StarTowerBuildWhetherSaveResp{});
+        try research_project_notify.send(scope);
 
         log.info("saved Ascension record {d}", .{build_id});
 

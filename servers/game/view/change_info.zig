@@ -9,6 +9,7 @@ const Player = @import("../store/Player.zig");
 const player_view = @import("player.zig");
 const progression = @import("../gameplay/progression.zig");
 const proto = @import("proto");
+const research_project = @import("../gameplay/research_project.zig");
 const reward = @import("../gameplay/reward.zig");
 const tables = @import("../tables.zig");
 
@@ -128,12 +129,12 @@ pub const Achievement = struct {
 
 pub const ResearchProject = struct {
     builder: Builder = .{},
-    resources: [2]proto.pb.Res = undefined,
-    items: [2]proto.pb.Item = undefined,
+    resources: [research_project.max_reward_deltas]proto.pb.Res = undefined,
+    items: [research_project.max_reward_deltas]proto.pb.Item = undefined,
 
     pub fn build(
         formatter: *ResearchProject,
-        receipt: *const @import("../gameplay/research_project.zig").RewardReceipt,
+        receipt: *const research_project.RewardReceipt,
         arena: Allocator,
     ) Error!proto.pb.ChangeInfo {
         formatter.builder.len = 0;
