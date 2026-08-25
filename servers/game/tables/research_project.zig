@@ -4,6 +4,8 @@ const generated = @import("generated/assets/research_project");
 
 const raw_quests = @import("tables/StarTowerQuest");
 
+const quest_count: usize = raw_quests.len;
+
 //
 
 pub const max_required_nodes = generated.max_required_nodes;
@@ -42,14 +44,14 @@ pub fn get(id: u32) ?*const Definition {
     return null;
 }
 
-fn build() [raw_quests.len]Definition {
-    if (raw_quests.len != generated.quests.len)
+fn build() [quest_count]Definition {
+    if (quest_count != generated.quests.len)
         @compileError(std.fmt.comptimePrint(
             "StarTowerQuest has {d} entries, but the generated Research Project asset has {d}; run `zig build generate-assets -- research_project`",
-            .{ raw_quests.len, generated.quests.len },
+            .{ quest_count, generated.quests.len },
         ));
 
-    var result: [raw_quests.len]Definition = undefined;
+    var result: [quest_count]Definition = undefined;
     for (raw_quests, 0..) |raw, index| {
         const generated_quest = generated.quests[index];
         if (generated_quest.id != raw.id)

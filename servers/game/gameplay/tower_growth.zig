@@ -1,5 +1,6 @@
 const std = @import("std");
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const tables = @import("../tables.zig");
 
@@ -245,13 +246,21 @@ fn isGroupAvailable(details: []const u32, group_id: u32, player_level: u32) bool
     return true;
 }
 
-pub fn unlock(player: *Player, id: u32) error{ InvalidNode, LockedNode, InsufficientItems }!tables.tower_growth.Node {
+pub fn unlock(mutation: *Mutation, id: u32) error{ InvalidNode, LockedNode, InsufficientItems }!tables.tower_growth.Node {
     const node = tables.tower_growth.get(id) orelse
         return error.InvalidNode;
-    if (!canUnlock(&player.tower_growth.details, id, @intFromEnum(player.basic.level)))
+    const current = mutation.read();
+    if (!canUnlock(&current.tower_growth.details, id, @intFromEnum(current.basic.level)))
         return error.LockedNode;
+    if (current.itemQuantity(node.cost_item_id) < node.cost_item_quantity)
+        return error.InsufficientItems;
 
-    try player.consumeItem(node.cost_item_id, node.cost_item_quantity);
+    const player = mutation.modify(.{
+        .inventory = true,
+        .tower_growth = true,
+        .research_project = true,
+    });
+    player.consumeItem(node.cost_item_id, node.cost_item_quantity) catch unreachable;
     setUnlocked(&player.tower_growth.details, id);
 
     return node;

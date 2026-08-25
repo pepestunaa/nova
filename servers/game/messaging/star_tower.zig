@@ -8,7 +8,6 @@ const tower = gameplay.star_tower;
 const event_interaction = @import("star_tower/event.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
-const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const settlement = @import("star_tower/settlement.zig");
 const shop = @import("star_tower/shop.zig");
@@ -22,10 +21,23 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
 
     const request = try scope.source.read(proto.pb.StarTowerInteractReq);
     const request_id = request.Id;
-    const player = scope.playerMut();
-    const run = &player.star_tower_run;
-    if (!run.active)
+    const current = scope.player;
+    const current_run = &current.star_tower_run;
+    if (!current_run.active)
         return error.NoActiveRun;
+
+    if (request.EnterReq != null and
+        !(current_run.settlement_pending and current_run.pending_floor == 0))
+    {
+        const door_case_index = tower.roomCaseIndex(current_run, request_id) orelse
+            return scope.reject(.invalid_req);
+        if (current_run.room_case_kinds[door_case_index] != .door or
+            current_run.room_case_resolved[door_case_index])
+            return scope.reject(.invalid_req);
+    }
+
+    const player = scope.mutation().modify(.{ .ascension = true, .research_project = true });
+    const run = &player.star_tower_run;
 
     if (request.EnterReq) |enter| {
         if (run.settlement_pending and run.pending_floor == 0) {
@@ -33,10 +45,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             return;
         }
 
-        const door_case_index = tower.roomCaseIndex(run, request_id) orelse
-            return scope.reject(.invalid_req);
-        if (run.room_case_kinds[door_case_index] != .door or run.room_case_resolved[door_case_index])
-            return scope.reject(.invalid_req);
+        const door_case_index = tower.roomCaseIndex(run, request_id).?;
         run.room_case_resolved[door_case_index] = true;
 
         const floor = run.pending_floor;
@@ -56,8 +65,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 .{ .Id = battle_case_id, .BattleCase = .{ .SubNoteSkillNum = note_count } },
                 .{ .Id = sync_case_id, .SyncHPCase = .{} },
             };
-
-            scope.markDirty();
 
             try scope.respond(proto.pb.StarTowerInteractResp{
                 .Id = request_id,
@@ -90,8 +97,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             const event_case_id = try tower.addRoomCase(run, .select_event, 0);
             const sync_case_id = try tower.addRoomCase(run, .sync_hp, 0);
             const door_case_id = try tower.addRoomCase(run, .door, 0);
-
-            scope.markDirty();
 
             var affinity: [1]proto.pb.NPCAffinityInfo = .{.{
                 .NPCId = event.npc_id,
@@ -193,8 +198,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     },
                 };
 
-                scope.markDirty();
-
                 try scope.respond(proto.pb.StarTowerInteractResp{
                     .Id = request_id,
                     .Change = .{},
@@ -217,8 +220,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
 
             const door_case_id = try tower.addRoomCase(run, .door, 0);
             const sync_case_id = try tower.addRoomCase(run, .sync_hp, 0);
-
-            scope.markDirty();
 
             var cases: [2]proto.pb.StarTowerRoomCase = .{
                 .{
@@ -323,8 +324,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             else
                 0;
 
-            scope.markDirty();
-
             var encoded_currency: [16]u8 = undefined;
             var currency_writer = Io.Writer.fixed(&encoded_currency);
             const currency: proto.pb.TowerResInfo = .{
@@ -424,7 +423,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .BattleTime = victory.Time,
                 } },
             });
-            try research_project_notify.send(scope);
 
             log.info("completed Ascension floor {d}; offered {d} potential(s){s}", .{
                 run.floor,
@@ -463,8 +461,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             run.room_case_resolved[case_index] = true;
             run.char_hp = recovery.Hp;
 
-            scope.markDirty();
-
             try scope.respond(proto.pb.StarTowerInteractResp{ .Id = request_id, .Change = .{}, .Data = .{}, .NilResp = .{} });
 
             return;
@@ -475,8 +471,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
         run.room_case_resolved[case_index] = true;
         run.char_hp = recovery.Hp;
         const next_sync_case_id = try tower.addRoomCase(run, .sync_hp, 0);
-
-        scope.markDirty();
 
         var cases: [1]proto.pb.StarTowerRoomCase = .{.{
             .Id = next_sync_case_id,
@@ -529,8 +523,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             if (run.strengthen_bonus_count != strengthen_bonus_count)
                 gameplay.research_project.triggeredPotentialBoost(player);
             if (run.offered_potential_count == 0) {
-                scope.markDirty();
-
                 try scope.respond(proto.pb.StarTowerInteractResp{
                     .Id = request_id,
                     .Change = .{},
@@ -539,13 +531,10 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                         .BuySucceed = false,
                     },
                 });
-                try research_project_notify.send(scope);
 
                 return;
             }
             const potential_case_id = try tower.addRoomCase(run, .select_potential, 0);
-
-            scope.markDirty();
 
             var infos: [3]proto.pb.PotentialInfo = undefined;
             for (run.offered_potential_ids[0..run.offered_potential_count], 0..) |potential_id, index|
@@ -581,7 +570,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 .Data = .{},
                 .StrengthenMachineResp = .{ .BuySucceed = true },
             });
-            try research_project_notify.send(scope);
 
             log.info("opened Potential strengthening selector for {d} currency", .{price});
 
@@ -620,8 +608,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     return error.NoPotentialChoices;
                 const reroll_case_id = try tower.addRoomCase(run, selected_case_kind, 0);
 
-                scope.markDirty();
-
                 var infos: [3]proto.pb.PotentialInfo = undefined;
                 for (run.offered_potential_ids[0..run.offered_potential_count], 0..) |potential_id, info_index|
                     infos[info_index] = .{ .Tid = potential_id, .Level = run.offered_potential_levels[info_index] };
@@ -652,7 +638,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .Data = .{},
                     .NilResp = .{},
                 });
-                try research_project_notify.send(scope);
 
                 log.info("rerolled Ascension potential choices for {d} currency", .{reroll_price});
 
@@ -716,8 +701,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             if (run.shop_potential_pending) {
                 run.shop_potential_pending = false;
 
-                scope.markDirty();
-
                 try scope.respond(proto.pb.StarTowerInteractResp{
                     .Id = request_id,
                     .Change = .{ .Props = .fromOwnedSlice(&changes) },
@@ -730,7 +713,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     current_potential_level,
                     tower_book_changed,
                 );
-                try research_project_notify.send(scope);
 
                 log.info("selected shop potential {d}", .{potential_id});
                 return;
@@ -748,7 +730,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 if (run.offered_potential_count == 0)
                     return error.NoPotentialChoices;
                 const core_case_id = try tower.addRoomCase(run, .select_special_potential, 0);
-                scope.markDirty();
                 var cases: [1]proto.pb.StarTowerRoomCase = .{.{
                     .Id = core_case_id,
                     .SelectSpecialPotentialCase = .{
@@ -779,7 +760,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     current_potential_level,
                     tower_book_changed,
                 );
-                try research_project_notify.send(scope);
 
                 log.info(
                     "selected final-room potential {d}; offering core potential",
@@ -827,8 +807,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 try tower.addRoomCase(run, .strengthen_machine, 0)
             else
                 0;
-
-            scope.markDirty();
 
             var cases: [2]proto.pb.StarTowerRoomCase = undefined;
             var next_case_count: usize = 0;
@@ -879,7 +857,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 current_potential_level,
                 tower_book_changed,
             );
-            try research_project_notify.send(scope);
 
             log.info("selected Ascension potential {d}", .{potential_id});
 
@@ -903,7 +880,6 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
     if (tower.roomCaseIndex(run, request_id)) |case_index| if (run.room_case_kinds[case_index] == .npc_recovery_hp and !run.room_case_resolved[case_index]) {
         run.room_case_resolved[case_index] = true;
 
-        scope.markDirty();
         try scope.respond(
             proto.pb.StarTowerInteractResp{
                 .Id = request_id,

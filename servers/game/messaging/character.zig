@@ -1,14 +1,8 @@
 const std = @import("std");
-const Io = std.Io;
-
-const achievement = @import("../gameplay/achievement.zig");
-const achievement_notify = @import("../notify/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const Player = @import("../store/Player.zig");
-const player_data = @import("player_data.zig");
 const progression = @import("../gameplay/character_progression.zig");
 const proto = @import("proto");
-const quest_notify = @import("../notify/quest.zig");
 const Scope = @import("../Scope.zig");
 
 //
@@ -45,7 +39,7 @@ pub fn char_upgrade_req(scope: *Scope) !void {
     }
 
     var receipt: progression.Receipt = .{};
-    progression.upgrade(scope.playerMut(), request.CharId, items[0..item_count], &receipt) catch |err| switch (err) {
+    progression.upgrade(scope.mutation(), request.CharId, items[0..item_count], &receipt) catch |err| switch (err) {
         error.LevelCapReached, error.MaximumReached => return scope.reject(.char_max_level),
         error.InsufficientResources => return scope.reject(.cond_check),
         error.InvalidCharacter, error.InvalidItems => return scope.reject(.invalid_req),
@@ -54,30 +48,19 @@ pub fn char_upgrade_req(scope: *Scope) !void {
 
     const character = scope.player.characters.get(request.CharId) orelse unreachable;
 
-    var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refresh(
-        scope.playerMut(),
-        scope.gpa,
-        Io.Timestamp.now(scope.io, .real).toSeconds(),
-        &achievement_changes,
-    );
-
     var change: change_info.Progression = .{};
     try scope.respond(proto.pb.CharUpgradeResp{
         .Level = character.level(),
         .Exp = character.exp(),
         .Change = try change.build(&receipt.progression, scope.arena),
     });
-
-    try quest_notify.refreshLineupTutorial(scope);
-    try achievement_notify.send(scope, &achievement_changes);
 }
 
 pub fn char_advance_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.UI32);
 
     var receipt: progression.Receipt = .{};
-    progression.advance(scope.playerMut(), scope.gpa, request.Value, &receipt) catch |err| switch (err) {
+    progression.advance(scope.mutation(), scope.gpa, request.Value, &receipt) catch |err| switch (err) {
         error.ConditionsNotMet => return scope.reject(.char_cond_max_advance),
         error.PlayerLevelNotMet => return scope.reject(.char_world_class_cond_not_met),
         error.MaximumReached => return scope.reject(.char_max_advance),
@@ -86,22 +69,8 @@ pub fn char_advance_req(scope: *Scope) !void {
         else => |other| return other,
     };
 
-    var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refresh(
-        scope.playerMut(),
-        scope.gpa,
-        Io.Timestamp.now(scope.io, .real).toSeconds(),
-        &achievement_changes,
-    );
-
     var change: change_info.Progression = .{};
     try scope.respond(try change.build(&receipt.progression, scope.arena));
-
-    try quest_notify.refreshLineupTutorial(scope);
-    try achievement_notify.send(scope, &achievement_changes);
-
-    if (receipt.unlocked_advance_skin)
-        try player_data.response.sendHandbookChanges(scope);
 }
 
 pub fn char_skill_upgrade_req(scope: *Scope) !void {
@@ -110,7 +79,7 @@ pub fn char_skill_upgrade_req(scope: *Scope) !void {
     const skill = Player.Character.Skill.fromWire(request.Index) orelse
         return scope.reject(.invalid_req);
     var receipt: progression.Receipt = .{};
-    progression.upgradeSkill(scope.playerMut(), request.CharId, skill, &receipt) catch |err| switch (err) {
+    progression.upgradeSkill(scope.mutation(), request.CharId, skill, &receipt) catch |err| switch (err) {
         error.MaximumReached => return scope.reject(.char_skill_max_level),
         error.ConditionsNotMet => return scope.reject(.char_skill_cond_not_met),
         error.InsufficientResources => return scope.reject(.cond_check),
@@ -118,25 +87,14 @@ pub fn char_skill_upgrade_req(scope: *Scope) !void {
         else => |other| return other,
     };
 
-    var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refresh(
-        scope.playerMut(),
-        scope.gpa,
-        Io.Timestamp.now(scope.io, .real).toSeconds(),
-        &achievement_changes,
-    );
-
     var change: change_info.Progression = .{};
     try scope.respond(try change.build(&receipt.progression, scope.arena));
-
-    try quest_notify.refreshLineupTutorial(scope);
-    try achievement_notify.send(scope, &achievement_changes);
 }
 
 pub fn char_skin_set_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.CharSkinSetReq);
     progression.setSkin(
-        scope.playerMut(),
+        scope.mutation(),
         request.CharId,
         request.SkinId,
     ) catch |err| switch (err) {
@@ -152,7 +110,7 @@ pub fn talent_group_unlock_req(scope: *Scope) !void {
 
     var receipt: progression.TalentReceipt = .{};
     progression.unlockTalentGroup(
-        scope.playerMut(),
+        scope.mutation(),
         request.Value,
         &receipt,
     ) catch |err| switch (err) {
@@ -174,7 +132,7 @@ pub fn talent_unlock_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.UI32);
 
     var receipt: progression.TalentReceipt = .{};
-    progression.unlockTalent(scope.playerMut(), request.Value, &receipt) catch |err| switch (err) {
+    progression.unlockTalent(scope.mutation(), request.Value, &receipt) catch |err| switch (err) {
         error.TalentAlreadyUnlocked => return scope.reject(.talent_alreay_activeated),
         error.TalentGroupLocked => return scope.reject(.talent_group_not_yet_open),
         error.TalentGroupComplete => return scope.reject(.talent_activation_limit),
@@ -193,7 +151,7 @@ pub fn talent_unlock_req(scope: *Scope) !void {
 pub fn talent_background_set_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.TalentBackgroundSetReq);
 
-    progression.setTalentBackground(scope.playerMut(), request.CharId, request.GroupId) catch |err| switch (err) {
+    progression.setTalentBackground(scope.mutation(), request.CharId, request.GroupId) catch |err| switch (err) {
         error.TalentGroupLocked => return scope.reject(.talent_group_not_yet_open),
         error.InvalidCharacter, error.InvalidTalent => return scope.reject(.invalid_req),
         else => |other| return other,

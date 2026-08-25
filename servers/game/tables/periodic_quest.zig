@@ -2,10 +2,13 @@ const raw_activities = @import("tables/Activity");
 const raw_groups = @import("tables/PeriodicQuestGroup");
 const raw_quests = @import("tables/PeriodicQuest");
 
+const group_count: usize = raw_groups.len;
+const quest_count: usize = raw_quests.len;
+
 //
 
 pub const activity_id: u32 = blk: {
-    if (raw_quests.len == 0)
+    if (quest_count == 0)
         @compileError("PeriodicQuest contains no definitions");
 
     const id = raw_quests[0].belong;
@@ -43,8 +46,8 @@ pub const Group = struct {
     unlock_day: u8,
 };
 
-pub const list: [raw_quests.len]Definition = blk: {
-    var definitions: [raw_quests.len]Definition = undefined;
+pub const list: [quest_count]Definition = blk: {
+    var definitions: [quest_count]Definition = undefined;
     for (raw_quests, 0..) |raw, index| {
         if (raw.belong != activity_id)
             @compileError("PeriodicQuest contains an unexpected activity");
@@ -58,8 +61,8 @@ pub const list: [raw_quests.len]Definition = blk: {
     break :blk definitions;
 };
 
-pub const groups: [raw_groups.len]Group = blk: {
-    var result: [raw_groups.len]Group = undefined;
+pub const groups: [group_count]Group = blk: {
+    var result: [group_count]Group = undefined;
     for (raw_groups, 0..) |raw, index| {
         if (raw.value.belong != activity_id)
             @compileError("PeriodicQuestGroup contains an unexpected activity");

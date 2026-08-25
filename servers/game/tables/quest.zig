@@ -6,6 +6,11 @@ const raw_tour_guide = @import("tables/TourGuideQuest");
 const raw_tower_event = @import("tables/StarTowerBookEventReward");
 const raw_weekly = @import("tables/WeeklyQuest");
 
+const assist_count: usize = raw_assist.len;
+const daily_count: usize = raw_daily.len;
+const tower_event_count: usize = raw_tower_event.len;
+const weekly_count: usize = raw_weekly.len;
+
 //
 
 pub const Type = enum(u8) {
@@ -31,9 +36,9 @@ pub const Definition = struct {
     progress_max: u32,
 };
 
-pub const daily = buildConditional(raw_daily, .daily);
-pub const weekly = buildConditional(raw_weekly, .weekly);
-pub const tower_event = buildTowerEvent(raw_tower_event);
+pub const daily = buildConditional(raw_daily, daily_count, .daily);
+pub const weekly = buildConditional(raw_weekly, weekly_count, .weekly);
+pub const tower_event = buildTowerEvent(raw_tower_event, tower_event_count);
 /// New official accounts receive all 5 chapters of the Ventus and Ignis
 /// Lineup Tutorial tracks. `AssistQuest` defines their rewards and text, but
 /// not their targets; the Lua client displays the `Cur` and `Max` values sent
@@ -42,7 +47,7 @@ pub const tower_event = buildTowerEvent(raw_tower_event);
 /// These targets were captured from an official `player_data_succeed_ack`. If
 /// the table changes, capture a new account and update each `Progress[0].Max`.
 /// Compile-time checks reject new tracks or layouts instead of guessing.
-pub const assist = buildAssist(raw_assist);
+pub const assist = buildAssist(raw_assist, assist_count);
 
 /// The first Tour Guide group given to a new account.
 pub const initial_tour_guide = blk: {
@@ -71,9 +76,10 @@ pub const initial_tour_guide = blk: {
 
 fn buildConditional(
     comptime raw_list: anytype,
+    comptime raw_count: usize,
     comptime quest_type: Type,
-) [raw_list.len]Definition {
-    var definitions: [raw_list.len]Definition = undefined;
+) [raw_count]Definition {
+    var definitions: [raw_count]Definition = undefined;
     for (raw_list, 0..) |raw, index| definitions[index] = .{
         .id = raw.id,
         .type = quest_type,
@@ -85,10 +91,13 @@ fn buildConditional(
     return definitions;
 }
 
-fn buildTowerEvent(comptime raw_list: anytype) [raw_list.len]Definition {
+fn buildTowerEvent(
+    comptime raw_list: anytype,
+    comptime raw_count: usize,
+) [raw_count]Definition {
     @setEvalBranchQuota(100_000);
 
-    var definitions: [raw_list.len]Definition = undefined;
+    var definitions: [raw_count]Definition = undefined;
     for (raw_list, 0..) |raw, index| definitions[index] = .{
         .id = raw.id,
         .type = .tower_event,
@@ -100,11 +109,14 @@ fn buildTowerEvent(comptime raw_list: anytype) [raw_list.len]Definition {
     return definitions;
 }
 
-fn buildAssist(comptime raw_list: anytype) [raw_list.len]Definition {
+fn buildAssist(
+    comptime raw_list: anytype,
+    comptime raw_count: usize,
+) [raw_count]Definition {
     const track_count = 2;
     const quests_per_track = 39;
     var track_quest_counts: [track_count]usize = @splat(0);
-    var definitions: [raw_list.len]Definition = undefined;
+    var definitions: [raw_count]Definition = undefined;
     for (raw_list, 0..) |raw, index| {
         const track = raw.id / 100_000;
         if (track < 1 or track > track_count)

@@ -17,7 +17,7 @@ pub const max_affinity_level = progression.max_affinity_level;
 pub const max_affinity_exp = progression.max_affinity_exp;
 pub const max_skill_level = progression.max_skill_level;
 
-pub const count = raw_list.len;
+pub const count: usize = raw_list.len;
 
 pub const Index = enum(u8) {
     _,

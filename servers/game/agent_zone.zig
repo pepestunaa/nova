@@ -5,7 +5,9 @@ const net = std.Io.net;
 
 const Auth = @import("auth.zig");
 const config: @import("Config.zig") = @import("config");
+const gameplay_progression = @import("gameplay/progression.zig");
 const net_msg_id = @import("net_msg_id");
+const progression_notify = @import("notify/progression.zig");
 const Player = @import("store/Player.zig");
 const PlayerCache = @import("store/PlayerCache.zig");
 const proto = @import("proto");
@@ -137,7 +139,8 @@ fn handle(
     else
         null;
 
-    const now = Io.Timestamp.now(io, .real).toSeconds();
+    const timestamp = Io.Timestamp.now(io, .real);
+    const now = timestamp.toSeconds();
     const lookup: session.Store.Lookup = if (request_token) |token|
         sessions.lookup(io, token, now)
     else
@@ -273,9 +276,12 @@ fn handle(
         .io = io,
         .gpa = gpa,
         .arena = request_arena.allocator(),
+        .timestamp = timestamp,
+        .now = now,
         .source = .{ .id = packet_id, .body = packet.payload },
         .sink = .{ .response = &response },
         .player = &scratch_player,
+        .mutation_state = .init(&scratch_player),
         .session = request_session,
         .auth = auth,
         .player_cache = player_cache,
@@ -307,6 +313,15 @@ fn handle(
             return try respondPacketForRequest(request, io, request_session, "", buffers);
         },
     };
+
+    var progression_changes: gameplay_progression.Changes = .{};
+    try gameplay_progression.finalize(
+        scope.mutation(),
+        scope.gpa,
+        now,
+        &progression_changes,
+    );
+    try progression_notify.send(&scope, &progression_changes);
 
     const response_body = try response.finish(scope.arena);
     try scope.commit();

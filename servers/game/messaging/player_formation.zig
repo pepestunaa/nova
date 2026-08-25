@@ -29,15 +29,13 @@ pub fn player_formation_req(scope: *Scope) !void {
         disc_count += 1;
     }
 
-    try scope.playerMut().setFormation(
+    try scope.mutation().modify(.{ .formations = true }).setFormation(
         scope.gpa,
         formation.Number,
         character_ids[0..character_count],
         disc_ids[0..disc_count],
         formation.PreselectionId,
     );
-
-    scope.markDirty();
 
     try scope.respond(proto.pb.Nil{});
 }

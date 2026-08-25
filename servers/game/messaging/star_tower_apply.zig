@@ -6,7 +6,6 @@ const tower = gameplay.star_tower;
 
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
-const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const settlement = @import("star_tower/settlement.zig");
 const shop = @import("star_tower/shop.zig");
@@ -22,19 +21,22 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
 
     const request = try scope.source.read(proto.pb.StarTowerApplyReq);
     const request_id = request.Id;
-    const player = scope.playerMut();
-    if (player.star_tower_run.active) {
+    const current = scope.player;
+    if (current.star_tower_run.active) {
         return scope.reject(.rgl_in_progress);
     }
     const first_room = tables.star_tower.room(request_id, 1) orelse
         return scope.reject(.rgl_cond);
-    const formation = player.getFormation(request.FormationId) orelse
+    const formation = current.getFormation(request.FormationId) orelse
         return scope.reject(.formation_id_need);
     const spent_sweep_ticket: ?u32 = if (request.Sweep) blk: {
-        if (!gameplay.tower_growth.has(player, 10301))
+        if (!gameplay.tower_growth.has(current, 10301))
             return scope.reject(.rgl_cond);
-        break :blk settlement.consumeSweepTicket(player, scope.gpa) catch
-            return scope.reject(.rgl_cond);
+        if (current.resourceQuantity(settlement.sweep_ticket_id) > 0)
+            break :blk settlement.sweep_ticket_id;
+        if (current.resourceQuantity(settlement.sweep_ticket_undated_id) > 0)
+            break :blk settlement.sweep_ticket_undated_id;
+        return scope.reject(.rgl_cond);
     } else null;
 
     const character_count: usize = formation.character_count;
@@ -47,7 +49,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
     @memset(std.mem.sliceAsBytes(gem_attributes), 0);
     @memset(std.mem.sliceAsBytes(gem_overlocks), 0);
     for (formation.character_ids[0..character_count], 0..) |character_id, index| {
-        const character = player.characters.get(character_id) orelse
+        const character = current.characters.get(character_id) orelse
             return scope.reject(.rgl_cond);
         for (&character_gems[index], tables.character.gemSlots(character_id) orelse
             return scope.reject(.rgl_cond), 0..) |*gem, slot_id, gem_index| gem.* = .{
@@ -75,7 +77,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
             discs[index] = .{};
             continue;
         }
-        const disc = tower.findDisc(player, disc_id) orelse {
+        const disc = tower.findDisc(current, disc_id) orelse {
             log.warn("formation references unavailable disc {d}", .{disc_id});
             discs[index] = .{ .Id = disc_id, .Level = 1 };
 
@@ -90,8 +92,8 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
     }
 
     const tower_growth_nodes = try scope.arena.alloc(u32, tables.tower_growth.list.len);
-    const tower_growth_node_count = tower.collectGrowthNodes(player, tower_growth_nodes);
-    const modifiers = tower.growthModifiers(player, request_id);
+    const tower_growth_node_count = tower.collectGrowthNodes(current, tower_growth_nodes);
+    const modifiers = tower.growthModifiers(current, request_id);
     const initial_tower_coins = 200 + modifiers.starting_coins;
     const initial_map_id = if (!request.Sweep and request.MapId != 0 and request.MapId != std.math.maxInt(u32))
         request.MapId
@@ -101,7 +103,14 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
         request.MapTableId
     else
         initial_map_id;
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const now = scope.now;
+    const player = scope.mutation().modify(.{
+        .ascension = true,
+        .inventory = request.Sweep,
+        .research_project = true,
+    });
+    if (spent_sweep_ticket) |ticket_id|
+        try player.addResource(scope.gpa, ticket_id, -1);
     player.resetStarTowerRun();
     const run = &player.star_tower_run;
     run.active = true;
@@ -245,10 +254,6 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
         .SweepTicketUndated = @intCast(@max(player.resourceQuantity(settlement.sweep_ticket_undated_id), 0)),
         .Change = .{ .Props = .fromOwnedSlice(sweep_changes[0..sweep_change_count]) },
     });
-    try research_project_notify.send(scope);
-
-    scope.markDirty();
-
     log.info("started Ascension {d} with formation {d}", .{ request_id, formation.number });
 }
 

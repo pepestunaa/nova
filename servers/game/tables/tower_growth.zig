@@ -3,6 +3,9 @@ const lookup = @import("lookup.zig");
 const raw_groups = @import("tables/StarTowerGrowthGroup");
 const raw_nodes = @import("tables/StarTowerGrowthNode");
 
+const group_count: usize = raw_groups.len;
+const node_count: usize = raw_nodes.len;
+
 //
 
 const max_prerequisites = blk: {
@@ -49,7 +52,7 @@ pub const Node = struct {
 };
 
 pub const groups = blk: {
-    var result: [raw_groups.len]Group = undefined;
+    var result: [group_count]Group = undefined;
     for (raw_groups, 0..) |raw, index| result[index] = .{
         .id = raw.id,
         .minimum_level = raw.world_class,
@@ -60,7 +63,7 @@ pub const groups = blk: {
 };
 
 pub const list = blk: {
-    var result: [raw_nodes.len]Node = undefined;
+    var result: [node_count]Node = undefined;
     for (raw_nodes, 0..) |raw, index| {
         var prerequisites: [max_prerequisites]u32 = @splat(0);
         const prerequisite_count = if (@hasField(@TypeOf(raw), "pre_nodes")) count: {

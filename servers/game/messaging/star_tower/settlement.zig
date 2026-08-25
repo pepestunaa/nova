@@ -9,7 +9,6 @@ const tower = gameplay.star_tower;
 
 const Player = @import("../../store/Player.zig");
 const proto = @import("proto");
-const research_project_notify = @import("../../notify/research_project.zig");
 const Scope = @import("../../Scope.zig");
 const star_tower_record = @import("../../gameplay/star_tower/record.zig");
 const tables = @import("../../tables.zig");
@@ -60,7 +59,7 @@ pub fn send(
     const completed_tower_id = run.tower_id;
     const completed_difficulty = tables.star_tower.difficulty(completed_tower_id) orelse 0;
     const total_time = run.settlement_time;
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const now = scope.now;
     const ticket_count = try awardRunTickets(player, scope.gpa, run, now);
     const is_first_clear = !player.hasClaimedClearReward(.star_tower, completed_tower_id);
     var first_award_defs: [8]tables.star_tower.FirstAward = undefined;
@@ -103,8 +102,6 @@ pub fn send(
     run.settlement_pending = false;
     run.final_core_potential_pending = false;
     tower.beginRoomCases(run);
-
-    scope.markDirty();
 
     const settlement_change_capacity = 2 + first_award_defs_slice.len + run.affinity_change_count;
     const encoded_resources = try scope.arena.alloc([32]u8, settlement_change_capacity);
@@ -197,7 +194,6 @@ pub fn send(
             .TotalDamages = .fromOwnedSlice(run.total_damages[0..run.total_damage_count]),
         },
     });
-    try research_project_notify.send(scope);
 
     log.info("completed Ascension {d}; awarded {d} run and {d} record Journey Ticket(s)", .{
         completed_tower_id,

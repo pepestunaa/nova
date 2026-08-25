@@ -1,5 +1,6 @@
 const Allocator = @import("std").mem.Allocator;
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const tables = @import("../tables.zig");
 
@@ -18,14 +19,15 @@ pub const ChangeSet = struct {
 /// Rebuilds every supported achievement from persistent state.
 /// This keeps the result correct after a restart and lets character changes
 /// satisfy milestones that were added after the player first leveled up.
-pub fn refresh(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
+pub fn refresh(mutation: *Mutation, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
     changes.* = .{};
 
-    try refreshCollection(player, allocator, now, changes);
-    try refreshCharacterProgression(player, allocator, now, changes);
+    try refreshCollection(mutation, allocator, now, changes);
+    try refreshProgression(mutation, allocator, now, changes);
 }
 
-fn refreshCollection(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
+pub fn refreshCollection(mutation: *Mutation, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
+    const player = mutation.read();
     var counts: [@typeInfo(tables.achievement.CollectionKind).@"enum".fields.len]u32 = @splat(0);
     for (player.acquisitions.slice()) |acquisition| {
         const card = tables.gacha.maybeClassifyCard(acquisition.id) orelse
@@ -46,22 +48,43 @@ fn refreshCollection(player: *Player, allocator: Allocator, now: i64, changes: *
 
     for (tables.achievement.collection_groups, 0..) |group, group_index| {
         for (tables.achievement.collectionEntries(group)) |definition| {
-            try refreshState(player, allocator, now, definition, counts[group_index], changes);
+            try refreshState(mutation, allocator, now, definition, counts[group_index], changes);
         }
     }
 }
 
-fn refreshCharacterProgression(player: *Player, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
-    for (tables.achievement.character_progressions) |definition| {
+pub fn refreshProgression(mutation: *Mutation, allocator: Allocator, now: i64, changes: *ChangeSet) !void {
+    const player = mutation.read();
+    for (tables.achievement.progressions) |definition| {
         const progress = switch (definition.kind) {
             .advance_total => advancementTotal(player),
             .character_level => characterLevelCount(player, definition.minimum_level, null),
             .element_level => characterLevelCount(player, definition.minimum_level, definition.element),
             .skill_level => skillLevelCount(player, definition.minimum_level),
+            .disc_tier_total => discTierTotal(player),
+            .disc_level => discLevelCount(player, definition.minimum_level),
         };
         const entry = tables.achievement.entry(definition.entry_index);
-        try refreshState(player, allocator, now, entry, progress, changes);
+        try refreshState(mutation, allocator, now, entry, progress, changes);
     }
+}
+
+fn discTierTotal(player: *const Player) u32 {
+    var total: u32 = 0;
+    for (player.discs.slice()) |disc|
+        total +|= @intFromEnum(disc.phase);
+
+    return total;
+}
+
+fn discLevelCount(player: *const Player, minimum_level: u8) u32 {
+    var count: u32 = 0;
+    for (player.discs.slice()) |disc| {
+        if (@intFromEnum(disc.level) >= minimum_level)
+            count += 1;
+    }
+
+    return count;
 }
 
 fn advancementTotal(player: *const Player) u32 {
@@ -105,30 +128,35 @@ fn skillLevelCount(player: *const Player, minimum_level: u8) u32 {
 }
 
 fn refreshState(
-    player: *Player,
+    mutation: *Mutation,
     allocator: Allocator,
     now: i64,
     definition: tables.achievement.Entry,
     progress: u32,
     changes: *ChangeSet,
 ) !void {
-    const state = try getOrCreate(player, allocator, definition.id);
-    const previous_status = state.status;
+    const existing = find(mutation.read(), definition.id);
+    const previous_status = if (existing) |state| state.status else .in_progress;
     const status: Player.Achievement.Status = if (previous_status == .reward_received)
         .reward_received
     else if (progress >= definition.target)
         .reward_available
     else
         .in_progress;
-    const completed_at: i64 = if (status != .in_progress and state.completed_at == 0)
+    const previous_completed_at = if (existing) |state| state.completed_at else 0;
+    const completed_at: i64 = if (status != .in_progress and previous_completed_at == 0)
         now
     else
-        state.completed_at;
-    if (state.progress == progress and
-        state.status == status and
-        state.completed_at == completed_at)
-        return;
+        previous_completed_at;
+    if (existing) |state| {
+        if (state.progress == progress and
+            state.status == status and
+            state.completed_at == completed_at)
+            return;
+    }
 
+    const player = mutation.modify(.{ .achievements = true });
+    const state = try getOrCreate(player, allocator, definition.id);
     state.progress = progress;
     state.status = status;
     state.completed_at = completed_at;
@@ -138,6 +166,15 @@ fn refreshState(
         return;
     changes.entries[changes.len] = state.*;
     changes.len += 1;
+}
+
+fn find(player: *const Player, id: u32) ?*const Player.Achievement {
+    for (player.achievements.slice()) |*entry| {
+        if (entry.id == id)
+            return entry;
+    }
+
+    return null;
 }
 
 fn getOrCreate(player: *Player, allocator: Allocator, id: u32) !*Player.Achievement {

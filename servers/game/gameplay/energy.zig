@@ -1,3 +1,4 @@
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 
 //
@@ -5,8 +6,16 @@ const Player = @import("../store/Player.zig");
 const maximum: u32 = @intFromEnum(Player.Basic.PrimaryEnergy.regeneration_max);
 const gain_seconds: i64 = 4 * 60;
 
-pub fn refresh(player: *Player, now: i64) bool {
-    const basic = &player.basic;
+pub fn refresh(mutation: *Mutation, now: i64) bool {
+    var basic = mutation.read().basic;
+    if (!refreshBasic(&basic, now))
+        return false;
+
+    mutation.modify(.{ .player_progression = true }).basic = basic;
+    return true;
+}
+
+fn refreshBasic(basic: *Player.Basic, now: i64) bool {
     if (basic.energy_next_at <= 0) {
         basic.energy_next_at = nextTick(now);
 

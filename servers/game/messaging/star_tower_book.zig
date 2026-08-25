@@ -70,23 +70,24 @@ pub fn star_tower_book_potential_reward_receive_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_book_potential_reward_receive_req);
 
     const request = try scope.source.read(proto.pb.UI32);
-    const player = scope.playerMut();
+    const current = scope.player;
     const character_id = request.Value;
-    var receipt: reward.AchievementReceipt = .{};
+    var receipt: reward.ResourceReceipt = .{};
     const received_ids = try scope.arena.alloc(u32, tables.star_tower_book.potential_rewards.len);
     var received_count: usize = 0;
 
     for (tables.star_tower_book.potential_rewards) |definition| {
         if (character_id != 0 and definition.character_id != character_id)
             continue;
-        if (player.hasTowerBookPotentialReward(definition.id))
+        if (current.hasTowerBookPotentialReward(definition.id))
             continue;
-        if (player.towerBookPotentialCount(definition.character_id) < definition.potential_count)
+        if (current.towerBookPotentialCount(definition.character_id) < definition.potential_count)
             continue;
 
+        const player = scope.mutation().modify(.{ .ascension = true, .inventory = true });
         try player.claimTowerBookPotentialReward(scope.gpa, definition.id);
-        try reward.applyAchievementReward(
-            player,
+        try reward.grantResource(
+            scope.mutation(),
             scope.gpa,
             &receipt,
             definition.item_id,
@@ -96,9 +97,7 @@ pub fn star_tower_book_potential_reward_receive_req(scope: *Scope) !void {
         received_count += 1;
     }
 
-    if (received_count != 0) scope.markDirty();
-
-    var change: change_info.Achievement = .{};
+    var change: change_info.Resources = .{};
     try scope.respond(proto.pb.StarTowerBookPotentialRewardReceiveResp{
         .Change = try change.build(&receipt, scope.arena),
         .ReceivedIds = .fromOwnedSlice(received_ids[0..received_count]),
@@ -111,13 +110,13 @@ pub fn star_tower_book_event_reward_receive_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_book_event_reward_receive_req);
 
     const request = try scope.source.read(proto.pb.UI32);
-    const player = scope.playerMut();
+    const current = scope.player;
     const requested_id = request.Value;
-    var receipt: reward.AchievementReceipt = .{};
-    const received_ids = try scope.arena.alloc(u32, player.quests.len);
+    var receipt: reward.ResourceReceipt = .{};
+    const received_ids = try scope.arena.alloc(u32, current.quests.len);
     var received_count: usize = 0;
 
-    for (player.quests.entries[0..player.quests.len]) |*quest| {
+    for (current.quests.slice(), 0..) |quest, quest_index| {
         if (quest.quest_type != @intFromEnum(tables.quest.Type.tower_event) or quest.claimed)
             continue;
         if (requested_id != 0 and quest.id != requested_id)
@@ -127,9 +126,10 @@ pub fn star_tower_book_event_reward_receive_req(scope: *Scope) !void {
         const definition = tables.star_tower_book.eventReward(quest.id) orelse
             continue;
 
-        quest.claimed = true;
-        try reward.applyAchievementReward(
-            player,
+        const player = scope.mutation().modify(.{ .inventory = true, .quests = true });
+        player.quests.entries[quest_index].claimed = true;
+        try reward.grantResource(
+            scope.mutation(),
             scope.gpa,
             &receipt,
             definition.item_id,
@@ -139,9 +139,7 @@ pub fn star_tower_book_event_reward_receive_req(scope: *Scope) !void {
         received_count += 1;
     }
 
-    if (received_count != 0) scope.markDirty();
-
-    var change: change_info.Achievement = .{};
+    var change: change_info.Resources = .{};
     try scope.respond(proto.pb.StarTowerBookEventRewardReceiveResp{
         .Change = try change.build(&receipt, scope.arena),
         .ReceivedIds = .fromOwnedSlice(received_ids[0..received_count]),

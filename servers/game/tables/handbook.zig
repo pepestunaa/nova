@@ -2,6 +2,8 @@ const lookup = @import("lookup.zig");
 
 const raw_list = @import("tables/Handbook");
 
+const count: usize = raw_list.len;
+
 //
 
 pub const Entry = struct {
@@ -13,8 +15,8 @@ pub const Entry = struct {
     condition: u32,
 };
 
-pub const list: [raw_list.len]Entry = blk: {
-    var entries: [raw_list.len]Entry = undefined;
+pub const list: [count]Entry = blk: {
+    var entries: [count]Entry = undefined;
     for (raw_list, 0..) |raw, i| entries[i] = .{
         .id = raw.id,
         .index = raw.index,

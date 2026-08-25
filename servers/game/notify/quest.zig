@@ -1,12 +1,10 @@
-const gameplay = @import("../gameplay.zig");
+const Mutation = @import("../gameplay/mutation.zig");
+const quest = @import("../gameplay/quest.zig");
 const proto = @import("proto");
-const reward = @import("../gameplay/reward.zig");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
 
-pub fn refreshLineupTutorial(scope: *Scope) !void {
-    var changes: gameplay.quest.AssistChanges = .{};
-    gameplay.quest.refreshAssist(scope.playerMut(), &changes);
+pub fn sendLineupTutorial(scope: *Scope, changes: *const quest.AssistChanges) !void {
     for (changes.slice()) |state| {
         var progress: [1]proto.pb.QuestProgress = .{.{
             .Cur = state.progress_current,
@@ -23,13 +21,10 @@ pub fn refreshLineupTutorial(scope: *Scope) !void {
     }
 }
 
-pub fn sendNewTrekkerAffinityQuests(scope: *Scope, receipt: *const reward.GachaReceipt) !void {
-    for (receipt.new_card_ids[0..receipt.new_card_count]) |card_id| {
-        const card = tables.gacha.maybeClassifyCard(card_id) orelse
-            continue;
-        if (card.kind != .character)
-            continue;
-
+pub fn sendNewTrekkerAffinityQuests(scope: *Scope, mutation: *const Mutation) !void {
+    var characters = mutation.newCharacterIterator();
+    while (characters.next()) |raw_index| {
+        const card_id = @as(tables.character.Index, @enumFromInt(raw_index)).id();
         const definitions = tables.affinity_quest.forCharacter(@intCast(card_id));
         for (definitions) |definition| {
             var progress: [1]proto.pb.QuestProgress = .{.{ .Max = definition.target }};

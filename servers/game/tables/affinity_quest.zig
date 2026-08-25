@@ -5,6 +5,8 @@ const lookup = @import("lookup.zig");
 
 const raw_list = @import("tables/AffinityQuest");
 
+const count: usize = raw_list.len;
+
 //
 
 pub const Entry = struct {
@@ -13,10 +15,10 @@ pub const Entry = struct {
     target: u32,
 };
 
-pub const list: [raw_list.len]Entry = blk: {
+pub const list: [count]Entry = blk: {
     @setEvalBranchQuota(100_000);
 
-    var entries: [raw_list.len]Entry = undefined;
+    var entries: [count]Entry = undefined;
 
     for (raw_list, 0..) |raw, index| {
         entries[index] = .{

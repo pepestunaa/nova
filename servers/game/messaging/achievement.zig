@@ -1,6 +1,3 @@
-const std = @import("std");
-const Io = std.Io;
-
 const achievement = @import("../gameplay/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const Player = @import("../store/Player.zig");
@@ -14,14 +11,11 @@ const tables = @import("../tables.zig");
 
 pub fn achievement_info_req(scope: *Scope) !void {
     _ = try scope.source.read(proto.pb.Nil);
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const now = scope.now;
     var changes: achievement.ChangeSet = .{};
-    const player = scope.playerMut();
-    try achievement.refresh(player, scope.gpa, now, &changes);
+    try achievement.refresh(scope.mutation(), scope.gpa, now, &changes);
 
-    if (changes.dirty) scope.markDirty();
-
-    const states = player.achievements.slice();
+    const states = scope.player.achievements.slice();
     const entries = try scope.arena.alloc(proto.pb.Achievement, states.len);
     const progress = try scope.arena.alloc([1]proto.pb.QuestProgress, states.len);
     var entry_count: usize = 0;
@@ -44,22 +38,24 @@ pub fn achievement_reward_receive_req(scope: *Scope) !void {
     const log = scope.logger(.achievement_reward_receive_req);
 
     const request = try scope.source.read(proto.pb.AchievementRewardReq);
-    const player = scope.playerMut();
-    var receipt: reward.AchievementReceipt = .{};
+    const mutation = scope.mutation();
+    var receipt: reward.ResourceReceipt = .{};
     var claimed: usize = 0;
 
     var ids = request.Ids;
     while (try ids.next()) |id| {
-        const state = findState(player, id) orelse
+        const current = findStateConst(mutation.read(), id) orelse
             continue;
-        if (state.status != .reward_available)
+        if (current.status != .reward_available)
             continue;
 
         const definition = tables.achievement.get(id) orelse
             continue;
+        const player = mutation.modify(.{ .achievements = true });
+        const state = findState(player, id).?;
         state.status = .reward_received;
-        try reward.applyAchievementReward(
-            player,
+        try reward.grantResource(
+            mutation,
             scope.gpa,
             &receipt,
             definition.reward_id,
@@ -68,15 +64,22 @@ pub fn achievement_reward_receive_req(scope: *Scope) !void {
         claimed += 1;
     }
 
-    if (claimed != 0) scope.markDirty();
-
-    var change: change_info.Achievement = .{};
+    var change: change_info.Resources = .{};
     try scope.respond(try change.build(&receipt, scope.arena));
 
     log.info("claimed {d} achievement reward(s)", .{claimed});
 }
 
 fn findState(player: *player_store, id: u32) ?*player_store.Achievement {
+    for (player.achievements.entries[0..player.achievements.len]) |*state| {
+        if (state.id == id)
+            return state;
+    }
+
+    return null;
+}
+
+fn findStateConst(player: *const player_store, id: u32) ?*const player_store.Achievement {
     for (player.achievements.entries[0..player.achievements.len]) |*state| {
         if (state.id == id)
             return state;

@@ -2,6 +2,9 @@ const raw_events = @import("tables/StarTowerEvent");
 const raw_options = @import("tables/EventOptions");
 const raw_results = @import("tables/EventResult");
 
+const event_count: usize = raw_events.len;
+const result_count: usize = raw_results.len;
+
 //
 
 pub const max_options = 9;
@@ -23,7 +26,7 @@ const Definition = struct {
 const definitions = blk: {
     @setEvalBranchQuota(100_000);
 
-    var list: [raw_events.len]Definition = undefined;
+    var list: [event_count]Definition = undefined;
     for (raw_events, 0..) |raw_event, index| {
         var candidates: [max_options]u32 = undefined;
         var candidate_count: usize = 0;
@@ -65,7 +68,7 @@ pub const Outcome = struct {
 const outcomes = blk: {
     @setEvalBranchQuota(100_000);
 
-    var list: [raw_results.len]Outcome = undefined;
+    var list: [result_count]Outcome = undefined;
     for (raw_results, 0..) |result, index| {
         var entry: Outcome = .{ .option_id = result.id / 100 };
         applyEffect(&entry, result.effect1, parameters(result, "parameter1"));
@@ -91,7 +94,7 @@ comptime {
     }
 }
 
-pub const count = definitions.len;
+pub const count: usize = event_count;
 
 pub fn event(index: usize, npc_index: usize) Event {
     const definition = definitions[index];

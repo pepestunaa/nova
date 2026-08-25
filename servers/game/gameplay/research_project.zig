@@ -3,6 +3,7 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const tables = @import("../tables.zig");
 const tower_growth = @import("tower_growth.zig");
@@ -126,7 +127,7 @@ pub fn savedRecord(player: *Player, rating: u8) void {
     refreshActive(player);
 }
 
-pub fn claimable(player: *Player, id: u32) ?*Player.Quest {
+pub fn claimable(player: *const Player, id: u32) ?*const Player.Quest {
     const quest = find(player, id) orelse
         return null;
     if (quest.claimed or quest.progress_current < quest.progress_max)
@@ -151,15 +152,38 @@ pub const max_reward_deltas = tables.research_project.list.len * 2;
 
 /// Claims a completed task and lets `sync` expose anything it unlocks.
 pub fn claim(
-    player: *Player,
+    mutation: *Mutation,
     allocator: Allocator,
     id: u32,
     receipt: *RewardReceipt,
 ) Allocator.Error!bool {
     receipt.* = .{};
 
+    const current = mutation.read();
     if (id == 0) {
-        var claimed = false;
+        var found = false;
+        for (current.quests.slice()) |quest| {
+            if (quest.quest_type == quest_type and
+                !quest.claimed and
+                quest.progress_current >= quest.progress_max)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            return false;
+    } else if (claimable(current, id) == null) {
+        return false;
+    }
+
+    const player = mutation.modify(.{
+        .inventory = true,
+        .quests = true,
+        .research_project = true,
+    });
+
+    if (id == 0) {
         const quests = player.quests.entries[0..player.quests.len];
         for (quests) |*quest| {
             if (quest.quest_type != quest_type or
@@ -168,19 +192,14 @@ pub fn claim(
                 continue;
 
             try claimQuest(player, allocator, quest, receipt);
-            claimed = true;
         }
-
-        if (!claimed)
-            return false;
 
         _ = try sync(player, allocator);
 
         return true;
     }
 
-    const quest = claimable(player, id) orelse
-        return false;
+    const quest = findMut(player, id).?;
     try claimQuest(player, allocator, quest, receipt);
     _ = try sync(player, allocator);
 
@@ -327,7 +346,16 @@ fn prerequisitesClaimed(
     return true;
 }
 
-fn find(player: *const Player, id: u32) ?*Player.Quest {
+fn find(player: *const Player, id: u32) ?*const Player.Quest {
+    for (player.quests.slice()) |*quest| {
+        if (quest.quest_type == quest_type and quest.id == id)
+            return quest;
+    }
+
+    return null;
+}
+
+fn findMut(player: *Player, id: u32) ?*Player.Quest {
     for (player.quests.entries[0..player.quests.len]) |*quest| {
         if (quest.quest_type == quest_type and quest.id == id)
             return quest;

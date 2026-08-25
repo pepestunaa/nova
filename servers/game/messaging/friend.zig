@@ -43,7 +43,7 @@ pub fn friend_delete_req(scope: *Scope) !void {
     const index = friendIndex(scope.player, request.UId) orelse
         return scope.reject(.invalid_req);
 
-    const player = scope.playerMut();
+    const player = scope.mutation().modify(.{ .social = true });
     const last_index = player.basic.friend_count - 1;
     var current = index;
     while (current < last_index) : (current += 1) {
@@ -76,7 +76,15 @@ pub fn friend_star_set_req(scope: *Scope) !void {
             return scope.reject(.invalid_req);
     }
 
-    const player = scope.playerMut();
+    var changed = false;
+    for (uids[0..uid_count]) |uid| {
+        const index = friendIndex(scope.player, uid).?;
+        changed = changed or isFriendStar(scope.player, index) != request.Star;
+    }
+    if (!changed)
+        return scope.respondEmpty();
+
+    const player = scope.mutation().modify(.{ .social = true });
     for (uids[0..uid_count]) |uid| {
         setFriendStar(player, friendIndex(player, uid).?, request.Star);
     }

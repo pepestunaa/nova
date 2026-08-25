@@ -1,6 +1,7 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const tables = @import("../tables.zig");
 
@@ -68,7 +69,6 @@ pub const GachaReceipt = struct {
     item_deltas: [max_gacha_changes]InventoryItemDelta = undefined,
     item_delta_count: usize = 0,
     resource_deltas: ResourceDeltaSet = .{},
-    handbook_changed: bool = false,
 
     pub fn cardAcquisitionIndex(receipt: *const GachaReceipt, card_id: u32) ?usize {
         for (receipt.card_acquisitions[0..receipt.card_acquisition_count], 0..) |entry, index| {
@@ -80,24 +80,27 @@ pub const GachaReceipt = struct {
     }
 };
 
-pub const AchievementReceipt = struct {
+pub const ResourceReceipt = struct {
     resource_deltas: ResourceDeltaSet = .{},
 };
 
-pub fn applyAchievementReward(
-    player: *Player,
+pub fn grantResource(
+    mutation: *Mutation,
     allocator: Allocator,
-    receipt: *AchievementReceipt,
+    receipt: *ResourceReceipt,
     resource_id: u32,
     quantity: i32,
 ) Error!void {
+    if (quantity == 0)
+        return;
+    const player = mutation.modify(.{ .inventory = true });
     try applyResourceDelta(player, allocator, receipt, resource_id, quantity);
 }
 
 /// Spends Recruitment tickets first, then converts enough premium currency to
 /// cover the difference. Both changes are returned with the drawn rewards.
-pub fn consumeGachaCost(
-    player: *Player,
+pub fn consumeRecruitmentCost(
+    mutation: *Mutation,
     allocator: Allocator,
     receipt: *GachaReceipt,
     ticket_id: u32,
@@ -105,13 +108,18 @@ pub fn consumeGachaCost(
     currency_id: u32,
     currency_per_ticket: u32,
 ) GachaCostError!void {
-    const available_tickets: u32 = @intCast(@max(player.itemQuantity(ticket_id), 0));
+    const current = mutation.read();
+    const available_tickets: u32 = @intCast(@max(current.itemQuantity(ticket_id), 0));
     const consumed_tickets = @min(available_tickets, ticket_quantity);
     const converted_tickets = ticket_quantity - consumed_tickets;
     const currency_cost: u64 = @as(u64, converted_tickets) * currency_per_ticket;
     if (currency_cost > std.math.maxInt(i32) or
-        player.resourceQuantity(currency_id) < @as(i32, @intCast(currency_cost)))
+        current.resourceQuantity(currency_id) < @as(i32, @intCast(currency_cost)))
         return error.InsufficientCurrency;
+
+    if (consumed_tickets == 0 and currency_cost == 0)
+        return;
+    const player = mutation.modify(.{ .inventory = true });
 
     if (consumed_tickets != 0) {
         player.consumeItem(ticket_id, @intCast(consumed_tickets)) catch unreachable;
@@ -121,13 +129,17 @@ pub fn consumeGachaCost(
         try applyResourceDelta(player, allocator, receipt, currency_id, -@as(i32, @intCast(currency_cost)));
 }
 
-pub fn applyGachaCards(
-    player: *Player,
+pub fn grantCards(
+    mutation: *Mutation,
     allocator: Allocator,
     cards: []const tables.gacha.Card,
     now: i64,
     receipt: *GachaReceipt,
 ) Error!void {
+    if (cards.len == 0)
+        return;
+    const player = mutation.modify(.{ .acquisitions = true });
+
     for (cards) |card| {
         const card_id = card.id;
         const acquisition = try getOrCreatePlayerAcquisition(player, allocator, card_id);
@@ -150,17 +162,24 @@ pub fn applyGachaCards(
         const card_class = card.class;
         if (first_for_card) {
             switch (card_class.kind) {
-                .character => receipt.handbook_changed |= try unlockCharacter(
-                    player,
-                    allocator,
-                    card_id,
-                    now,
-                ),
-                .disc => receipt.handbook_changed |= try unlockDisc(player, allocator, card_id, now),
+                .character => {
+                    const handbook_changed = try unlockCharacter(player, allocator, card_id, now);
+                    mutation.affect(.{ .characters = true });
+                    if (handbook_changed)
+                        mutation.recordHandbookType(tables.handbook.skin_type);
+                    mutation.recordNewCharacter(card_id);
+                },
+                .disc => {
+                    const handbook_changed = try unlockDisc(player, allocator, card_id, now);
+                    mutation.affect(.{ .discs = true });
+                    if (handbook_changed)
+                        mutation.recordHandbookType(tables.handbook.disc_type);
+                },
             }
             receipt.new_card_ids[receipt.new_card_count] = card_id;
             receipt.new_card_count += 1;
         } else {
+            mutation.affect(.{ .inventory = true });
             try addItemTemplateDelta(&receipt.transform_sources, &receipt.transform_source_count, card_id, 1);
             const conversion_item_id: u32 = switch (card_class.kind) {
                 .character => tables.character.fragmentsId(card_id) orelse return error.Full,
@@ -185,8 +204,8 @@ pub fn applyGachaCards(
 }
 
 /// Adds an item awarded alongside a normal Recruitment draw.
-pub fn applyGachaItemReward(
-    player: *Player,
+pub fn grantRecruitmentItem(
+    mutation: *Mutation,
     allocator: Allocator,
     receipt: *GachaReceipt,
     item_id: u32,
@@ -195,6 +214,7 @@ pub fn applyGachaItemReward(
     if (quantity == 0)
         return;
 
+    const player = mutation.modify(.{ .inventory = true });
     try applyInventoryItemDelta(player, allocator, receipt, item_id, quantity);
 }
 

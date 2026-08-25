@@ -2,6 +2,8 @@ const lookup = @import("lookup.zig");
 
 const raw_goods = @import("tables/StarTowerShopGoods");
 
+const goods_count: usize = raw_goods.len;
+
 //
 
 pub const Entry = struct {
@@ -12,7 +14,7 @@ pub const Entry = struct {
 };
 
 pub const list = blk: {
-    var entries: [raw_goods.len]Entry = undefined;
+    var entries: [goods_count]Entry = undefined;
     for (raw_goods, 0..) |raw, index| entries[index] = .{
         .id = raw.id,
         .group_id = raw.goods_group_id,

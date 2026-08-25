@@ -6,7 +6,6 @@ const tower = gameplay.star_tower;
 
 const Player = @import("../../store/Player.zig");
 const proto = @import("proto");
-const research_project_notify = @import("../../notify/research_project.zig");
 const Scope = @import("../../Scope.zig");
 const settlement = @import("settlement.zig");
 const shop = @import("shop.zig");
@@ -179,8 +178,6 @@ pub fn resolve(
         break :blk 1;
     } else 0;
 
-    scope.markDirty();
-
     try scope.respond(proto.pb.StarTowerInteractResp{
         .Id = request_id,
         .Cases = .fromOwnedSlice(cases[0..case_count]),
@@ -202,7 +199,6 @@ pub fn resolve(
         },
     });
     try settlement.sendTowerBookEventQuestChanges(scope, player, run.event_npc_id);
-    try research_project_notify.send(scope);
     log.info(
         "completed Ascension event {d}, option {d}: currency {d}, note {d} x{d}, potential kind {d}, character slot {d}",
         .{ run.event_id, option_id, outcome.coin_delta, note_id, outcome.note_quantity, outcome.potential_kind, outcome.potential_character_position },

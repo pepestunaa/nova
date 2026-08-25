@@ -4,7 +4,6 @@ const Io = std.Io;
 const gameplay = @import("../gameplay.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
-const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
 
@@ -26,8 +25,7 @@ pub fn tower_growth_node_unlock_req(scope: *Scope) !void {
     const log = scope.logger(.tower_growth_node_unlock_req);
 
     const request = try scope.source.read(proto.pb.UI32);
-    const player = scope.playerMut();
-    const node = gameplay.tower_growth.unlock(player, request.Value) catch |err| switch (err) {
+    const node = gameplay.tower_growth.unlock(scope.mutation(), request.Value) catch |err| switch (err) {
         error.InvalidNode, error.LockedNode, error.InsufficientItems => {
             log.warn("rejected Monolith Research node {d}: {t}", .{ request.Value, err });
             return scope.reject(switch (err) {
@@ -36,14 +34,14 @@ pub fn tower_growth_node_unlock_req(scope: *Scope) !void {
             });
         },
     };
-    _ = try gameplay.research_project.sync(player, scope.gpa);
-
-    scope.markDirty();
+    _ = try gameplay.research_project.sync(
+        scope.mutation().modify(.{ .quests = true, .research_project = true }),
+        scope.gpa,
+    );
 
     var change: ItemChange = undefined;
     try change.init(node.cost_item_id, -node.cost_item_quantity);
     try scope.respond(change.info());
-    try research_project_notify.send(scope);
 
     log.info("unlocked Monolith Research node {d}", .{node.id});
 }
@@ -53,7 +51,7 @@ pub fn tower_growth_group_node_unlock_req(scope: *Scope) !void {
     const log = scope.logger(.tower_growth_group_node_unlock_req);
 
     const request = try scope.source.read(proto.pb.UI32);
-    const player = scope.playerMut();
+    const player = scope.player;
     var staged_details = player.tower_growth.details;
     var node_ids: [tables.tower_growth.list.len]u32 = undefined;
     var node_count: usize = 0;
@@ -82,11 +80,15 @@ pub fn tower_growth_group_node_unlock_req(scope: *Scope) !void {
     if (player.itemQuantity(cost_item_id) < total_cost)
         return scope.reject(.talent_key_nodes_insufficient_quantity);
 
-    try player.consumeItem(cost_item_id, total_cost);
-    player.tower_growth.details = staged_details;
-    _ = try gameplay.research_project.sync(player, scope.gpa);
-
-    scope.markDirty();
+    const writable = scope.mutation().modify(.{
+        .inventory = true,
+        .tower_growth = true,
+        .research_project = true,
+        .quests = true,
+    });
+    writable.consumeItem(cost_item_id, total_cost) catch unreachable;
+    writable.tower_growth.details = staged_details;
+    _ = try gameplay.research_project.sync(writable, scope.gpa);
 
     var change: ItemChange = undefined;
     try change.init(cost_item_id, -total_cost);
@@ -94,7 +96,6 @@ pub fn tower_growth_group_node_unlock_req(scope: *Scope) !void {
         .Nodes = .fromOwnedSlice(node_ids[0..node_count]),
         .ChangeInfo = change.info(),
     });
-    try research_project_notify.send(scope);
 
     log.info("quick-unlocked {d} Monolith Research node(s) in tier {d}", .{
         node_count,

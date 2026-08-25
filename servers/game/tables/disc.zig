@@ -5,6 +5,8 @@ const lookup = @import("lookup.zig");
 const raw_list = @import("tables/Disc");
 const raw_items = @import("tables/Item");
 
+const count: usize = raw_list.len;
+
 //
 
 const by_id = lookup.Lookup(u32, lookup.fieldKeys(u32, raw_list, "id"));
@@ -16,31 +18,31 @@ pub const Definition = struct {
     rarity: u8,
 };
 
-const transform_item_ids: [raw_list.len]u32 = blk: {
-    @setEvalBranchQuota(100 * raw_list.len + 1000);
+const transform_item_ids: [count]u32 = blk: {
+    @setEvalBranchQuota(100 * count + 1000);
 
-    var result: [raw_list.len]u32 = undefined;
+    var result: [count]u32 = undefined;
     for (raw_list, 0..) |entry, index| result[index] = entry.transform_item_id;
 
     break :blk result;
 };
 
-const strengthen_groups: [raw_list.len]u32 = blk: {
-    var result: [raw_list.len]u32 = undefined;
+const strengthen_groups: [count]u32 = blk: {
+    var result: [count]u32 = undefined;
     for (raw_list, 0..) |entry, index| result[index] = entry.strengthen_group_id;
     break :blk result;
 };
 
-const promote_groups: [raw_list.len]u32 = blk: {
-    var result: [raw_list.len]u32 = undefined;
+const promote_groups: [count]u32 = blk: {
+    var result: [count]u32 = undefined;
     for (raw_list, 0..) |entry, index| result[index] = entry.promote_group_id;
     break :blk result;
 };
 
-const rarities: [raw_list.len]u8 = blk: {
+const rarities: [count]u8 = blk: {
     @setEvalBranchQuota(1_000_000);
 
-    var result: [raw_list.len]u8 = undefined;
+    var result: [count]u8 = undefined;
     for (raw_list, 0..) |disc, disc_index| {
         for (raw_items) |item| {
             if (item.id != disc.id)
@@ -55,8 +57,8 @@ const rarities: [raw_list.len]u8 = blk: {
     break :blk result;
 };
 
-const elements: [raw_list.len]u8 = blk: {
-    var result: [raw_list.len]u8 = undefined;
+const elements: [count]u8 = blk: {
+    var result: [count]u8 = undefined;
     for (raw_list, 0..) |entry, index| result[index] = entry.eet;
 
     break :blk result;

@@ -5,6 +5,7 @@ const Allocator = std.mem.Allocator;
 const Io = std.Io;
 
 const Auth = @import("auth.zig");
+const Mutation = @import("gameplay/mutation.zig");
 const net_msg_id = @import("net_msg_id");
 const Player = @import("store/Player.zig");
 const PlayerCache = @import("store/PlayerCache.zig");
@@ -18,16 +19,17 @@ const tables = @import("tables.zig");
 io: Io,
 gpa: Allocator,
 arena: Allocator,
+timestamp: Io.Timestamp,
+now: i64,
 source: Source,
 sink: Sink,
-/// Player state stays read-only until a handler calls `playerMut`, which
-/// enrolls the request in rollback.
+/// Player state stays read-only until a gameplay operation starts a mutation.
 player: *const Player,
+mutation_state: Mutation,
 session: ?Session,
 auth: *Auth,
 player_cache: *PlayerCache,
 player_entry: ?*PlayerCache.Entry = null,
-dirty: bool = false,
 
 pub const Error = Source.ReadError || Sink.SendError || Save.LoadError || error{
     UnmappedResponse,
@@ -37,13 +39,14 @@ pub fn loadPlayer(scope: *Scope, uid: u64) Save.LoadError!void {
     if (scope.player_entry != null and scope.player.uid.? != uid) {
         // Login may replace the session's player, but not after the request
         // has changed persistent state.
-        std.debug.assert(!scope.dirty);
+        std.debug.assert(!scope.mutation_state.isDirty());
         scope.releasePlayer();
     }
     if (scope.player_entry == null) {
         const entry = try scope.player_cache.acquire(scope.gpa, scope.io, uid);
         scope.player_entry = entry;
         scope.player = &entry.player;
+        scope.mutation_state.rebind(&entry.player);
     }
 }
 
@@ -55,16 +58,14 @@ pub fn releasePlayer(scope: *Scope) void {
     const entry = scope.player_entry orelse
         return;
     scope.player_entry = null;
-    if (scope.dirty) {
+    if (scope.mutation_state.isDirty()) {
         scope.player_cache.rollback(scope.gpa, scope.io, entry);
-        scope.dirty = false;
     }
     scope.player_cache.release(scope.gpa, scope.io, entry);
 }
 
-/// Marks the player for saving after the request succeeds.
-pub fn markDirty(scope: *Scope) void {
-    scope.dirty = true;
+pub fn mutation(scope: *Scope) *Mutation {
+    return &scope.mutation_state;
 }
 
 /// Returns a logger that adds the current player ID to every message. Requests
@@ -129,19 +130,13 @@ pub fn Logger(comptime log_scope: @EnumLiteral()) type {
     };
 }
 
-/// Returns mutable player state and enables rollback before the first change.
-pub fn playerMut(scope: *Scope) *Player {
-    scope.markDirty();
-    return @constCast(scope.player);
-}
-
 /// Saves the request's changes while the cache entry is still locked. If the
 /// save fails, `deinit` restores the last good state.
 pub fn commit(scope: *Scope) Save.SaveError!void {
-    if (!scope.dirty)
+    if (!scope.mutation_state.isDirty())
         return;
     try Save.save(scope.io, scope.player);
-    scope.dirty = false;
+    scope.mutation_state.committed();
 }
 
 /// Creates the AES session negotiated by IKE.
@@ -152,7 +147,7 @@ pub fn createSession(scope: *Scope, key: Session.Key) []const u8 {
         .token = .random(scope.io),
         .player_id = .none,
         .key = key,
-        .last_seen = Io.Timestamp.now(scope.io, .real).toSeconds(),
+        .last_seen = scope.now,
     };
 
     return scope.session.?.token.slice();
@@ -185,6 +180,7 @@ pub fn respondFailure(scope: *const Scope, message: anytype) Error!void {
 /// Rejects a valid request with its mapped failure packet. I/O, decoding, and
 /// server failures continue to propagate as Zig errors.
 pub fn reject(scope: *const Scope, code: tables.error_code.Code) Error!void {
+    std.debug.assert(!scope.mutation_state.isDirty());
     try scope.respondFailure(proto.pb.Error{
         .Code = @intCast(@intFromEnum(code)),
     });

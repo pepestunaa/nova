@@ -11,6 +11,10 @@ const raw_talent_groups = @import("tables/TalentGroup");
 const raw_talents = @import("tables/Talent");
 const raw_upgrades = @import("tables/CharacterUpgrade");
 
+const raw_exp_item_count: usize = raw_exp_items.len;
+const raw_level_cap_count: usize = raw_level_caps.len;
+const raw_upgrade_count: usize = raw_upgrades.len;
+
 //
 
 const max_costs = @max(
@@ -128,7 +132,7 @@ pub fn generate(_: std.process.Init, writer: *Io.Writer) anyerror!void {
     try writer.print(
         "pub const exp_item_count = {d};\npub const max_level = {d};\npub const max_exp = {d};\npub const max_advance = {d};\npub const max_skill_level = {d};\npub const max_skill_upgrade_rank = {d};\npub const talent_group_count = {d};\npub const max_talent_index = {d};\npub const max_talents_per_group = {d};\n\n",
         .{
-            raw_exp_items.len,
+            raw_exp_item_count,
             level_costs.rows[level_costs.rows.len - 1].level,
             level_costs.max_exp,
             level_caps.rows.len - 1,
@@ -275,9 +279,9 @@ fn writeCosts(writer: *Io.Writer, costs: Costs) void {
 }
 
 fn buildLevelCosts() !LevelCostData {
-    var curves: [raw_upgrades.len][level_cost_count]LevelCost = undefined;
-    var curve_counts: [raw_upgrades.len]usize = @splat(0);
-    var curve_keys: [raw_upgrades.len]u32 = undefined;
+    var curves: [raw_upgrade_count][level_cost_count]LevelCost = undefined;
+    var curve_counts: [raw_upgrade_count]usize = @splat(0);
+    var curve_keys: [raw_upgrade_count]u32 = undefined;
     var curve_count: usize = 0;
 
     inline for (raw_upgrades) |raw| {
@@ -319,9 +323,9 @@ fn buildLevelCosts() !LevelCostData {
 }
 
 fn buildLevelCaps() !LevelCapData {
-    var curves: [raw_level_caps.len][level_cap_count]LevelCap = undefined;
-    var curve_counts: [raw_level_caps.len]usize = @splat(0);
-    var curve_keys: [raw_level_caps.len]u32 = undefined;
+    var curves: [raw_level_cap_count][level_cap_count]LevelCap = undefined;
+    var curve_counts: [raw_level_cap_count]usize = @splat(0);
+    var curve_keys: [raw_level_cap_count]u32 = undefined;
     var curve_count: usize = 0;
 
     inline for (raw_level_caps) |raw| {

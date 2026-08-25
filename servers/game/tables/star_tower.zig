@@ -10,6 +10,12 @@ const raw_stages = @import("tables/StarTowerStage");
 const raw_team_exp = @import("tables/StarTowerTeamExp");
 const raw_towers = @import("tables/StarTower");
 
+const floor_exp_count: usize = raw_floor_exp.len;
+const floor_set_count: usize = raw_floor_sets.len;
+const stage_count: usize = raw_stages.len;
+const team_exp_count: usize = raw_team_exp.len;
+const tower_count: usize = raw_towers.len;
+
 //
 
 pub const Room = struct {
@@ -38,8 +44,8 @@ pub const TeamLevel = struct {
     required_exp: u32,
 };
 
-pub const team_levels: [raw_team_exp.len]TeamLevel = blk: {
-    var levels: [raw_team_exp.len]TeamLevel = undefined;
+pub const team_levels: [team_exp_count]TeamLevel = blk: {
+    var levels: [team_exp_count]TeamLevel = undefined;
     for (raw_team_exp, 0..) |raw, index| levels[index] = .{
         .level = raw.level,
         .required_exp = fieldOr(raw, "need_exp", 0),
@@ -286,10 +292,10 @@ const Tower = struct {
     first_awards: []const FirstAward,
 };
 
-const towers: [raw_towers.len]Tower = blk: {
+const towers: [tower_count]Tower = blk: {
     @setEvalBranchQuota(1_000_000);
 
-    var result: [raw_towers.len]Tower = undefined;
+    var result: [tower_count]Tower = undefined;
     for (raw_towers, 0..) |raw, index| {
         var groups: [max_groups]Group = undefined;
         var first_floor: u32 = 1;
@@ -333,10 +339,10 @@ const Stage = struct {
     interior_currency_quantity: u32,
 };
 
-const stages: [raw_stages.len]Stage = blk: {
+const stages: [stage_count]Stage = blk: {
     @setEvalBranchQuota(1_000_000);
 
-    var result: [raw_stages.len]Stage = undefined;
+    var result: [stage_count]Stage = undefined;
     for (raw_stages, 0..) |raw, index| result[index] = .{
         .id = raw.id,
         .stage = raw.stage,
@@ -350,7 +356,7 @@ const stages: [raw_stages.len]Stage = blk: {
 const by_stage = lookup.Lookup(u64, blk: {
     @setEvalBranchQuota(1_000_000);
 
-    var keys: [raw_stages.len]u64 = undefined;
+    var keys: [stage_count]u64 = undefined;
     for (raw_stages, 0..) |raw, index| keys[index] = pairKey(raw.group_id, raw.floor);
     const result = keys;
 
@@ -361,8 +367,8 @@ const FloorExp = struct {
     value: BattleExperience,
 };
 
-const floor_exp: [raw_floor_exp.len]FloorExp = blk: {
-    var result: [raw_floor_exp.len]FloorExp = undefined;
+const floor_exp: [floor_exp_count]FloorExp = blk: {
+    var result: [floor_exp_count]FloorExp = undefined;
     for (raw_floor_exp, 0..) |raw, index| result[index] = .{ .value = .{
         .normal = raw.normal_exp,
         .elite = raw.elite_exp,
@@ -374,7 +380,7 @@ const floor_exp: [raw_floor_exp.len]FloorExp = blk: {
 };
 
 const by_floor_exp = lookup.Lookup(u64, blk: {
-    var keys: [raw_floor_exp.len]u64 = undefined;
+    var keys: [floor_exp_count]u64 = undefined;
     for (raw_floor_exp, 0..) |raw, index| keys[index] = pairKey(raw.star_tower_id, raw.stage);
     const result = keys;
 
@@ -391,10 +397,10 @@ const FloorSet = struct {
     map_ids: []const u32,
 };
 
-const floor_sets: [raw_floor_sets.len]FloorSet = blk: {
+const floor_sets: [floor_set_count]FloorSet = blk: {
     @setEvalBranchQuota(1_000_000);
 
-    var result: [raw_floor_sets.len]FloorSet = undefined;
+    var result: [floor_set_count]FloorSet = undefined;
     for (raw_floor_sets, 0..) |raw, index| result[index] = .{
         .battle_lvs = raw.battle_lvs,
         .room_type = fieldOr(raw, "room_type", 0),

@@ -1,8 +1,4 @@
 const std = @import("std");
-const Io = std.Io;
-
-const achievement = @import("../gameplay/achievement.zig");
-const achievement_notify = @import("../notify/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const Player = @import("../store/Player.zig");
 const progression = @import("../gameplay/disc_progression.zig");
@@ -37,7 +33,7 @@ pub fn disc_strengthen_req(scope: *Scope) !void {
     }
 
     var receipt: progression.Receipt = .{};
-    progression.strengthen(scope.playerMut(), request.Id, items[0..item_count], &receipt) catch |err| switch (err) {
+    progression.strengthen(scope.mutation(), request.Id, items[0..item_count], &receipt) catch |err| switch (err) {
         error.LevelCapReached => return scope.reject(.disc_strengthen_max),
         error.InsufficientResources => return scope.reject(.cond_check),
         error.InvalidDisc => return scope.reject(.disc_no_data),
@@ -52,13 +48,12 @@ pub fn disc_strengthen_req(scope: *Scope) !void {
         .Exp = @intFromEnum(disc.exp),
         .Change = try change.build(&receipt, scope.arena),
     });
-    try refreshAchievements(scope);
 }
 
 pub fn disc_promote_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.DiscPromoteReq);
     var receipt: progression.Receipt = .{};
-    progression.promote(scope.playerMut(), request.Id, &receipt) catch |err| switch (err) {
+    progression.promote(scope.mutation(), request.Id, &receipt) catch |err| switch (err) {
         error.LevelNotReached => return scope.reject(.disc_level_not_reached),
         error.MaximumPhaseReached => return scope.reject(.disc_phase_max),
         error.PlayerLevelNotMet, error.InsufficientResources => return scope.reject(.cond_check),
@@ -72,13 +67,12 @@ pub fn disc_promote_req(scope: *Scope) !void {
         .Phase = @intFromEnum(disc.phase),
         .Change = try change.build(&receipt, scope.arena),
     });
-    try refreshAchievements(scope);
 }
 
 pub fn disc_limit_break_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.DiscLimitBreakReq);
     var receipt: progression.Receipt = .{};
-    progression.limitBreak(scope.playerMut(), request.Id, request.Qty, &receipt) catch |err| switch (err) {
+    progression.limitBreak(scope.mutation(), request.Id, request.Qty, &receipt) catch |err| switch (err) {
         error.MaximumStarReached => return scope.reject(.disc_star_max),
         error.InsufficientResources => return scope.reject(.cond_check),
         error.InvalidDisc => return scope.reject(.disc_no_data),
@@ -91,7 +85,6 @@ pub fn disc_limit_break_req(scope: *Scope) !void {
         .Star = @intFromEnum(disc.star),
         .Change = try change.build(&receipt, scope.arena),
     });
-    try refreshAchievements(scope);
 }
 
 fn discById(player: *const Player, id: u32) ?*const Player.Disc {
@@ -101,15 +94,4 @@ fn discById(player: *const Player, id: u32) ?*const Player.Disc {
     }
 
     return null;
-}
-
-fn refreshAchievements(scope: *Scope) !void {
-    var changes: achievement.ChangeSet = .{};
-    try achievement.refresh(
-        scope.playerMut(),
-        scope.gpa,
-        Io.Timestamp.now(scope.io, .real).toSeconds(),
-        &changes,
-    );
-    try achievement_notify.send(scope, &changes);
 }

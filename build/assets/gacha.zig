@@ -5,6 +5,7 @@ const raw_a_type_probabilities = @import("tables/GachaATypeProb");
 const raw_acquire_rewards = @import("tables/AcquireReward");
 const raw_banners = @import("tables/Gacha");
 const raw_packages = @import("tables/GachaPkg");
+const raw_package_count: usize = raw_packages.len;
 const raw_storages = @import("tables/GachaStorage");
 
 //
@@ -102,7 +103,7 @@ fn writePackages(writer: *Io.Writer) !void {
     @setEvalBranchQuota(10_000_000);
 
     var current_id: ?u32 = null;
-    var seen: [raw_packages.len]u32 = undefined;
+    var seen: [raw_package_count]u32 = undefined;
     var seen_count: usize = 0;
 
     inline for (raw_packages) |raw| {

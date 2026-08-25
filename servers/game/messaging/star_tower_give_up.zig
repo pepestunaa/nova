@@ -18,17 +18,23 @@ pub fn star_tower_give_up_req(scope: *Scope) !void {
     _ = try scope.source.read(proto.pb.Nil);
     const log = scope.logger(.star_tower_give_up_req);
 
-    const player = scope.playerMut();
-    const run = &player.star_tower_run;
-    if (!run.active) {
+    const current = scope.player;
+    const current_run = &current.star_tower_run;
+    if (!current_run.active) {
         try scope.respondFailureEmpty();
         log.warn("received give-up request without an active Ascension", .{});
         return;
     }
 
-    const formation = player.getFormation(run.formation_id) orelse
+    const formation = current.getFormation(current_run.formation_id) orelse
         return scope.reject(.rgl_cond);
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const player = scope.mutation().modify(.{
+        .ascension = true,
+        .inventory = true,
+        .research_project = true,
+    });
+    const run = &player.star_tower_run;
+    const now = scope.now;
     const ticket_count = try settlement.awardRunTickets(player, scope.gpa, run, now);
 
     const potentials = try scope.arena.alloc(proto.pb.BuildPotential, run.potential_count);
@@ -117,8 +123,6 @@ pub fn star_tower_give_up_req(scope: *Scope) !void {
     const total_damage_count = run.total_damage_count;
     const npc_interactions = player.progress.star_tower_npc_interactions;
     player.resetStarTowerRun();
-
-    scope.markDirty();
 
     try scope.respond(proto.pb.StarTowerGiveUpResp{
         .Change = .{ .Props = .fromOwnedSlice(changes[0..change_count]) },

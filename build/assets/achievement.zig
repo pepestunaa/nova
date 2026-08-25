@@ -2,6 +2,7 @@ const std = @import("std");
 const Io = std.Io;
 
 const raw_list = @import("tables/Achievement");
+const raw_count: usize = raw_list.len;
 
 //
 
@@ -32,6 +33,8 @@ const ProgressKind = enum(u8) {
     character_level,
     element_level,
     skill_level,
+    disc_tier_total,
+    disc_level,
 };
 
 const Progression = struct {
@@ -52,8 +55,8 @@ const Raw = struct {
     prerequisite: ?u32,
 };
 
-const entries: [raw_list.len]Raw = entries: {
-    var result: [raw_list.len]Raw = undefined;
+const entries: [raw_count]Raw = entries: {
+    var result: [raw_count]Raw = undefined;
 
     for (raw_list, 0..) |entry, index| {
         const prerequisites: []const u32 = if (@hasField(@TypeOf(entry), "prerequisites"))
@@ -160,7 +163,7 @@ pub fn generate(_: std.process.Init, writer: *Io.Writer) !void {
     }
     try writer.writeAll("};\n\n");
 
-    try writer.writeAll("pub const character_progressions = [_]Progression{\n");
+    try writer.writeAll("pub const progressions = [_]Progression{\n");
     for (definitions.progressions[0..definitions.progression_count]) |progression| {
         try writer.print(
             "    .{{ .entry_index = {d}, .kind = .{s}, .minimum_level = {d}, .element = {d} }},\n",
@@ -404,6 +407,19 @@ fn progressionFor(entry: Raw) ?struct {
         60 => .{
             .kind = .skill_level,
             .minimum_level = skillMilestone(entry.achievement_id),
+        },
+        34 => blk: {
+            if (entry.achievement_id / 100 != 402)
+                @compileError("unexpected Runic Disc tier achievement group");
+            break :blk .{ .kind = .disc_tier_total };
+        },
+        36 => blk: {
+            if (entry.achievement_id / 100 != 410)
+                @compileError("unexpected Runic Disc level achievement group");
+            break :blk .{
+                .kind = .disc_level,
+                .minimum_level = levelMilestone(entry.achievement_id, 410),
+            };
         },
         else => null,
     };

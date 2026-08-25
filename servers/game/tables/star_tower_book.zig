@@ -1,6 +1,9 @@
 const raw_potential_rewards = @import("tables/StarTowerBookPotentialReward");
 const raw_event_rewards = @import("tables/StarTowerBookEventReward");
 
+const event_reward_count: usize = raw_event_rewards.len;
+const potential_reward_count: usize = raw_potential_rewards.len;
+
 //
 
 pub const PotentialReward = struct {
@@ -14,7 +17,7 @@ pub const PotentialReward = struct {
 pub const potential_rewards = blk: {
     @setEvalBranchQuota(100_000);
 
-    var list: [raw_potential_rewards.len]PotentialReward = undefined;
+    var list: [potential_reward_count]PotentialReward = undefined;
     for (raw_potential_rewards, 0..) |raw, index| list[index] = .{
         .id = raw.id,
         .character_id = raw.char_id,
@@ -34,7 +37,7 @@ pub const EventReward = struct {
 };
 
 pub const event_rewards = blk: {
-    var list: [raw_event_rewards.len]EventReward = undefined;
+    var list: [event_reward_count]EventReward = undefined;
     for (raw_event_rewards, 0..) |raw, index| list[index] = .{
         .id = raw.id,
         .npc_id = raw.npc_id,

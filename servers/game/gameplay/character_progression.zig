@@ -1,10 +1,11 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const TalentIndex = Player.Character.TalentNodes.Index;
 
-const progression = @import("progression.zig");
+const progression = @import("upgrade.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -48,7 +49,7 @@ pub const TalentReceipt = struct {
 };
 
 pub fn upgrade(
-    player: *Player,
+    mutation: *Mutation,
     character_id: u32,
     items: []const ItemAmount,
     receipt: *Receipt,
@@ -57,7 +58,8 @@ pub fn upgrade(
     if (items.len == 0 or items.len > max_item_changes)
         return error.InvalidItems;
 
-    const character = player.characters.getMut(character_id) orelse
+    const player = mutation.read();
+    const character = player.characters.get(character_id) orelse
         return error.InvalidCharacter;
     const cap = tables.character_progression.levelCap(@intCast(character.advance())) orelse
         return error.InvalidCharacter;
@@ -66,8 +68,8 @@ pub fn upgrade(
 
     var total_exp: u64 = 0;
     for (items) |item| {
-        if (item.quantity <= 0 or player.itemQuantity(item.id) < item.quantity)
-            return error.InsufficientResources;
+        if (item.quantity <= 0)
+            return error.InvalidItems;
         const item_exp = tables.character_progression.expItem(item.id) orelse
             return error.InvalidItems;
         total_exp = std.math.add(
@@ -78,6 +80,7 @@ pub fn upgrade(
         ) catch
             return error.InvalidItems;
     }
+    try progression.validateItemQuantities(player, items);
 
     var level: u8 = @intCast(character.level());
     var exp: u32 = character.exp();
@@ -107,19 +110,24 @@ pub fn upgrade(
     if (player.resourceQuantity(tables.character_progression.gold_id) < gold)
         return error.InsufficientResources;
 
+    const writable = mutation.modify(.{
+        .characters = true,
+        .inventory = true,
+    });
+    const writable_character = writable.characters.getMut(character_id) orelse unreachable;
     for (items, 0..) |item, index| {
-        player.consumeItem(item.id, item.quantity) catch unreachable;
+        writable.consumeItem(item.id, item.quantity) catch unreachable;
         receipt.progression.items[index] = .{ .id = item.id, .quantity = -item.quantity };
     }
     receipt.progression.item_count = @intCast(items.len);
-    player.consumeResource(tables.character_progression.gold_id, gold) catch unreachable;
+    writable.consumeResource(tables.character_progression.gold_id, gold) catch unreachable;
     receipt.progression.gold = -gold;
-    character.bits.level = @enumFromInt(level);
-    character.bits.exp = @enumFromInt(exp);
+    writable_character.bits.level = @enumFromInt(level);
+    writable_character.bits.exp = @enumFromInt(exp);
 }
 
 pub fn advance(
-    player: *Player,
+    mutation: *Mutation,
     allocator: Allocator,
     character_id: u32,
     receipt: *Receipt,
@@ -127,7 +135,8 @@ pub fn advance(
     receipt.* = .{};
     const definition = tables.character_progression.character(character_id) orelse
         return error.InvalidCharacter;
-    const character = player.characters.getMut(character_id) orelse
+    const player = mutation.read();
+    const character = player.characters.get(character_id) orelse
         return error.InvalidCharacter;
     const current_advance: u8 = @intCast(character.advance());
     const current_cap = tables.character_progression.levelCap(current_advance) orelse
@@ -145,15 +154,23 @@ pub fn advance(
         return error.MaximumReached;
     try validateCosts(player, cost.costs[0..cost.cost_count], cost.gold);
 
-    if (target_advance >= definition.advance_skin_unlock_level)
-        receipt.unlocked_advance_skin = try player.unlockAdvanceSkin(allocator, character_id);
+    const writable = mutation.modify(.{
+        .characters = true,
+        .inventory = true,
+    });
+    const writable_character = writable.characters.getMut(character_id) orelse unreachable;
+    if (target_advance >= definition.advance_skin_unlock_level) {
+        receipt.unlocked_advance_skin = try writable.unlockAdvanceSkin(allocator, character_id);
+        if (receipt.unlocked_advance_skin)
+            mutation.recordHandbookType(tables.handbook.skin_type);
+    }
 
-    applyCosts(player, cost.costs[0..cost.cost_count], cost.gold, receipt);
-    character.bits.advance = @enumFromInt(target_advance);
+    applyCosts(writable, cost.costs[0..cost.cost_count], cost.gold, receipt);
+    writable_character.bits.advance = @enumFromInt(target_advance);
 }
 
 pub fn upgradeSkill(
-    player: *Player,
+    mutation: *Mutation,
     character_id: u32,
     skill: Player.Character.Skill,
     receipt: *Receipt,
@@ -161,7 +178,8 @@ pub fn upgradeSkill(
     receipt.* = .{};
     const definition = tables.character_progression.character(character_id) orelse
         return error.InvalidCharacter;
-    const character = player.characters.getMut(character_id) orelse
+    const player = mutation.read();
+    const character = player.characters.get(character_id) orelse
         return error.InvalidCharacter;
     const current_level = character.skillLevel(skill);
     const target_level = std.math.add(u8, current_level, 1) catch
@@ -172,17 +190,22 @@ pub fn upgradeSkill(
         return error.ConditionsNotMet;
     try validateCosts(player, cost.costs[0..cost.cost_count], cost.gold);
 
-    applyCosts(player, cost.costs[0..cost.cost_count], cost.gold, receipt);
-    character.setSkillLevel(skill, target_level);
+    const writable = mutation.modify(.{
+        .characters = true,
+        .inventory = true,
+    });
+    applyCosts(writable, cost.costs[0..cost.cost_count], cost.gold, receipt);
+    writable.characters.getMut(character_id).?.setSkillLevel(skill, target_level);
 }
 
-pub fn unlockTalentGroup(player: *Player, group_id: u32, receipt: *TalentReceipt) Error!void {
+pub fn unlockTalentGroup(mutation: *Mutation, group_id: u32, receipt: *TalentReceipt) Error!void {
     receipt.* = .{};
     const group = tables.character_progression.talentGroup(group_id) orelse
         return error.InvalidTalent;
     const definition = tables.character_progression.character(group.character_id) orelse
         return error.InvalidCharacter;
-    const character = player.characters.getMut(group.character_id) orelse
+    const player = mutation.read();
+    const character = player.characters.get(group.character_id) orelse
         return error.InvalidCharacter;
     try validateTalentGroup(character, &group);
 
@@ -193,9 +216,18 @@ pub fn unlockTalentGroup(player: *Player, group_id: u32, receipt: *TalentReceipt
             unlocked_count += 1;
     }
     if (unlocked_count >= group.node_limit) {
-        if (activateCore(character, &group, receipt))
-            return;
-        return error.TalentGroupComplete;
+        const key = tables.character_progression.talent(group.key_talent_id) orelse
+            return error.InvalidTalent;
+        if (character.hasTalent(TalentIndex.fromInt(key.index)))
+            return error.TalentGroupComplete;
+        const writable = mutation.modify(.{ .characters = true });
+        std.debug.assert(activateCore(
+            writable.characters.getMut(group.character_id).?,
+            &group,
+            receipt,
+        ));
+
+        return;
     }
 
     const fragments_per_node = tables.character_progression.fragmentsPerTalentNode(definition.grade) orelse
@@ -210,21 +242,26 @@ pub fn unlockTalentGroup(player: *Player, group_id: u32, receipt: *TalentReceipt
     if (unlock_count == 0)
         return error.InsufficientResources;
 
+    const writable = mutation.modify(.{
+        .characters = true,
+        .inventory = true,
+    });
+    const writable_character = writable.characters.getMut(group.character_id) orelse unreachable;
     for (group_talents) |talent| {
-        if (receipt.node_count == unlock_count or talent.kind != 2 or character.hasTalent(TalentIndex.fromInt(talent.index)))
+        if (receipt.node_count == unlock_count or talent.kind != 2 or writable_character.hasTalent(TalentIndex.fromInt(talent.index)))
             continue;
-        if (!character.setTalent(TalentIndex.fromInt(talent.index))) unreachable;
+        if (!writable_character.setTalent(TalentIndex.fromInt(talent.index))) unreachable;
         receipt.nodes[receipt.node_count] = talent.id;
         receipt.node_count += 1;
     }
     const consumed = fragments_per_node * unlock_count;
-    player.consumeItem(definition.fragments_id, consumed) catch unreachable;
+    writable.consumeItem(definition.fragments_id, consumed) catch unreachable;
     receipt.cost = .{ .id = definition.fragments_id, .quantity = -consumed };
-    _ = activateCore(character, &group, receipt);
-    character.talent_background = group.background;
+    _ = activateCore(writable_character, &group, receipt);
+    writable_character.talent_background = group.background;
 }
 
-pub fn unlockTalent(player: *Player, talent_id: u32, receipt: *TalentReceipt) Error!void {
+pub fn unlockTalent(mutation: *Mutation, talent_id: u32, receipt: *TalentReceipt) Error!void {
     receipt.* = .{};
     const talent = tables.character_progression.talent(talent_id) orelse
         return error.InvalidTalent;
@@ -234,7 +271,8 @@ pub fn unlockTalent(player: *Player, talent_id: u32, receipt: *TalentReceipt) Er
         return error.InvalidTalent;
     const definition = tables.character_progression.character(group.character_id) orelse
         return error.InvalidCharacter;
-    const character = player.characters.getMut(group.character_id) orelse
+    const player = mutation.read();
+    const character = player.characters.get(group.character_id) orelse
         return error.InvalidCharacter;
     try validateTalentGroup(character, &group);
     if (character.hasTalent(TalentIndex.fromInt(talent.index)))
@@ -253,43 +291,53 @@ pub fn unlockTalent(player: *Player, talent_id: u32, receipt: *TalentReceipt) Er
     if (player.itemQuantity(definition.fragments_id) < fragments)
         return error.InsufficientResources;
 
-    player.consumeItem(definition.fragments_id, fragments) catch unreachable;
-    if (!character.setTalent(TalentIndex.fromInt(talent.index))) unreachable;
+    const writable = mutation.modify(.{
+        .characters = true,
+        .inventory = true,
+    });
+    const writable_character = writable.characters.getMut(group.character_id) orelse unreachable;
+    writable.consumeItem(definition.fragments_id, fragments) catch unreachable;
+    if (!writable_character.setTalent(TalentIndex.fromInt(talent.index))) unreachable;
     receipt.cost = .{ .id = definition.fragments_id, .quantity = -fragments };
     receipt.nodes[0] = talent.id;
     receipt.node_count = 1;
-    _ = activateCore(character, &group, receipt);
+    _ = activateCore(writable_character, &group, receipt);
 }
 
-pub fn setSkin(player: *Player, character_id: u32, skin_id: u32) Error!void {
+pub fn setSkin(mutation: *Mutation, character_id: u32, skin_id: u32) Error!void {
     const definition = tables.character_progression.character(character_id) orelse
         return error.InvalidCharacter;
-    const character = player.characters.getMut(character_id) orelse
+    const character = mutation.read().characters.get(character_id) orelse
         return error.InvalidCharacter;
     if (skin_id != definition.default_skin_id and
         (skin_id != definition.advance_skin_id or
             character.advance() < definition.advance_skin_unlock_level))
         return error.ConditionsNotMet;
-    character.skin = skin_id;
+    if (character.skin == skin_id)
+        return;
+    mutation.modify(.{ .characters = true }).characters.getMut(character_id).?.skin = skin_id;
 }
 
-pub fn setTalentBackground(player: *Player, character_id: u32, group_id: u32) Error!void {
+pub fn setTalentBackground(mutation: *Mutation, character_id: u32, group_id: u32) Error!void {
     if (group_id == 0) {
-        const character = player.characters.getMut(character_id) orelse
+        const character = mutation.read().characters.get(character_id) orelse
             return error.InvalidCharacter;
-        character.talent_background = 0;
+        if (character.talent_background != 0)
+            mutation.modify(.{ .characters = true }).characters.getMut(character_id).?.talent_background = 0;
+
         return;
     }
 
     const group = tables.character_progression.talentGroup(group_id) orelse
         return error.InvalidTalent;
-    const character = player.characters.getMut(group.character_id) orelse
+    const character = mutation.read().characters.get(group.character_id) orelse
         return error.InvalidCharacter;
     const key = tables.character_progression.talent(group.key_talent_id) orelse
         return error.InvalidTalent;
     if (!character.hasTalent(TalentIndex.fromInt(key.index)))
         return error.TalentGroupLocked;
-    character.talent_background = group.background;
+    if (character.talent_background != group.background)
+        mutation.modify(.{ .characters = true }).characters.getMut(group.character_id).?.talent_background = group.background;
 }
 
 fn validateCosts(player: *const Player, costs: []const tables.character_progression.Cost, gold: i32) Error!void {

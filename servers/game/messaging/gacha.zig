@@ -1,13 +1,9 @@
 const std = @import("std");
 const Io = std.Io;
 
-const achievement = @import("../gameplay/achievement.zig");
-const achievement_notify = @import("../notify/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const gacha = @import("../gameplay/gacha.zig");
-const quest_notify = @import("../notify/quest.zig");
 const Player = @import("../store/Player.zig");
-const player_data = @import("player_data.zig");
 const proto = @import("proto");
 const reward = @import("../gameplay/reward.zig");
 const Scope = @import("../Scope.zig");
@@ -43,11 +39,24 @@ pub fn gacha_spin_req(scope: *Scope) !void {
     };
     const ticket_quantity = std.math.mul(u32, banner.storage.tickets_per_pull, @intCast(pull_count)) catch
         return scope.reject(.invalid_req);
-    const player = scope.playerMut();
-
+    const received_first_ten_reward = if (findBannerStateConst(scope.player, banner.id)) |state|
+        state.received_first_ten_reward
+    else
+        false;
+    const first_ten_reward = pull_count == tables.gacha_newbie.cards_per_spin and
+        !received_first_ten_reward;
+    const side_reward_quantity: i32 = if (banner.storage.give_item) |item| blk: {
+        const multiplier: u32 = if (first_ten_reward) banner.first_ten_reward_multiplier else 1;
+        const multiplier_i32 = std.math.cast(i32, multiplier) orelse
+            return scope.reject(.invalid_req);
+        const per_pull = std.math.mul(i32, item.quantity, @as(i32, pull_count)) catch
+            return scope.reject(.invalid_req);
+        break :blk std.math.mul(i32, per_pull, multiplier_i32) catch
+            return scope.reject(.invalid_req);
+    } else 0;
     var receipt: reward.GachaReceipt = .{};
-    reward.consumeGachaCost(
-        player,
+    reward.consumeRecruitmentCost(
+        scope.mutation(),
         scope.gpa,
         &receipt,
         banner.storage.ticket_id,
@@ -59,37 +68,20 @@ pub fn gacha_spin_req(scope: *Scope) !void {
         else => |e| return e,
     };
 
-    const now = Io.Timestamp.now(scope.io, .real);
+    const now = scope.timestamp;
     const banner_state = try getOrCreateBannerState(scope, banner);
     const storage_state = try getOrCreateStorageState(scope, banner, now);
-    const spin = gacha.spinBanner(storage_state, banner, pull_count) catch
-        return scope.reject(.invalid_req);
-    const first_ten_reward = pull_count == tables.gacha_newbie.cards_per_spin and
-        !banner_state.received_first_ten_reward;
-
+    const spin = try gacha.spinBanner(storage_state, banner, pull_count);
     banner_state.total_pulls +|= pull_count;
     banner_state.daily_pulls +|= pull_count;
     banner_state.a_up_count +|= spin.a_up_count;
     if (pull_count == tables.gacha_newbie.cards_per_spin)
         banner_state.received_first_ten_reward = true;
-    try reward.applyGachaCards(player, scope.gpa, spin.slice(), now.toSeconds(), &receipt);
+    try reward.grantCards(scope.mutation(), scope.gpa, spin.slice(), now.toSeconds(), &receipt);
     if (banner.storage.give_item) |item| {
-        const multiplier: u32 = if (first_ten_reward) banner.first_ten_reward_multiplier else 1;
-        const multiplier_i32 = std.math.cast(i32, multiplier) orelse
-            return scope.reject(.invalid_req);
-        const per_pull_quantity = std.math.mul(i32, item.quantity, @as(i32, pull_count)) catch
-            return scope.reject(.invalid_req);
-        const total_quantity = std.math.mul(i32, per_pull_quantity, multiplier_i32) catch
-            return scope.reject(.invalid_req);
-        try reward.applyGachaItemReward(player, scope.gpa, &receipt, item.id, total_quantity);
+        try reward.grantRecruitmentItem(scope.mutation(), scope.gpa, &receipt, item.id, side_reward_quantity);
     }
-    // Collection achievements use lifetime acquisitions, so normal draws and
-    // Beginner Limited Banner claims advance them in the same way.
-    var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refresh(player, scope.gpa, now.toSeconds(), &achievement_changes);
     try appendHistory(scope, banner, now.toSeconds(), &spin);
-
-    scope.markDirty();
 
     var card_messages: [tables.gacha_newbie.cards_per_spin]proto.pb.GachaCard = undefined;
     for (spin.slice(), 0..) |card, index|
@@ -107,11 +99,6 @@ pub fn gacha_spin_req(scope: *Scope) !void {
         .AupMissTimes = storage_state.a_up_misses,
         .DaysCount = banner_state.daily_pulls,
     });
-    try quest_notify.refreshLineupTutorial(scope);
-    try quest_notify.sendNewTrekkerAffinityQuests(scope, &receipt);
-    try achievement_notify.send(scope, &achievement_changes);
-    if (receipt.handbook_changed)
-        try player_data.response.sendHandbookChanges(scope);
 
     log.info("completed {d} pull(s) on banner {d}", .{ pull_count, banner.id });
     log.debug(
@@ -166,23 +153,14 @@ pub fn gacha_guarantee_reward_receive_req(scope: *Scope) !void {
         .id = configured_reward.resource_id,
         .class = card_class,
     }};
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
-    const player = scope.playerMut();
+    const now = scope.now;
+    try reward.grantCards(scope.mutation(), scope.gpa, &cards, now, &receipt);
+    const player = scope.mutation().modify(.{ .gacha = true });
     const state = findBannerState(player, banner.id).?;
-    try reward.applyGachaCards(player, scope.gpa, &cards, now, &receipt);
-    var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refresh(player, scope.gpa, now, &achievement_changes);
     state.claim_reward_received = true;
-
-    scope.markDirty();
 
     var change: change_info.Gacha = .{};
     try scope.respond(try change.build(scope.player, &receipt, scope.arena));
-    try quest_notify.refreshLineupTutorial(scope);
-    try quest_notify.sendNewTrekkerAffinityQuests(scope, &receipt);
-    try achievement_notify.send(scope, &achievement_changes);
-    if (receipt.handbook_changed)
-        try player_data.response.sendHandbookChanges(scope);
 
     log.info("claimed banner {d} guarantee reward", .{banner.id});
 }
@@ -191,7 +169,7 @@ fn getOrCreateBannerState(
     scope: *Scope,
     banner: *const tables.gacha.Banner,
 ) !*Player.GachaBanner {
-    const player = scope.playerMut();
+    const player = scope.mutation().modify(.{ .gacha = true });
     if (findBannerState(player, banner.id)) |state|
         return state;
 
@@ -208,7 +186,7 @@ fn appendHistory(
     created_at: i64,
     spin: *const gacha.NormalSpin,
 ) !void {
-    const player = scope.playerMut();
+    const player = scope.mutation().modify(.{ .gacha = true });
     var matching_count: usize = 0;
     var oldest_index: ?usize = null;
     for (player.gacha_histories.slice(), 0..) |entry, index| {
@@ -245,7 +223,7 @@ fn getOrCreateStorageState(
     banner: *const tables.gacha.Banner,
     now: Io.Timestamp,
 ) !*Player.GachaStorage {
-    const player = scope.playerMut();
+    const player = scope.mutation().modify(.{ .gacha = true });
     if (findStorageState(player, banner.storage_id)) |state|
         return state;
 

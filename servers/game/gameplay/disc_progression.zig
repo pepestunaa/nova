@@ -1,7 +1,8 @@
 const std = @import("std");
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
-const progression = @import("progression.zig");
+const progression = @import("upgrade.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -23,7 +24,7 @@ pub const ItemAmount = progression.ItemAmount;
 pub const Receipt = progression.Receipt;
 
 pub fn strengthen(
-    player: *Player,
+    mutation: *Mutation,
     disc_id: u32,
     items: []const ItemAmount,
     receipt: *Receipt,
@@ -32,9 +33,10 @@ pub fn strengthen(
     if (items.len == 0 or items.len > receipt.items.len)
         return error.InvalidItems;
 
+    const player = mutation.read();
     const definition = tables.disc.definition(disc_id) orelse
         return error.InvalidDisc;
-    const disc = ownedDisc(player, disc_id) orelse
+    const disc = ownedDiscConst(player, disc_id) orelse
         return error.InvalidDisc;
     const cap = tables.disc_progression.phaseCap(definition.rarity, @intFromEnum(disc.phase)) orelse
         return error.InvalidDisc;
@@ -43,8 +45,8 @@ pub fn strengthen(
 
     var total_exp: u64 = 0;
     for (items) |item| {
-        if (item.quantity <= 0 or player.itemQuantity(item.id) < item.quantity)
-            return error.InsufficientResources;
+        if (item.quantity <= 0)
+            return error.InvalidItems;
         const item_exp = tables.disc_progression.expItem(item.id) orelse
             return error.InvalidItems;
         total_exp = std.math.add(
@@ -55,6 +57,7 @@ pub fn strengthen(
         ) catch
             return error.InvalidItems;
     }
+    try progression.validateItemQuantities(player, items);
 
     var level: u16 = @intFromEnum(disc.level);
     var exp: u32 = @intFromEnum(disc.exp);
@@ -84,22 +87,28 @@ pub fn strengthen(
     if (player.resourceQuantity(tables.disc_progression.gold_id) < gold)
         return error.InsufficientResources;
 
+    const writable = mutation.modify(.{
+        .discs = true,
+        .inventory = true,
+    });
+    const writable_disc = ownedDisc(writable, disc_id) orelse unreachable;
     for (items, 0..) |item, index| {
-        player.consumeItem(item.id, item.quantity) catch unreachable;
+        writable.consumeItem(item.id, item.quantity) catch unreachable;
         receipt.items[index] = .{ .id = item.id, .quantity = -item.quantity };
     }
     receipt.item_count = @intCast(items.len);
-    player.consumeResource(tables.disc_progression.gold_id, gold) catch unreachable;
+    writable.consumeResource(tables.disc_progression.gold_id, gold) catch unreachable;
     receipt.gold = -gold;
-    disc.level = @enumFromInt(level);
-    disc.exp = @enumFromInt(exp);
+    writable_disc.level = @enumFromInt(level);
+    writable_disc.exp = @enumFromInt(exp);
 }
 
-pub fn promote(player: *Player, disc_id: u32, receipt: *Receipt) Error!void {
+pub fn promote(mutation: *Mutation, disc_id: u32, receipt: *Receipt) Error!void {
     receipt.* = .{};
+    const player = mutation.read();
     const definition = tables.disc.definition(disc_id) orelse
         return error.InvalidDisc;
-    const disc = ownedDisc(player, disc_id) orelse
+    const disc = ownedDiscConst(player, disc_id) orelse
         return error.InvalidDisc;
     const current_phase: u8 = @intFromEnum(disc.phase);
     const current_cap = tables.disc_progression.phaseCap(definition.rarity, current_phase) orelse
@@ -117,15 +126,20 @@ pub fn promote(player: *Player, disc_id: u32, receipt: *Receipt) Error!void {
         return error.MaximumPhaseReached;
     try validateCosts(player, cost.costs[0..cost.cost_count], cost.gold);
 
-    applyCosts(player, cost.costs[0..cost.cost_count], cost.gold, receipt);
-    disc.phase = @enumFromInt(target_phase);
+    const writable = mutation.modify(.{
+        .discs = true,
+        .inventory = true,
+    });
+    applyCosts(writable, cost.costs[0..cost.cost_count], cost.gold, receipt);
+    ownedDisc(writable, disc_id).?.phase = @enumFromInt(target_phase);
 }
 
-pub fn limitBreak(player: *Player, disc_id: u32, quantity: u32, receipt: *Receipt) Error!void {
+pub fn limitBreak(mutation: *Mutation, disc_id: u32, quantity: u32, receipt: *Receipt) Error!void {
     receipt.* = .{};
+    const player = mutation.read();
     const definition = tables.disc.definition(disc_id) orelse
         return error.InvalidDisc;
-    const disc = ownedDisc(player, disc_id) orelse
+    const disc = ownedDiscConst(player, disc_id) orelse
         return error.InvalidDisc;
     const current_star: u8 = @intFromEnum(disc.star);
     const target_star = std.math.add(u32, current_star, quantity) catch
@@ -137,14 +151,27 @@ pub fn limitBreak(player: *Player, disc_id: u32, quantity: u32, receipt: *Receip
     if (player.itemQuantity(definition.transform_item_id) < cost)
         return error.InsufficientResources;
 
-    player.consumeItem(definition.transform_item_id, cost) catch unreachable;
+    const writable = mutation.modify(.{
+        .discs = true,
+        .inventory = true,
+    });
+    writable.consumeItem(definition.transform_item_id, cost) catch unreachable;
     receipt.items[0] = .{ .id = definition.transform_item_id, .quantity = -cost };
     receipt.item_count = 1;
-    disc.star = @enumFromInt(target_star);
+    ownedDisc(writable, disc_id).?.star = @enumFromInt(target_star);
 }
 
 fn ownedDisc(player: *Player, id: u32) ?*Player.Disc {
     for (player.discs.entries[0..player.discs.len]) |*disc| {
+        if (disc.id == id)
+            return disc;
+    }
+
+    return null;
+}
+
+fn ownedDiscConst(player: *const Player, id: u32) ?*const Player.Disc {
+    for (player.discs.slice()) |*disc| {
         if (disc.id == id)
             return disc;
     }

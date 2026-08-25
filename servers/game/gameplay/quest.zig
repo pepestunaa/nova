@@ -1,5 +1,6 @@
 const Allocator = @import("std").mem.Allocator;
 
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const reset = @import("reset.zig");
 const tables = @import("../tables.zig");
@@ -7,7 +8,7 @@ const tables = @import("../tables.zig");
 //
 
 pub fn initialize(player: *Player, allocator: Allocator, created_at: i64) Allocator.Error!void {
-    _ = try refreshDailyWeeklyMissions(player, allocator, created_at);
+    _ = try refreshDailyWeeklyMissionsPlayer(player, allocator, created_at);
 
     inline for (tables.quest.initial_tour_guide) |definition|
         try appendDefinition(player, allocator, definition, 0);
@@ -60,7 +61,20 @@ pub fn refreshAssist(player: *Player, changes: *AssistChanges) void {
 
 /// Refreshes daily and weekly missions while preserving progress until their
 /// next reset.
-pub fn refreshDailyWeeklyMissions(player: *Player, allocator: Allocator, now: i64) !bool {
+pub fn refreshDailyWeeklyMissions(mutation: *Mutation, allocator: Allocator, now: i64) !bool {
+    const player = mutation.read();
+    if (!definitionsNeedRefresh(player, &tables.quest.daily, now) and
+        !definitionsNeedRefresh(player, &tables.quest.weekly, now))
+        return false;
+
+    return refreshDailyWeeklyMissionsPlayer(
+        mutation.modify(.{ .quests = true }),
+        allocator,
+        now,
+    );
+}
+
+fn refreshDailyWeeklyMissionsPlayer(player: *Player, allocator: Allocator, now: i64) !bool {
     var changed = try refreshDefinitions(
         player,
         allocator,
@@ -77,6 +91,31 @@ pub fn refreshDailyWeeklyMissions(player: *Player, allocator: Allocator, now: i6
     ) or changed;
 
     return changed;
+}
+
+fn definitionsNeedRefresh(
+    player: *const Player,
+    comptime definitions: []const tables.quest.Definition,
+    now: i64,
+) bool {
+    for (definitions) |definition| {
+        var found = false;
+        for (player.quests.slice()) |quest| {
+            if (quest.id != definition.id or quest.quest_type != @intFromEnum(definition.type))
+                continue;
+            found = true;
+            if (quest.condition != definition.condition or
+                quest.condition_param != definition.condition_param or
+                quest.progress_max != definition.progress_max or
+                quest.expires_at <= now)
+                return true;
+            break;
+        }
+        if (!found)
+            return true;
+    }
+
+    return false;
 }
 
 fn appendDefinition(

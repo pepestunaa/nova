@@ -3,9 +3,11 @@ const lookup = @import("lookup.zig");
 const raw_character_potentials = @import("tables/CharPotential");
 const raw_list = @import("tables/Potential");
 
+const character_potential_count: usize = raw_character_potentials.len;
+
 //
 
-pub const count = entries.len;
+pub const count: usize = raw_list.len;
 
 const Entry = struct {
     id: u32,
@@ -33,7 +35,7 @@ pub const Pool = struct {
 const entries = blk: {
     @setEvalBranchQuota(1_000_000);
 
-    var list: [raw_list.len]Entry = undefined;
+    var list: [count]Entry = undefined;
     for (raw_list, 0..) |raw, index| {
         var scores: [9]u32 = @splat(0);
         for (raw.build_score, 0..) |build_score, score_index|
@@ -51,7 +53,7 @@ const entries = blk: {
 };
 
 const character_entries = blk: {
-    var list: [raw_character_potentials.len]CharacterEntry = undefined;
+    var list: [character_potential_count]CharacterEntry = undefined;
     for (raw_character_potentials, 0..) |raw, index| list[index] = .{
         .id = raw.id,
         .master_specific = &raw.master_specific_potential_ids,

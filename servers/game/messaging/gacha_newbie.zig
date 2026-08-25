@@ -1,14 +1,6 @@
-const std = @import("std");
-const Io = std.Io;
-
-const achievement = @import("../gameplay/achievement.zig");
-const achievement_notify = @import("../notify/achievement.zig");
 const change_info = @import("../view/change_info.zig");
 const gacha_rules = @import("../gameplay/gacha.zig");
-const Player = @import("../store/Player.zig");
-const player_data = @import("player_data.zig");
 const proto = @import("proto");
-const quest_notify = @import("../notify/quest.zig");
 const reward = @import("../gameplay/reward.zig");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
@@ -48,11 +40,11 @@ pub fn gacha_newbie_spin_req(scope: *Scope) !void {
 
     if (request.Value != tables.gacha_newbie.id)
         return scope.reject(.invalid_req);
-    const player = scope.playerMut();
-    var cards = gacha_rules.spinNewbieGacha(&player.newbie_gacha) catch
+    var checked = scope.player.newbie_gacha;
+    _ = gacha_rules.spinNewbieGacha(&checked) catch
         return scope.reject(.invalid_req);
-
-    scope.markDirty();
+    const player = scope.mutation().modify(.{ .gacha = true });
+    var cards = gacha_rules.spinNewbieGacha(&player.newbie_gacha) catch unreachable;
 
     try scope.respond(proto.pb.GachaNewbieSpinResp{ .Cards = .fromOwnedSlice(&cards) });
 
@@ -68,11 +60,11 @@ pub fn gacha_newbie_save_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.GachaNewbieSaveReq);
     if (request.Id != tables.gacha_newbie.id)
         return scope.reject(.invalid_req);
-    const player = scope.playerMut();
-    gacha_rules.saveNewbieGachaResult(&player.newbie_gacha, request.Idx) catch
+    var checked = scope.player.newbie_gacha;
+    gacha_rules.saveNewbieGachaResult(&checked, request.Idx) catch
         return scope.reject(.invalid_req);
-
-    scope.markDirty();
+    const player = scope.mutation().modify(.{ .gacha = true });
+    gacha_rules.saveNewbieGachaResult(&player.newbie_gacha, request.Idx) catch unreachable;
 
     try scope.respond(proto.pb.Nil{});
 
@@ -87,27 +79,17 @@ pub fn gacha_newbie_obtain_req(scope: *Scope) !void {
         return scope.reject(.invalid_req);
     const cards = gacha_rules.selectedNewbieGachaResult(&scope.player.newbie_gacha, request.Idx) catch
         return scope.reject(.invalid_req);
-    const player = scope.playerMut();
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const now = scope.now;
     var drawn_cards: [tables.gacha_newbie.cards_per_spin]tables.gacha.Card = undefined;
     for (&drawn_cards, cards) |*drawn, card_id|
         drawn.* = .{ .id = card_id, .class = tables.gacha.classifyCard(card_id) };
     var receipt: reward.GachaReceipt = .{};
-    try reward.applyGachaCards(player, scope.gpa, &drawn_cards, now, &receipt);
-    var achievement_changes: achievement.ChangeSet = .{};
-    try achievement.refresh(player, scope.gpa, now, &achievement_changes);
+    try reward.grantCards(scope.mutation(), scope.gpa, &drawn_cards, now, &receipt);
+    const player = scope.mutation().modify(.{ .gacha = true });
     gacha_rules.markNewbieGachaReceived(&player.newbie_gacha);
-
-    scope.markDirty();
 
     var change: change_info.Gacha = .{};
     try scope.respond(try change.build(scope.player, &receipt, scope.arena));
-
-    try quest_notify.refreshLineupTutorial(scope);
-    try quest_notify.sendNewTrekkerAffinityQuests(scope, &receipt);
-    try achievement_notify.send(scope, &achievement_changes);
-    if (receipt.handbook_changed)
-        try player_data.response.sendHandbookChanges(scope);
 
     log.info("selected newbie gacha result {d}", .{request.Idx});
 }

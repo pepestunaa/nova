@@ -1,5 +1,7 @@
 const raw_list = @import("tables/SubNoteSkill");
 
+const count: usize = raw_list.len;
+
 //
 
 const max_scores = blk: {
@@ -15,10 +17,10 @@ pub const Entry = struct {
     score_count: usize,
 };
 
-pub const list: [raw_list.len]Entry = blk: {
+pub const list: [count]Entry = blk: {
     @setEvalBranchQuota(10_000);
 
-    var result: [raw_list.len]Entry = undefined;
+    var result: [count]Entry = undefined;
     for (raw_list, 0..) |raw, entry_index| {
         var scores: [max_scores]u32 = @splat(0);
         for (raw.scores, 0..) |entry_score, score_index|

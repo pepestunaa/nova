@@ -6,6 +6,7 @@ const Io = std.Io;
 
 const common = @import("common");
 const gacha = @import("gacha.zig");
+const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const quest = @import("quest.zig");
 const research_project = @import("research_project.zig");
@@ -18,20 +19,20 @@ pub const Error = error{NameTooLong} || Allocator.Error;
 const Nickname = common.mem.LimitedString(64);
 
 pub fn register(
-    player: *Player,
+    mutation: *Mutation,
     allocator: Allocator,
     new_nickname: []const u8,
     gender: Player.Basic.Gender,
     registered_at: Io.Timestamp,
 ) Error!void {
     const created_at = registered_at.toSeconds();
+    const nickname = Nickname.init(new_nickname) catch
+        return error.NameTooLong;
+    const player = mutation.modify(.{ .player_progression = true });
     player.basic = .{
         .created_at = created_at,
         .gender = gender,
-        .nickname = Nickname.init(
-            new_nickname,
-        ) catch
-            return error.NameTooLong,
+        .nickname = nickname,
         .energy_updated_at = created_at,
         .energy_next_at = 0,
     };

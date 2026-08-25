@@ -7,7 +7,7 @@ const Io = std.Io;
 const character_progression = @import("../gameplay/character_progression.zig");
 const Player = @import("../store/Player.zig");
 const player_view = @import("player.zig");
-const progression = @import("../gameplay/progression.zig");
+const progression = @import("../gameplay/upgrade.zig");
 const proto = @import("proto");
 const research_project = @import("../gameplay/research_project.zig");
 const reward = @import("../gameplay/reward.zig");
@@ -105,12 +105,12 @@ pub const Gacha = struct {
     }
 };
 
-pub const Achievement = struct {
+pub const Resources = struct {
     builder: Builder = .{},
 
     pub fn build(
-        formatter: *Achievement,
-        receipt: *const reward.AchievementReceipt,
+        formatter: *Resources,
+        receipt: *const reward.ResourceReceipt,
         arena: Allocator,
     ) Error!proto.pb.ChangeInfo {
         formatter.builder.len = 0;

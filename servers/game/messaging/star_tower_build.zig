@@ -7,7 +7,6 @@ const journey_ticket_id = star_tower_record.journey_ticket_id;
 const gameplay = @import("../gameplay.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
-const research_project_notify = @import("../notify/research_project.zig");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
 
@@ -82,7 +81,7 @@ pub fn star_tower_build_delete_req(scope: *Scope) !void {
         requested_build_count += 1;
     }
 
-    const player = scope.playerMut();
+    const player = scope.mutation().modify(.{ .ascension = true, .inventory = true });
     var raw_ticket_count: u32 = 0;
     var deleted_count: usize = 0;
     var index: usize = 0;
@@ -98,15 +97,13 @@ pub fn star_tower_build_delete_req(scope: *Scope) !void {
         deleted_count += 1;
     }
 
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const now = scope.now;
     const ticket_count = try star_tower_record.awardDismantleTickets(
         player,
         scope.gpa,
         raw_ticket_count,
         now,
     );
-
-    scope.markDirty();
 
     var encoded_resource: [16]u8 = undefined;
     var changes: [1]proto.pb.Any = undefined;
@@ -123,18 +120,21 @@ pub fn star_tower_build_name_set_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_build_name_set_req);
 
     const request = try scope.source.read(proto.pb.StarTowerBuildNameSetReq);
-    const player = scope.playerMut();
-    const build = findBuildMut(player, request.BuildId) orelse {
+    const current = findBuild(scope.player, request.BuildId) orelse {
         try scope.respondFailureEmpty();
 
         log.warn("received name change for unknown record {d}", .{request.BuildId});
 
         return;
     };
-    build.name.set(request.Name) catch
+    var name = current.name;
+    name.set(request.Name) catch
         return scope.reject(.build_name_max_len_limit);
-
-    scope.markDirty();
+    const build = findBuildMut(
+        scope.mutation().modify(.{ .ascension = true }),
+        request.BuildId,
+    ).?;
+    build.name = name;
 
     try scope.respond(proto.pb.Nil{});
 
@@ -145,18 +145,19 @@ pub fn star_tower_build_lock_unlock_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_build_lock_unlock_req);
 
     const request = try scope.source.read(proto.pb.StarTowerBuildLockUnlockReq);
-    const player = scope.playerMut();
-    const build = findBuildMut(player, request.BuildId) orelse {
+    _ = findBuild(scope.player, request.BuildId) orelse {
         try scope.respondFailureEmpty();
 
         log.warn("received lock change for unknown record {d}", .{request.BuildId});
 
         return;
     };
+    const build = findBuildMut(
+        scope.mutation().modify(.{ .ascension = true }),
+        request.BuildId,
+    ).?;
 
     build.flags.locked = request.Lock;
-
-    scope.markDirty();
 
     try scope.respond(proto.pb.Nil{});
 
@@ -170,7 +171,7 @@ pub fn star_tower_build_preference_set_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_build_preference_set_req);
 
     const request = try scope.source.read(proto.pb.StarTowerBuildPreferenceSetReq);
-    const player = scope.playerMut();
+    const player = scope.mutation().modify(.{ .ascension = true });
     var changed: usize = 0;
     var check_in_ids = request.CheckInIds;
     while (try check_in_ids.next()) |build_id| {
@@ -186,8 +187,6 @@ pub fn star_tower_build_preference_set_req(scope: *Scope) !void {
         if (build.flags.preferred) changed += 1;
         build.flags.preferred = false;
     }
-    scope.markDirty();
-
     try scope.respond(proto.pb.Nil{});
 
     log.info("updated preference on {d} Ascension record(s)", .{changed});
@@ -197,41 +196,46 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_build_whether_save_req);
 
     const request = try scope.source.read(proto.pb.StarTowerBuildWhetherSaveReq);
-    const player = scope.playerMut();
-    const pending = &player.pending_star_tower_build;
-    if (!pending.flags.valid) {
+    const current_pending = &scope.player.pending_star_tower_build;
+    if (!current_pending.flags.valid) {
         return try scope.respond(proto.pb.StarTowerBuildWhetherSaveResp{});
     }
 
     if (!request.Delete) {
-        if (player.star_tower_builds.len == Player.max_star_tower_builds) {
+        if (scope.player.star_tower_builds.len == Player.max_star_tower_builds) {
             try scope.respondFailureEmpty();
 
-            log.warn("cannot save record {d}: record storage is full", .{pending.id});
+            log.warn("cannot save record {d}: record storage is full", .{current_pending.id});
 
             return;
         }
+        var checked_name = current_pending.name;
+        checked_name.set(request.BuildName) catch
+            return scope.reject(.build_name_max_len_limit);
+        const player = scope.mutation().modify(.{
+            .ascension = true,
+            .research_project = true,
+        });
+        const pending = &player.pending_star_tower_build;
         pending.flags.locked = request.Lock;
         pending.flags.preferred = request.Preference;
-        pending.name.set(request.BuildName) catch
-            return scope.reject(.build_name_max_len_limit);
+        pending.name = checked_name;
         const build_id = pending.id;
         const rating = tables.star_tower.buildRating(pending.score);
         try player.star_tower_builds.append(scope.gpa, pending.*);
         pending.* = .{};
         gameplay.research_project.savedRecord(player, rating);
 
-        scope.markDirty();
-
         try scope.respond(proto.pb.StarTowerBuildWhetherSaveResp{});
-        try research_project_notify.send(scope);
 
         log.info("saved Ascension record {d}", .{build_id});
 
         return;
     }
 
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
+    const player = scope.mutation().modify(.{ .ascension = true, .inventory = true });
+    const pending = &player.pending_star_tower_build;
+    const now = scope.now;
     const ticket_count = try star_tower_record.awardDismantleTickets(
         player,
         scope.gpa,
@@ -240,8 +244,6 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
     );
     const build_id = pending.id;
     pending.* = .{};
-    scope.markDirty();
-
     var encoded_resource: [16]u8 = undefined;
     var changes: [1]proto.pb.Any = undefined;
     const change = try ticketChange(ticket_count, &encoded_resource, &changes);

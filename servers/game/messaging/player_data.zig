@@ -1,7 +1,5 @@
-const std = @import("std");
-const Io = std.Io;
-
 const gameplay = @import("../gameplay.zig");
+const handbook_view = @import("../view/handbook.zig");
 const Player = @import("../store/Player.zig");
 const player_view = @import("../view/player.zig");
 const proto = @import("proto");
@@ -20,65 +18,21 @@ pub fn player_data_req(scope: *Scope) !void {
         return;
     }
 
-    const now = Io.Timestamp.now(scope.io, .real).toSeconds();
-    const player = scope.playerMut();
-    const daily_weekly_missions_changed = try gameplay.quest.refreshDailyWeeklyMissions(
-        player,
+    _ = try gameplay.quest.refreshDailyWeeklyMissions(
+        scope.mutation(),
         scope.gpa,
-        now,
+        scope.now,
     );
-    const energy_changed = gameplay.energy.refresh(player, now);
-    const skins_changed = try player.ensureCharacterDefaultSkins(scope.gpa);
+    _ = gameplay.energy.refresh(scope.mutation(), scope.now);
+    _ = try gameplay.handbook.ensureDefaultSkins(scope.mutation(), scope.gpa);
 
-    if (daily_weekly_missions_changed or energy_changed or skins_changed)
-        scope.markDirty();
-
-    try response.send(scope, now);
+    try response.send(scope);
 }
 
 pub const response = struct {
-    /// Builds a Gallery bitmap in the format cached by the client. `null`
-    /// means the player has no entries of that type.
-    pub fn handbookInfo(
-        player: *const Player,
-        handbook_type: usize,
-        bitmap: []u8,
-    ) ?proto.pb.HandbookInfo {
-        std.debug.assert(bitmap.len >= tables.handbook.max_bitmap_len);
-        @memset(bitmap, 0);
-
-        var bitmap_len: usize = 0;
-        for (player.handbook.slice()) |unlock| {
-            const entry = tables.handbook.get(unlock.handbook_id) orelse
-                continue;
-            if (entry.type != handbook_type) continue;
-
-            const byte_index = tables.handbook.bitmapByteIndex(entry.index);
-            const bit: u3 = @intCast((entry.index - 1) % 8);
-            bitmap[byte_index] |= @as(u8, 1) << bit;
-            bitmap_len = @max(bitmap_len, tables.handbook.bitmapLen(entry.index));
-        }
-
-        if (bitmap_len == 0)
-            return null;
-
-        return .{
-            .Type = @intCast(handbook_type),
-            .Data = bitmap[0..bitmap_len],
-        };
-    }
-
-    pub fn sendHandbookChanges(scope: *Scope) !void {
-        var bitmap: [tables.handbook.max_bitmap_len]u8 = undefined;
-        for ([_]u32{ tables.handbook.skin_type, tables.handbook.disc_type }) |handbook_type| {
-            const handbook_info = handbookInfo(scope.player, handbook_type, &bitmap) orelse
-                continue;
-            try scope.sink.sendProto(.handbook_change_notify, &handbook_info);
-        }
-    }
-
-    pub fn send(scope: *Scope, now: i64) !void {
+    pub fn send(scope: *Scope) !void {
         const player: *const Player = scope.player;
+        const now = scope.now;
         const active_tower_formation = if (player.star_tower_run.active)
             player.getFormation(player.star_tower_run.formation_id)
         else
@@ -283,7 +237,7 @@ pub const response = struct {
         }
         for (player.board.slice(), 0..) |entry, index| board[index] = entry.handbook_id;
         for (&handbook_bitmaps, 0..) |*bitmap, handbook_type| {
-            if (handbookInfo(player, handbook_type, bitmap)) |info| {
+            if (handbook_view.info(player, handbook_type, bitmap)) |info| {
                 handbook_infos[handbook_count] = info;
                 handbook_count += 1;
             }
