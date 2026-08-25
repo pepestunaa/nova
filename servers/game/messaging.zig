@@ -14,6 +14,7 @@ const namespaces: []const type = &.{
     @import("messaging/character.zig"),
     @import("messaging/disc.zig"),
     @import("messaging/energy_info.zig"),
+    @import("messaging/friend.zig"),
     @import("messaging/gacha.zig"),
     @import("messaging/gacha_newbie.zig"),
     @import("messaging/ike.zig"),

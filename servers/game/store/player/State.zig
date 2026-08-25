@@ -9,6 +9,7 @@ const tables = @import("../../tables.zig");
 //
 
 pub const max_characters = tables.character.count;
+pub const max_friends = tables.config.unsignedList(usize, "FriendMax")[0];
 pub const max_formation_characters = StarTower.max_formation_characters;
 pub const max_formation_discs = StarTower.max_formation_discs;
 pub const max_achievements = tables.achievement.tracked_entry_count;
@@ -53,6 +54,9 @@ pub const Basic = extern struct {
     nickname: Nickname = .empty,
 
     padding: [3]u8 = @splat(0),
+    friend_uids: [max_friends]u64 = @splat(0),
+    friend_count: u8 = 0,
+    friend_stars: [(max_friends + 7) / 8]u8 = @splat(0),
 
     comptime {
         common.mem.assertNoImplicitPadding(@This());
