@@ -121,6 +121,7 @@ pub fn resolve(
             formation,
             false,
             character_override,
+            .event,
         );
         gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
         if (run.offered_potential_count == 0)
@@ -135,7 +136,7 @@ pub fn resolve(
             .NewIds = .fromOwnedSlice(run.offered_potential_ids[0..run.offered_potential_count]),
             .CanReRoll = run.potential_rerolls != 0,
             .ReRollPrice = run.potential_reroll_price,
-            .Type = 5,
+            .Type = @intFromEnum(Player.StarTowerRun.PotentialSelectorType.event),
         } };
         case_count += 1;
     }

@@ -182,7 +182,7 @@ fn resumeCases(
                 .TeamLevel = run.team_level,
                 .CanReRoll = run.potential_rerolls != 0,
                 .ReRollPrice = run.potential_reroll_price,
-                .Type = if (run.potential_selector_is_strengthen) 2 else if (run.shop_potential_pending) 4 else 1,
+                .Type = @intFromEnum(run.potential_selector),
             } },
             .select_event => .{ .Id = id, .SelectOptionsEventCase = .{
                 .EvtId = run.event_id,

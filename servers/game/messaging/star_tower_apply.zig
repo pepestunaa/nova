@@ -268,7 +268,7 @@ fn addInitialTowerItem(
 
         return;
     }
-    if (count.* == items.len)
+    if (count.* >= items.len)
         return error.FullTowerInventory;
     items[count.*] = .{ .Tid = item_id, .Qty = @intCast(quantity) };
     count.* += 1;

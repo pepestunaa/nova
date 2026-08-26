@@ -54,7 +54,7 @@ official server:
 - A few advanced Monolith Research effects and unusual Ascension events need more refinement.
 - Fate Cards and Cataclysm Survivor are not implemented yet.
 - Daily and weekly missions are listed and reset on schedule, but their gameplay progress and rewards are not implemented yet.
-- Disc progression and character emblems are not implemented yet.
+- Character emblems are not implemented yet.
 
 ## Client patch
 

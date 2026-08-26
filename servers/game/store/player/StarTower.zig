@@ -38,6 +38,17 @@ pub const Run = extern struct {
         sync_hp,
     };
 
+    pub const PotentialSelectorType = enum(u8) {
+        /// The potential selector shown after the squad level increases.
+        level_up = 1,
+        /// The selector opened by the Enhancement Machine.
+        strengthen = 2,
+        /// The selector opened by a shop purchase.
+        shop = 4,
+        /// The selector opened by an event reward.
+        event = 5,
+    };
+
     total_damages: [max_formation_characters]u64 = @splat(0),
     /// ID reused if this Ascension becomes a Record.
     build_id: u64 = 0,
@@ -100,7 +111,7 @@ pub const Run = extern struct {
     offered_potential_bonus_pending: [3]bool = @splat(false),
     strengthen_bonus_count: u8 = 0,
     potential_rerolls: u8 = 0,
-    potential_selector_is_strengthen: bool = false,
+    potential_selector: PotentialSelectorType = .level_up,
     shop_goods_count: u8 = 0,
     shop_good_purchased: [max_shop_goods]bool = @splat(false),
     shop_rerolls: u8 = 0,
@@ -114,7 +125,6 @@ pub const Run = extern struct {
     affinity_change_count: u8 = 0,
     strengthen_times: u8 = 0,
     strengthen_first_free_available: bool = false,
-    shop_potential_pending: bool = false,
     event_option_count: u8 = 0,
     event_pending: bool = false,
     room_case_count: u8 = 0,
@@ -123,7 +133,7 @@ pub const Run = extern struct {
     settlement_pending: bool = false,
     final_core_potential_pending: bool = false,
 
-    padding: [1]u8 = @splat(0),
+    padding: [2]u8 = @splat(0),
 
     comptime {
         common.mem.assertNoImplicitPadding(@This());

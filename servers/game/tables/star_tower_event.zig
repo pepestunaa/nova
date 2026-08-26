@@ -1,3 +1,5 @@
+const std = @import("std");
+
 const raw_events = @import("tables/StarTowerEvent");
 const raw_options = @import("tables/EventOptions");
 const raw_results = @import("tables/EventResult");
@@ -33,6 +35,8 @@ const definitions = blk: {
         for (raw_options) |option| {
             if (option.id / 100 != raw_event.id)
                 continue;
+            if (candidate_count >= candidates.len)
+                @compileError("StarTowerEvent has more options than the server supports");
             candidates[candidate_count] = option.id;
             candidate_count += 1;
         }
@@ -171,4 +175,28 @@ fn parameters(comptime result: anytype, comptime field_name: []const u8) [2]u32 
     }
 
     return result_params;
+}
+
+//
+
+test "event result lookup preserves table effects" {
+    var found_gain = false;
+    var found_loss = false;
+    var found_potential = false;
+
+    const result_count_for_option = outcomeCount(11901);
+    try std.testing.expectEqual(@as(usize, 3), result_count_for_option);
+    for (0..result_count_for_option) |index| {
+        const result = outcome(11901, index).?;
+        if (result.coin_delta == 120)
+            found_gain = true;
+        if (result.coin_delta == -120)
+            found_loss = true;
+        if (result.potential_kind == 104 and result.potential_character_position == 0)
+            found_potential = true;
+    }
+
+    try std.testing.expect(found_gain);
+    try std.testing.expect(found_loss);
+    try std.testing.expect(found_potential);
 }

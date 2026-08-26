@@ -125,6 +125,7 @@ pub fn offerPotentials(
     formation: *const Player.Formation,
     core_only: bool,
     character_override: ?u32,
+    selector_type: Player.StarTowerRun.PotentialSelectorType,
 ) u32 {
     const character_id = character_override orelse selectPotentialCharacter(run, formation);
     run.offered_potential_character_id = character_id;
@@ -163,7 +164,7 @@ pub fn offerPotentials(
     }
     run.potential_rerolls = modifiers.potential_rerolls;
     run.potential_reroll_price = modifiers.potential_reroll_price;
-    run.potential_selector_is_strengthen = false;
+    run.potential_selector = selector_type;
 
     return butterflies_inside;
 }
@@ -206,7 +207,7 @@ pub fn offerPotentialStrengthening(
     }
     run.potential_rerolls = modifiers.potential_rerolls;
     run.potential_reroll_price = modifiers.potential_reroll_price;
-    run.potential_selector_is_strengthen = true;
+    run.potential_selector = .strengthen;
     run.offered_potential_character_id = 0;
 }
 
@@ -232,7 +233,7 @@ pub fn addItem(
 
         return;
     }
-    if (run.tower_item_count == run.tower_item_ids.len)
+    if (run.tower_item_count >= run.tower_item_ids.len)
         return error.FullTowerInventory;
     const index = run.tower_item_count;
     run.tower_item_ids[index] = item_id;
@@ -483,7 +484,7 @@ pub fn addRoomCase(
     kind: Player.StarTowerRun.RoomCaseKind,
     effect_id: u32,
 ) error{TooManyRoomCases}!u32 {
-    if (run.room_case_count == run.room_case_ids.len)
+    if (run.room_case_count >= run.room_case_ids.len)
         return error.TooManyRoomCases;
 
     run.room_case_last_id +|= 1;
@@ -589,7 +590,7 @@ fn selectPotentialUpgradeChoices(
     var result: [3]u32 = @splat(0);
     var result_count: usize = 0;
     for (owned_ids, owned_levels) |id, level| {
-        if (result_count == result.len or containsPotential(result[0..result_count], id))
+        if (result_count >= result.len or containsPotential(result[0..result_count], id))
             continue;
         if (level >= potentialLevelCap(id, extra_level_cap))
             continue;
@@ -609,7 +610,7 @@ fn appendEligiblePotentials(
     extra_level_cap: u8,
 ) void {
     for (potential_ids) |id| {
-        if (candidate_count.* == candidates.len or containsPotential(candidates[0..candidate_count.*], id))
+        if (candidate_count.* >= candidates.len or containsPotential(candidates[0..candidate_count.*], id))
             continue;
         if (ownedPotentialLevel(owned_ids, owned_levels, id) >= potentialLevelCap(id, extra_level_cap))
             continue;
@@ -633,4 +634,16 @@ pub fn potentialLevelCap(id: u32, extra_level_cap: u8) u32 {
 fn containsPotential(ids: []const u32, expected: u32) bool {
     for (ids) |id| if (id == expected) return true;
     return false;
+}
+
+//
+
+test "unknown Ascension event options do not consume random state" {
+    var state: u64 = 123;
+
+    try std.testing.expectEqual(
+        @as(?tables.star_tower_event.Outcome, null),
+        selectEventOutcome(0, &state),
+    );
+    try std.testing.expectEqual(@as(u64, 123), state);
 }

@@ -299,7 +299,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             run.total_damage_count = 0;
             var damages = victory.Damages;
             while (try damages.next()) |damage| {
-                if (run.total_damage_count == run.total_damages.len)
+                if (run.total_damage_count >= run.total_damages.len)
                     break;
                 run.total_damages[run.total_damage_count] = damage;
                 run.total_damage_count += 1;
@@ -310,6 +310,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 formation,
                 run.potential_count == 0,
                 null,
+                .level_up,
             );
             gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
             if (run.offered_potential_count == 0)
@@ -402,7 +403,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .Infos = .fromOwnedSlice(potential_infos[0..run.offered_potential_count]),
                     .NewIds = .fromOwnedSlice(run.offered_potential_ids[0..run.offered_potential_count]),
                     .TeamLevel = run.team_level,
-                    .Type = 1,
+                    .Type = @intFromEnum(Player.StarTowerRun.PotentialSelectorType.level_up),
                 } else null,
             };
             if (offers_recovery) cases[1] = .{
@@ -560,7 +561,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .NewIds = .fromOwnedSlice(run.offered_potential_ids[0..run.offered_potential_count]),
                     .CanReRoll = run.potential_rerolls != 0,
                     .ReRollPrice = run.potential_reroll_price,
-                    .Type = 2,
+                    .Type = @intFromEnum(Player.StarTowerRun.PotentialSelectorType.strengthen),
                 },
             }};
 
@@ -589,7 +590,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 run.potential_rerolls -= 1;
                 const rerolls_remaining = run.potential_rerolls;
                 run.tower_coins -= reroll_price;
-                if (run.potential_selector_is_strengthen) {
+                if (run.potential_selector == .strengthen) {
                     const strengthen_bonus_count = run.strengthen_bonus_count;
                     tower.offerPotentialStrengthening(player, run);
                     if (run.strengthen_bonus_count != strengthen_bonus_count)
@@ -601,6 +602,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                         formation,
                         selected_case_kind == .select_special_potential,
                         run.offered_potential_character_id,
+                        run.potential_selector,
                     );
                     gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
                     gameplay.research_project.refreshedPotentials(scope.mutation());
@@ -630,6 +632,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     .SelectPotentialCase = if (selected_case_kind == .select_potential) .{
                         .Infos = .fromOwnedSlice(infos[0..run.offered_potential_count]),
                         .NewIds = .fromOwnedSlice(run.offered_potential_ids[0..run.offered_potential_count]),
+                        .Type = @intFromEnum(run.potential_selector),
                     } else null,
                 }};
 
@@ -658,7 +661,8 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 run.potential_bonus_count +|= 1;
                 gameplay.research_project.triggeredButterfliesInside(scope.mutation(), 1);
             }
-            if (run.potential_selector_is_strengthen) {
+            const selector_type = run.potential_selector;
+            if (selector_type == .strengthen) {
                 const owned_index = tower.potentialIndex(run, potential_id) orelse
                     return error.UnknownPotential;
                 const cap = tower.potentialLevelCap(
@@ -674,7 +678,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     );
                     run.potential_levels[owned_index] = @min(cap, run.potential_levels[owned_index] + potential_level);
                 } else {
-                    if (run.potential_count == run.potential_ids.len)
+                    if (run.potential_count >= run.potential_ids.len)
                         return error.TooManyPotentials;
                     run.potential_ids[run.potential_count] = potential_id;
                     run.potential_levels[run.potential_count] = potential_level;
@@ -700,9 +704,9 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 .value = potential_writer.buffered(),
             }};
 
-            if (run.shop_potential_pending) {
-                run.shop_potential_pending = false;
+            run.potential_selector = .level_up;
 
+            if (selector_type == .shop) {
                 try scope.respond(proto.pb.StarTowerInteractResp{
                     .Id = request_id,
                     .Change = .{ .Props = .fromOwnedSlice(&changes) },
@@ -728,6 +732,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     formation,
                     true,
                     null,
+                    .level_up,
                 );
                 gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
                 if (run.offered_potential_count == 0)

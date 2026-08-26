@@ -250,7 +250,7 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
     }
 
     if (!request.Delete) {
-        if (scope.player.star_tower_builds.len == Player.max_star_tower_builds) {
+        if (scope.player.star_tower_builds.len >= Player.max_star_tower_builds) {
             try scope.respondFailureEmpty();
 
             log.warn("cannot save record {d}: record storage is full", .{current_pending.id});

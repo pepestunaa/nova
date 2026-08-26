@@ -227,7 +227,7 @@ pub fn interact(
             gameplay.research_project.activatedHarmonySkills(scope.mutation(), activatedSecondaries(secondary_change_slice));
             run.shop_good_purchased[good_index] = true;
             run.tower_coins -= price;
-            run.shop_potential_pending = false;
+            run.potential_selector = .level_up;
             gameplay.research_project.purchasedShopGood(scope.mutation(), is_discounted);
 
             try respondTowerItemPurchase(scope, request_id, item_id, item_quantity, is_new, price, secondary_change_slice);
@@ -257,13 +257,13 @@ pub fn interact(
                 formation,
                 false,
                 character_override,
+                .shop,
             );
             gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
             if (run.offered_potential_count == 0) return error.NoPotentialChoices;
 
             run.shop_good_purchased[good_index] = true;
             run.tower_coins -= price;
-            run.shop_potential_pending = true;
             gameplay.research_project.purchasedShopGood(scope.mutation(), is_discounted);
             const potential_case_id = try tower.addRoomCase(run, .select_potential, 0);
 
@@ -413,7 +413,7 @@ fn respondPotentialPurchase(
             .NewIds = .fromOwnedSlice(run.offered_potential_ids[0..run.offered_potential_count]),
             .CanReRoll = run.potential_rerolls != 0,
             .ReRollPrice = run.potential_reroll_price,
-            .Type = 4,
+            .Type = @intFromEnum(Player.StarTowerRun.PotentialSelectorType.shop),
         },
     }};
     try scope.respond(proto.pb.StarTowerInteractResp{

@@ -83,7 +83,7 @@ pub fn send(
     } else 0;
     if (is_first_clear) try player.setClearRewardClaimed(scope.gpa, .star_tower, completed_tower_id);
     const build_storage_full =
-        player.star_tower_builds.len == Player.max_star_tower_builds;
+        player.star_tower_builds.len >= Player.max_star_tower_builds;
     _ = star_tower_record.preparePendingBuild(player, formation, score);
     gameplay.research_project.completedAscension(scope.mutation(), completed_difficulty);
     const build_coin = if (build_storage_full) blk: {
