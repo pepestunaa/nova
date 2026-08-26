@@ -104,11 +104,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
     else
         initial_map_id;
     const now = scope.now;
-    const player = scope.mutation().modify(.{
-        .ascension = true,
-        .inventory = request.Sweep,
-        .research_project = true,
-    });
+    const player = scope.mutation().modify(.{});
     if (spent_sweep_ticket) |ticket_id|
         try player.addResource(scope.gpa, ticket_id, -1);
     player.resetStarTowerRun();
@@ -153,7 +149,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
             .SyncHPCase = .{},
         },
     };
-    gameplay.research_project.enteredAscension(player);
+    gameplay.research_project.enteredAscension(scope.mutation());
     const initial_items = try scope.arena.alloc(
         proto.pb.TowerItemInfo,
         Player.StarTowerRun.max_tower_items,
@@ -198,7 +194,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
         &initial_secondary_changes,
     );
     gameplay.research_project.activatedHarmonySkills(
-        player,
+        scope.mutation(),
         shop.activatedSecondaries(initial_secondary_change_slice),
     );
     var initial_resources: [1]proto.pb.TowerResInfo = .{.{

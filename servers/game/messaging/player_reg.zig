@@ -26,7 +26,7 @@ pub fn player_reg_req(scope: *Scope) !void {
     _ = gameplay.energy.refresh(scope.mutation(), now);
 
     if (config.skip_tutorial) {
-        try scope.mutation().modify(.{ .player_progression = true }).completeGuides(
+        try scope.mutation().modify(.{}).completeGuides(
             scope.gpa,
             &tables.guide_group.all_ids,
         );

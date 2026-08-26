@@ -112,7 +112,6 @@ pub fn upgrade(
 
     const writable = mutation.modify(.{
         .characters = true,
-        .inventory = true,
     });
     const writable_character = writable.characters.getMut(character_id) orelse unreachable;
     for (items, 0..) |item, index| {
@@ -156,7 +155,6 @@ pub fn advance(
 
     const writable = mutation.modify(.{
         .characters = true,
-        .inventory = true,
     });
     const writable_character = writable.characters.getMut(character_id) orelse unreachable;
     if (target_advance >= definition.advance_skin_unlock_level) {
@@ -192,7 +190,6 @@ pub fn upgradeSkill(
 
     const writable = mutation.modify(.{
         .characters = true,
-        .inventory = true,
     });
     applyCosts(writable, cost.costs[0..cost.cost_count], cost.gold, receipt);
     writable.characters.getMut(character_id).?.setSkillLevel(skill, target_level);
@@ -244,7 +241,6 @@ pub fn unlockTalentGroup(mutation: *Mutation, group_id: u32, receipt: *TalentRec
 
     const writable = mutation.modify(.{
         .characters = true,
-        .inventory = true,
     });
     const writable_character = writable.characters.getMut(group.character_id) orelse unreachable;
     for (group_talents) |talent| {
@@ -293,7 +289,6 @@ pub fn unlockTalent(mutation: *Mutation, talent_id: u32, receipt: *TalentReceipt
 
     const writable = mutation.modify(.{
         .characters = true,
-        .inventory = true,
     });
     const writable_character = writable.characters.getMut(group.character_id) orelse unreachable;
     writable.consumeItem(definition.fragments_id, fragments) catch unreachable;

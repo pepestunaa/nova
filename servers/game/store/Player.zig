@@ -451,6 +451,33 @@ pub fn setFormation(
         return error.TooManyFormations;
 }
 
+pub fn formationMatches(
+    player: *const Player,
+    number: u32,
+    character_ids: []const u32,
+    disc_ids: []const u32,
+    preselection_id: u64,
+) bool {
+    for (player.formations.slice()) |*formation| {
+        if (formation.number != number)
+            continue;
+
+        return formation.preselection_id == preselection_id and
+            std.mem.eql(
+                u32,
+                formation.character_ids[0..formation.character_count],
+                character_ids,
+            ) and
+            std.mem.eql(
+                u32,
+                formation.disc_ids[0..formation.disc_count],
+                disc_ids,
+            );
+    }
+
+    return false;
+}
+
 pub fn ensureCharacterDefaultSkins(player: *Player, allocator: Allocator) !bool {
     var changed = false;
     var iterator = player.characters.iterator();
@@ -470,6 +497,15 @@ pub fn learn(player: *Player, allocator: Allocator, group_id: u32, step_id: i32)
     }
 
     try player.guides.append(allocator, .{ .group_id = group_id, .step_id = step_id });
+}
+
+pub fn guideStep(player: *const Player, group_id: u32) ?i32 {
+    for (player.guides.slice()) |guide| {
+        if (guide.group_id == group_id)
+            return guide.step_id;
+    }
+
+    return null;
 }
 
 /// Completes the supplied tutorial groups when new-player tutorial skipping is
@@ -512,4 +548,44 @@ pub fn resetStarTowerRun(player: *Player) void {
     player.star_tower_run.reset();
     player.star_tower_map_param.clear();
     player.star_tower_client_data.clear();
+}
+
+//
+
+test "formation comparison distinguishes unchanged and changed requests" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    const characters = [_]u32{ 1, 2, 3 };
+    const discs = [_]u32{ 10, 11 };
+    try player.setFormation(
+        testing.allocator,
+        2,
+        &characters,
+        &discs,
+        7,
+    );
+
+    try testing.expect(player.formationMatches(2, &characters, &discs, 7));
+    try testing.expect(!player.formationMatches(3, &characters, &discs, 7));
+    try testing.expect(!player.formationMatches(2, characters[0..2], &discs, 7));
+    try testing.expect(!player.formationMatches(2, &characters, discs[0..1], 7));
+    try testing.expect(!player.formationMatches(2, &characters, &discs, 8));
+}
+
+test "tutorial lookup observes updates without adding duplicate groups" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+
+    try testing.expectEqual(@as(?i32, null), player.guideStep(4));
+    try player.learn(testing.allocator, 4, 2);
+    try testing.expectEqual(@as(?i32, 2), player.guideStep(4));
+    try player.learn(testing.allocator, 4, 2);
+    try testing.expectEqual(@as(usize, 1), player.guides.len);
+    try player.learn(testing.allocator, 4, 3);
+    try testing.expectEqual(@as(?i32, 3), player.guideStep(4));
+    try testing.expectEqual(@as(usize, 1), player.guides.len);
 }

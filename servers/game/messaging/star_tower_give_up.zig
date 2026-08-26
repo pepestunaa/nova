@@ -28,11 +28,7 @@ pub fn star_tower_give_up_req(scope: *Scope) !void {
 
     const formation = current.getFormation(current_run.formation_id) orelse
         return scope.reject(.rgl_cond);
-    const player = scope.mutation().modify(.{
-        .ascension = true,
-        .inventory = true,
-        .research_project = true,
-    });
+    const player = scope.mutation().modify(.{});
     const run = &player.star_tower_run;
     const now = scope.now;
     const ticket_count = try settlement.awardRunTickets(player, scope.gpa, run, now);

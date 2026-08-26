@@ -181,7 +181,7 @@ pub fn interact(
         run.tower_coins -= reroll_price;
         run.shop_floor = 0;
         initialize(player, run, room.floor);
-        gameplay.research_project.restockedShop(player);
+        gameplay.research_project.restockedShop(scope.mutation());
 
         try respondShopReroll(scope, request_id, run, reroll_price);
         log.info("refreshed Ascension shop for {d} currency; {d} refresh(es) remain", .{
@@ -223,12 +223,12 @@ pub fn interact(
             var secondary_changes: [tables.disc_secondary.max_changes]tower.SecondaryChange = undefined;
             const secondary_change_slice = tower.reconcileActiveSecondaries(run, formation, &secondary_changes);
             if (tables.star_tower_note.contains(item_id))
-                gameplay.research_project.collectedMusicalNotes(player, item_quantity);
-            gameplay.research_project.activatedHarmonySkills(player, activatedSecondaries(secondary_change_slice));
+                gameplay.research_project.collectedMusicalNotes(scope.mutation(), item_quantity);
+            gameplay.research_project.activatedHarmonySkills(scope.mutation(), activatedSecondaries(secondary_change_slice));
             run.shop_good_purchased[good_index] = true;
             run.tower_coins -= price;
             run.shop_potential_pending = false;
-            gameplay.research_project.purchasedShopGood(player, is_discounted);
+            gameplay.research_project.purchasedShopGood(scope.mutation(), is_discounted);
 
             try respondTowerItemPurchase(scope, request_id, item_id, item_quantity, is_new, price, secondary_change_slice);
 
@@ -251,19 +251,20 @@ pub fn interact(
                     return error.InvalidShopCharacterPosition;
                 break :blk formation.character_ids[formation_index];
             };
-            tower.offerPotentials(
+            const butterflies_inside = tower.offerPotentials(
                 player,
                 run,
                 formation,
                 false,
                 character_override,
             );
+            gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
             if (run.offered_potential_count == 0) return error.NoPotentialChoices;
 
             run.shop_good_purchased[good_index] = true;
             run.tower_coins -= price;
             run.shop_potential_pending = true;
-            gameplay.research_project.purchasedShopGood(player, is_discounted);
+            gameplay.research_project.purchasedShopGood(scope.mutation(), is_discounted);
             const potential_case_id = try tower.addRoomCase(run, .select_potential, 0);
 
             try respondPotentialPurchase(scope, request_id, run, potential_case_id, price);

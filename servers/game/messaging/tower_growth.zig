@@ -34,11 +34,6 @@ pub fn tower_growth_node_unlock_req(scope: *Scope) !void {
             });
         },
     };
-    _ = try gameplay.research_project.sync(
-        scope.mutation().modify(.{ .quests = true, .research_project = true }),
-        scope.gpa,
-    );
-
     var change: ItemChange = undefined;
     try change.init(node.cost_item_id, -node.cost_item_quantity);
     try scope.respond(change.info());
@@ -81,15 +76,10 @@ pub fn tower_growth_group_node_unlock_req(scope: *Scope) !void {
         return scope.reject(.talent_key_nodes_insufficient_quantity);
 
     const writable = scope.mutation().modify(.{
-        .inventory = true,
         .tower_growth = true,
-        .research_project = true,
-        .quests = true,
     });
     writable.consumeItem(cost_item_id, total_cost) catch unreachable;
     writable.tower_growth.details = staged_details;
-    _ = try gameplay.research_project.sync(writable, scope.gpa);
-
     var change: ItemChange = undefined;
     try change.init(cost_item_id, -total_cost);
     try scope.respond(proto.pb.TowerGrowthGroupNodeUnlockResp{

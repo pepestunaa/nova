@@ -256,9 +256,7 @@ pub fn unlock(mutation: *Mutation, id: u32) error{ InvalidNode, LockedNode, Insu
         return error.InsufficientItems;
 
     const player = mutation.modify(.{
-        .inventory = true,
         .tower_growth = true,
-        .research_project = true,
     });
     player.consumeItem(node.cost_item_id, node.cost_item_quantity) catch unreachable;
     setUnlocked(&player.tower_growth.details, id);

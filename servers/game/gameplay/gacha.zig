@@ -163,24 +163,42 @@ pub fn spinNewbieGacha(state: *NewbieGachaState) Error![tables.gacha_newbie.card
     return state.pending;
 }
 
-pub fn saveNewbieGachaResult(state: *NewbieGachaState, slot: u32) Error!void {
+pub fn saveNewbieGachaResult(state: *NewbieGachaState, requested_slot: u32) Error!u32 {
     if (!hasNewbieGachaPendingResult(state) or state.received)
         return error.NewbieGachaUnavailable;
 
-    const index: usize = if (slot == 0) blk: {
+    const index: usize = if (requested_slot == 0) blk: {
         if (state.saved_count == tables.gacha_newbie.max_saved_results)
             return error.NewbieGachaUnavailable;
         const next = state.saved_count;
         state.saved_count += 1;
 
         break :blk next;
-    } else std.math.cast(usize, slot - 1) orelse
+    } else std.math.cast(usize, requested_slot - 1) orelse
         return error.NewbieGachaUnavailable;
     if (index >= state.saved_count)
         return error.NewbieGachaUnavailable;
 
     state.saved[index] = state.pending;
     @memset(&state.pending, 0);
+
+    return @intCast(index + 1);
+}
+
+//
+
+test "newbie gacha append slots advance independently of request sentinel" {
+    var state: NewbieGachaState = .{};
+
+    state.pending[0] = 101;
+    try std.testing.expectEqual(@as(u32, 1), try saveNewbieGachaResult(&state, 0));
+    try std.testing.expectEqual(@as(u8, 1), state.saved_count);
+    try std.testing.expectEqual(@as(u32, 101), state.saved[0][0]);
+
+    state.pending[0] = 202;
+    try std.testing.expectEqual(@as(u32, 2), try saveNewbieGachaResult(&state, 0));
+    try std.testing.expectEqual(@as(u8, 2), state.saved_count);
+    try std.testing.expectEqual(@as(u32, 202), state.saved[1][0]);
 }
 
 pub fn selectedNewbieGachaResult(state: *const NewbieGachaState, slot: u32) Error![tables.gacha_newbie.cards_per_spin]u32 {

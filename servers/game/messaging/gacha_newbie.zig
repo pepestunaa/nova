@@ -1,3 +1,5 @@
+const std = @import("std");
+
 const change_info = @import("../view/change_info.zig");
 const gacha_rules = @import("../gameplay/gacha.zig");
 const proto = @import("proto");
@@ -43,7 +45,7 @@ pub fn gacha_newbie_spin_req(scope: *Scope) !void {
     var checked = scope.player.newbie_gacha;
     _ = gacha_rules.spinNewbieGacha(&checked) catch
         return scope.reject(.invalid_req);
-    const player = scope.mutation().modify(.{ .gacha = true });
+    const player = scope.mutation().modify(.{});
     var cards = gacha_rules.spinNewbieGacha(&player.newbie_gacha) catch unreachable;
 
     try scope.respond(proto.pb.GachaNewbieSpinResp{ .Cards = .fromOwnedSlice(&cards) });
@@ -61,14 +63,15 @@ pub fn gacha_newbie_save_req(scope: *Scope) !void {
     if (request.Id != tables.gacha_newbie.id)
         return scope.reject(.invalid_req);
     var checked = scope.player.newbie_gacha;
-    gacha_rules.saveNewbieGachaResult(&checked, request.Idx) catch
+    const saved_slot = gacha_rules.saveNewbieGachaResult(&checked, request.Idx) catch
         return scope.reject(.invalid_req);
-    const player = scope.mutation().modify(.{ .gacha = true });
-    gacha_rules.saveNewbieGachaResult(&player.newbie_gacha, request.Idx) catch unreachable;
+    const player = scope.mutation().modify(.{});
+    const committed_slot = gacha_rules.saveNewbieGachaResult(&player.newbie_gacha, request.Idx) catch unreachable;
+    std.debug.assert(saved_slot == committed_slot);
 
     try scope.respond(proto.pb.Nil{});
 
-    log.info("saved newbie gacha pull in slot {d}", .{request.Idx});
+    log.info("saved newbie gacha pull in slot {d}", .{saved_slot});
 }
 
 pub fn gacha_newbie_obtain_req(scope: *Scope) !void {
@@ -85,7 +88,7 @@ pub fn gacha_newbie_obtain_req(scope: *Scope) !void {
         drawn.* = .{ .id = card_id, .class = tables.gacha.classifyCard(card_id) };
     var receipt: reward.GachaReceipt = .{};
     try reward.grantCards(scope.mutation(), scope.gpa, &drawn_cards, now, &receipt);
-    const player = scope.mutation().modify(.{ .gacha = true });
+    const player = scope.mutation().modify(.{});
     gacha_rules.markNewbieGachaReceived(&player.newbie_gacha);
 
     var change: change_info.Gacha = .{};

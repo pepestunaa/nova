@@ -89,7 +89,6 @@ pub fn strengthen(
 
     const writable = mutation.modify(.{
         .discs = true,
-        .inventory = true,
     });
     const writable_disc = ownedDisc(writable, disc_id) orelse unreachable;
     for (items, 0..) |item, index| {
@@ -128,7 +127,6 @@ pub fn promote(mutation: *Mutation, disc_id: u32, receipt: *Receipt) Error!void 
 
     const writable = mutation.modify(.{
         .discs = true,
-        .inventory = true,
     });
     applyCosts(writable, cost.costs[0..cost.cost_count], cost.gold, receipt);
     ownedDisc(writable, disc_id).?.phase = @enumFromInt(target_phase);
@@ -153,7 +151,6 @@ pub fn limitBreak(mutation: *Mutation, disc_id: u32, quantity: u32, receipt: *Re
 
     const writable = mutation.modify(.{
         .discs = true,
-        .inventory = true,
     });
     writable.consumeItem(definition.transform_item_id, cost) catch unreachable;
     receipt.items[0] = .{ .id = definition.transform_item_id, .quantity = -cost };

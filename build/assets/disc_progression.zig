@@ -7,11 +7,6 @@ const raw_exp_items = @import("tables/DiscItemExp");
 const raw_promotions = @import("tables/DiscPromote");
 const raw_strengthen = @import("tables/DiscStrengthen");
 
-const raw_cap_count: usize = raw_caps.len;
-const raw_exp_item_count: usize = raw_exp_items.len;
-const raw_promotion_count: usize = raw_promotions.len;
-const raw_strengthen_count: usize = raw_strengthen.len;
-
 //
 
 const max_costs = 3;
@@ -336,8 +331,8 @@ fn singleConfigValue(comptime id: []const u8) u32 {
     return values[0];
 }
 
-fn normalizeStrengthen() [raw_strengthen_count]StrengthenRow {
-    var result: [raw_strengthen_count]StrengthenRow = undefined;
+fn normalizeStrengthen() [raw_strengthen.len]StrengthenRow {
+    var result: [raw_strengthen.len]StrengthenRow = undefined;
     inline for (raw_strengthen, 0..) |entry, index| result[index] = .{
         .id = entry.id,
         .exp = fieldOrZero(entry, "exp"),
@@ -345,8 +340,8 @@ fn normalizeStrengthen() [raw_strengthen_count]StrengthenRow {
     return result;
 }
 
-fn normalizeExpItems() [raw_exp_item_count]ExpItem {
-    var result: [raw_exp_item_count]ExpItem = undefined;
+fn normalizeExpItems() [raw_exp_items.len]ExpItem {
+    var result: [raw_exp_items.len]ExpItem = undefined;
     inline for (raw_exp_items, 0..) |entry, index| result[index] = .{
         .item_id = entry.item_id,
         .exp = entry.exp,
@@ -354,10 +349,10 @@ fn normalizeExpItems() [raw_exp_item_count]ExpItem {
     return result;
 }
 
-fn normalizePromotions() [raw_promotion_count]PromoteRow {
+fn normalizePromotions() [raw_promotions.len]PromoteRow {
     @setEvalBranchQuota(100_000);
 
-    var result: [raw_promotion_count]PromoteRow = undefined;
+    var result: [raw_promotions.len]PromoteRow = undefined;
     inline for (raw_promotions, 0..) |entry, row| {
         var item_ids: [max_costs]u32 = undefined;
         var quantities: [max_costs]i32 = undefined;
@@ -375,10 +370,10 @@ fn normalizePromotions() [raw_promotion_count]PromoteRow {
     return result;
 }
 
-fn normalizeCaps() [raw_cap_count]PhaseCap {
+fn normalizeCaps() [raw_caps.len]PhaseCap {
     @setEvalBranchQuota(10_000);
 
-    var result: [raw_cap_count]PhaseCap = undefined;
+    var result: [raw_caps.len]PhaseCap = undefined;
     inline for (raw_caps, 0..) |entry, index| result[index] = .{
         .rarity = entry.rarity,
         .phase = std.fmt.parseInt(u8, entry.phase, 10) catch unreachable,

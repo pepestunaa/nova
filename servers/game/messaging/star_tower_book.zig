@@ -84,7 +84,7 @@ pub fn star_tower_book_potential_reward_receive_req(scope: *Scope) !void {
         if (current.towerBookPotentialCount(definition.character_id) < definition.potential_count)
             continue;
 
-        const player = scope.mutation().modify(.{ .ascension = true, .inventory = true });
+        const player = scope.mutation().modify(.{});
         try player.claimTowerBookPotentialReward(scope.gpa, definition.id);
         try reward.grantResource(
             scope.mutation(),
@@ -126,7 +126,7 @@ pub fn star_tower_book_event_reward_receive_req(scope: *Scope) !void {
         const definition = tables.star_tower_book.eventReward(quest.id) orelse
             continue;
 
-        const player = scope.mutation().modify(.{ .inventory = true, .quests = true });
+        const player = scope.mutation().modify(.{});
         player.quests.entries[quest_index].claimed = true;
         try reward.grantResource(
             scope.mutation(),

@@ -86,7 +86,7 @@ pub fn resolve(
     if (note_id != 0) {
         const is_new = tower.itemQuantity(run, note_id) == 0;
         try tower.addItem(run, note_id, outcome.note_quantity);
-        gameplay.research_project.collectedMusicalNotes(player, outcome.note_quantity);
+        gameplay.research_project.collectedMusicalNotes(scope.mutation(), outcome.note_quantity);
         notes[note_count] = .{
             .Tid = note_id,
             .Qty = @intCast(outcome.note_quantity),
@@ -98,7 +98,7 @@ pub fn resolve(
         return error.UnknownFormation;
     var secondary_changes: [tables.disc_secondary.max_changes]tower.SecondaryChange = undefined;
     const secondary_change_slice = tower.reconcileActiveSecondaries(run, formation, &secondary_changes);
-    gameplay.research_project.activatedHarmonySkills(player, shop.activatedSecondaries(secondary_change_slice));
+    gameplay.research_project.activatedHarmonySkills(scope.mutation(), shop.activatedSecondaries(secondary_change_slice));
     var secondaries: [tables.disc_secondary.max_changes]proto.pb.ActiveSecondaryChange = undefined;
     for (secondary_change_slice, 0..) |secondary, index| secondaries[index] = .{
         .SecondaryId = secondary.id,
@@ -115,13 +115,14 @@ pub fn resolve(
             formation.character_ids[outcome.potential_character_position - 1]
         else
             null;
-        tower.offerPotentials(
+        const butterflies_inside = tower.offerPotentials(
             player,
             run,
             formation,
             false,
             character_override,
         );
+        gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
         if (run.offered_potential_count == 0)
             return error.NoPotentialChoices;
 
@@ -163,7 +164,7 @@ pub fn resolve(
     const affinity_count: usize = if (run.event_npc_id != 0) blk: {
         const affinity_increase: u32 = 100;
         const affinity_value = try settlement.addRunNpcAffinity(
-            player,
+            scope.mutation(),
             scope.gpa,
             run,
             run.event_npc_id,

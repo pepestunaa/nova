@@ -13,6 +13,7 @@ This project is not affiliated with the game's developers or publisher.
 - [Prebuilt executables](#prebuilt-executables)
 - [Automatic setup](#automatic-setup)
 - [Manual setup](#manual-setup)
+- [Technical documentation](#technical-documentation)
 - [Bug reports](#bug-reports)
 - [Contributing](#contributing)
 - [License](#license)
@@ -136,6 +137,11 @@ The same settings can be changed permanently in `servers/sdk/config.zon` and
 `servers/game/config.zon`.
 
 Player data is stored in the `store` folder.
+
+## Technical documentation
+
+Developers who want to understand how the server works can start with
+the [technical documentation index](docs/README.md).
 
 ## Bug reports
 

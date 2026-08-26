@@ -29,7 +29,14 @@ pub fn player_formation_req(scope: *Scope) !void {
         disc_count += 1;
     }
 
-    try scope.mutation().modify(.{ .formations = true }).setFormation(
+    if (scope.player.formationMatches(
+        formation.Number,
+        character_ids[0..character_count],
+        disc_ids[0..disc_count],
+        formation.PreselectionId,
+    )) return scope.respond(proto.pb.Nil{});
+
+    try scope.mutation().modify(.{}).setFormation(
         scope.gpa,
         formation.Number,
         character_ids[0..character_count],

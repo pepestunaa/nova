@@ -28,7 +28,7 @@ pub fn register(
     const created_at = registered_at.toSeconds();
     const nickname = Nickname.init(new_nickname) catch
         return error.NameTooLong;
-    const player = mutation.modify(.{ .player_progression = true });
+    const player = mutation.modify(.{});
     player.basic = .{
         .created_at = created_at,
         .gender = gender,

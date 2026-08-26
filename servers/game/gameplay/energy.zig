@@ -11,7 +11,7 @@ pub fn refresh(mutation: *Mutation, now: i64) bool {
     if (!refreshBasic(&basic, now))
         return false;
 
-    mutation.modify(.{ .player_progression = true }).basic = basic;
+    mutation.modify(.{}).basic = basic;
     return true;
 }
 

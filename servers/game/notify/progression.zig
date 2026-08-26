@@ -18,10 +18,6 @@ pub fn send(scope: *Scope, changes: *const gameplay_progression.Changes) !void {
     try quest.sendLineupTutorial(scope, &changes.lineup_tutorial);
     try quest.sendNewTrekkerAffinityQuests(scope, mutation);
     try achievement.send(scope, &changes.achievements);
-    if (mutation.affects(.research_project) or
-        mutation.affects(.ascension) or
-        mutation.affects(.tower_growth))
-        try research_project.send(scope);
-    if (mutation.affects(.handbook))
-        try handbook.send(scope);
+    try research_project.send(scope, &changes.research_project);
+    try handbook.send(scope);
 }

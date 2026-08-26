@@ -155,7 +155,7 @@ pub fn gacha_guarantee_reward_receive_req(scope: *Scope) !void {
     }};
     const now = scope.now;
     try reward.grantCards(scope.mutation(), scope.gpa, &cards, now, &receipt);
-    const player = scope.mutation().modify(.{ .gacha = true });
+    const player = scope.mutation().modify(.{});
     const state = findBannerState(player, banner.id).?;
     state.claim_reward_received = true;
 
@@ -169,7 +169,7 @@ fn getOrCreateBannerState(
     scope: *Scope,
     banner: *const tables.gacha.Banner,
 ) !*Player.GachaBanner {
-    const player = scope.mutation().modify(.{ .gacha = true });
+    const player = scope.mutation().modify(.{});
     if (findBannerState(player, banner.id)) |state|
         return state;
 
@@ -186,7 +186,7 @@ fn appendHistory(
     created_at: i64,
     spin: *const gacha.NormalSpin,
 ) !void {
-    const player = scope.mutation().modify(.{ .gacha = true });
+    const player = scope.mutation().modify(.{});
     var matching_count: usize = 0;
     var oldest_index: ?usize = null;
     for (player.gacha_histories.slice(), 0..) |entry, index| {
@@ -223,7 +223,7 @@ fn getOrCreateStorageState(
     banner: *const tables.gacha.Banner,
     now: Io.Timestamp,
 ) !*Player.GachaStorage {
-    const player = scope.mutation().modify(.{ .gacha = true });
+    const player = scope.mutation().modify(.{});
     if (findStorageState(player, banner.storage_id)) |state|
         return state;
 

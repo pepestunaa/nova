@@ -32,6 +32,7 @@ player_cache: *PlayerCache,
 player_entry: ?*PlayerCache.Entry = null,
 
 pub const Error = Source.ReadError || Sink.SendError || Save.LoadError || error{
+    InvalidMutationState,
     UnmappedResponse,
 };
 
@@ -180,7 +181,7 @@ pub fn respondFailure(scope: *const Scope, message: anytype) Error!void {
 /// Rejects a valid request with its mapped failure packet. I/O, decoding, and
 /// server failures continue to propagate as Zig errors.
 pub fn reject(scope: *const Scope, code: tables.error_code.Code) Error!void {
-    std.debug.assert(!scope.mutation_state.isDirty());
+    try ensureUnmodified(&scope.mutation_state);
     try scope.respondFailure(proto.pb.Error{
         .Code = @intCast(@intFromEnum(code)),
     });
@@ -354,4 +355,25 @@ fn writeVarInt(output: []u8, value: usize) usize {
     output[index] = @intCast(remaining);
 
     return index + 1;
+}
+
+fn ensureUnmodified(state: *const Mutation) error{InvalidMutationState}!void {
+    if (state.isDirty())
+        return error.InvalidMutationState;
+}
+
+//
+
+test "protocol rejection cannot follow a persistent mutation" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    var state: Mutation = .init(&player);
+    _ = state.modify(.{});
+
+    try testing.expectError(
+        error.InvalidMutationState,
+        ensureUnmodified(&state),
+    );
 }

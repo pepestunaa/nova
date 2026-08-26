@@ -81,9 +81,27 @@ pub fn star_tower_build_delete_req(scope: *Scope) !void {
         requested_build_count += 1;
     }
 
-    const player = scope.mutation().modify(.{ .ascension = true, .inventory = true });
     var raw_ticket_count: u32 = 0;
     var deleted_count: usize = 0;
+    for (scope.player.star_tower_builds.slice()) |build| {
+        if (!containsBuildId(requested_build_ids[0..requested_build_count], build.id))
+            continue;
+
+        raw_ticket_count +|= star_tower_record.dismantleTicketCount(build.score);
+        deleted_count += 1;
+    }
+
+    if (deleted_count == 0) {
+        var encoded_resource: [16]u8 = undefined;
+        var changes: [1]proto.pb.Any = undefined;
+        const change = try ticketChange(0, &encoded_resource, &changes);
+        return scope.respond(proto.pb.StarTowerBuildDeleteResp{
+            .Change = change,
+            .Ticket = 0,
+        });
+    }
+
+    const player = scope.mutation().modify(.{});
     var index: usize = 0;
     while (index < player.star_tower_builds.len) {
         const build = &player.star_tower_builds.entries[index];
@@ -91,10 +109,7 @@ pub fn star_tower_build_delete_req(scope: *Scope) !void {
             index += 1;
             continue;
         }
-
-        raw_ticket_count +|= star_tower_record.dismantleTicketCount(build.score);
         removeBuildAt(&player.star_tower_builds, index);
-        deleted_count += 1;
     }
 
     const now = scope.now;
@@ -130,8 +145,11 @@ pub fn star_tower_build_name_set_req(scope: *Scope) !void {
     var name = current.name;
     name.set(request.Name) catch
         return scope.reject(.build_name_max_len_limit);
+    if (std.mem.eql(u8, current.name.view(), name.view()))
+        return scope.respond(proto.pb.Nil{});
+
     const build = findBuildMut(
-        scope.mutation().modify(.{ .ascension = true }),
+        scope.mutation().modify(.{}),
         request.BuildId,
     ).?;
     build.name = name;
@@ -145,15 +163,18 @@ pub fn star_tower_build_lock_unlock_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_build_lock_unlock_req);
 
     const request = try scope.source.read(proto.pb.StarTowerBuildLockUnlockReq);
-    _ = findBuild(scope.player, request.BuildId) orelse {
+    const current = findBuild(scope.player, request.BuildId) orelse {
         try scope.respondFailureEmpty();
 
         log.warn("received lock change for unknown record {d}", .{request.BuildId});
 
         return;
     };
+    if (current.flags.locked == request.Lock)
+        return scope.respond(proto.pb.Nil{});
+
     const build = findBuildMut(
-        scope.mutation().modify(.{ .ascension = true }),
+        scope.mutation().modify(.{}),
         request.BuildId,
     ).?;
 
@@ -171,21 +192,48 @@ pub fn star_tower_build_preference_set_req(scope: *Scope) !void {
     const log = scope.logger(.star_tower_build_preference_set_req);
 
     const request = try scope.source.read(proto.pb.StarTowerBuildPreferenceSetReq);
-    const player = scope.mutation().modify(.{ .ascension = true });
-    var changed: usize = 0;
+    var check_in_buffer: [Player.max_star_tower_builds]u64 = undefined;
+    var check_in_count: usize = 0;
     var check_in_ids = request.CheckInIds;
     while (try check_in_ids.next()) |build_id| {
-        const build = findBuildMut(player, build_id) orelse
-            continue;
-        if (!build.flags.preferred) changed += 1;
-        build.flags.preferred = true;
+        if (check_in_count == check_in_buffer.len)
+            return scope.reject(.invalid_req);
+        check_in_buffer[check_in_count] = build_id;
+        check_in_count += 1;
     }
+
+    var check_out_buffer: [Player.max_star_tower_builds]u64 = undefined;
+    var check_out_count: usize = 0;
     var check_out_ids = request.CheckOutIds;
     while (try check_out_ids.next()) |build_id| {
-        const build = findBuildMut(player, build_id) orelse
+        if (check_out_count == check_out_buffer.len)
+            return scope.reject(.invalid_req);
+        check_out_buffer[check_out_count] = build_id;
+        check_out_count += 1;
+    }
+
+    var changed: usize = 0;
+    for (scope.player.star_tower_builds.slice()) |build| {
+        const preferred = requestedPreference(
+            build.id,
+            check_in_buffer[0..check_in_count],
+            check_out_buffer[0..check_out_count],
+        ) orelse
             continue;
-        if (build.flags.preferred) changed += 1;
-        build.flags.preferred = false;
+        if (build.flags.preferred != preferred)
+            changed += 1;
+    }
+    if (changed == 0)
+        return scope.respond(proto.pb.Nil{});
+
+    const player = scope.mutation().modify(.{});
+    for (player.star_tower_builds.entries[0..player.star_tower_builds.len]) |*build| {
+        build.flags.preferred = requestedPreference(
+            build.id,
+            check_in_buffer[0..check_in_count],
+            check_out_buffer[0..check_out_count],
+        ) orelse
+            continue;
     }
     try scope.respond(proto.pb.Nil{});
 
@@ -212,10 +260,7 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
         var checked_name = current_pending.name;
         checked_name.set(request.BuildName) catch
             return scope.reject(.build_name_max_len_limit);
-        const player = scope.mutation().modify(.{
-            .ascension = true,
-            .research_project = true,
-        });
+        const player = scope.mutation().modify(.{});
         const pending = &player.pending_star_tower_build;
         pending.flags.locked = request.Lock;
         pending.flags.preferred = request.Preference;
@@ -224,7 +269,7 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
         const rating = tables.star_tower.buildRating(pending.score);
         try player.star_tower_builds.append(scope.gpa, pending.*);
         pending.* = .{};
-        gameplay.research_project.savedRecord(player, rating);
+        gameplay.research_project.savedRecord(scope.mutation(), rating);
 
         try scope.respond(proto.pb.StarTowerBuildWhetherSaveResp{});
 
@@ -233,7 +278,7 @@ pub fn star_tower_build_whether_save_req(scope: *Scope) !void {
         return;
     }
 
-    const player = scope.mutation().modify(.{ .ascension = true, .inventory = true });
+    const player = scope.mutation().modify(.{});
     const pending = &player.pending_star_tower_build;
     const now = scope.now;
     const ticket_count = try star_tower_record.awardDismantleTickets(
@@ -315,6 +360,19 @@ fn containsBuildId(build_ids: []const u64, wanted: u64) bool {
             return true;
 
     return false;
+}
+
+fn requestedPreference(
+    build_id: u64,
+    check_in_ids: []const u64,
+    check_out_ids: []const u64,
+) ?bool {
+    if (containsBuildId(check_out_ids, build_id))
+        return false;
+    if (containsBuildId(check_in_ids, build_id))
+        return true;
+
+    return null;
 }
 
 fn removeBuildAt(builds: *Player.StarTowerBuildTable, index: usize) void {

@@ -3,19 +3,19 @@ const Allocator = std.mem.Allocator;
 const Io = std.Io;
 const net = std.Io.net;
 
+const messaging = @import("messaging.zig");
+const Scope = messaging.Scope;
+
 const Auth = @import("auth.zig");
 const config: @import("Config.zig") = @import("config");
 const gameplay_progression = @import("gameplay/progression.zig");
 const net_msg_id = @import("net_msg_id");
-const progression_notify = @import("notify/progression.zig");
 const Player = @import("store/Player.zig");
 const PlayerCache = @import("store/PlayerCache.zig");
+const progression_notify = @import("notify/progression.zig");
 const proto = @import("proto");
 const session = @import("session.zig");
 const tables = @import("tables.zig");
-
-const messaging = @import("messaging.zig");
-const Scope = messaging.Scope;
 
 //
 

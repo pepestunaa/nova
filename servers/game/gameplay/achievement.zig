@@ -1,4 +1,5 @@
-const Allocator = @import("std").mem.Allocator;
+const std = @import("std");
+const Allocator = std.mem.Allocator;
 
 const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
@@ -155,7 +156,7 @@ fn refreshState(
             return;
     }
 
-    const player = mutation.modify(.{ .achievements = true });
+    const player = mutation.modify(.{});
     const state = try getOrCreate(player, allocator, definition.id);
     state.progress = progress;
     state.status = status;
@@ -184,4 +185,66 @@ fn getOrCreate(player: *Player, allocator: Allocator, id: u32) !*Player.Achievem
     try player.achievements.append(allocator, .{ .id = id });
 
     return &player.achievements.entries[player.achievements.len - 1];
+}
+
+//
+
+test "completed and claimed achievements do not notify again" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    const definition = tables.achievement.collectionEntries(
+        tables.achievement.collection_groups[0],
+    )[0];
+
+    var completion: Mutation = .init(&player);
+    var completion_changes: ChangeSet = .{};
+    try refreshState(
+        &completion,
+        testing.allocator,
+        100,
+        definition,
+        definition.target,
+        &completion_changes,
+    );
+    try testing.expectEqual(@as(usize, 1), completion_changes.len);
+    try testing.expectEqual(
+        Player.Achievement.Status.reward_available,
+        completion_changes.slice()[0].status,
+    );
+    completion.finish();
+    completion.committed();
+
+    var further_progress: Mutation = .init(&player);
+    var further_changes: ChangeSet = .{};
+    try refreshState(
+        &further_progress,
+        testing.allocator,
+        200,
+        definition,
+        definition.target + 1,
+        &further_changes,
+    );
+    try testing.expectEqual(@as(usize, 0), further_changes.len);
+    try testing.expectEqual(@as(i64, 100), find(&player, definition.id).?.completed_at);
+    further_progress.finish();
+    further_progress.committed();
+
+    player.achievements.entries[0].status = .reward_received;
+    var claimed_progress: Mutation = .init(&player);
+    var claimed_changes: ChangeSet = .{};
+    try refreshState(
+        &claimed_progress,
+        testing.allocator,
+        300,
+        definition,
+        definition.target + 2,
+        &claimed_changes,
+    );
+    try testing.expectEqual(@as(usize, 0), claimed_changes.len);
+    try testing.expectEqual(
+        Player.Achievement.Status.reward_received,
+        find(&player, definition.id).?.status,
+    );
 }

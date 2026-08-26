@@ -51,7 +51,7 @@ pub fn achievement_reward_receive_req(scope: *Scope) !void {
 
         const definition = tables.achievement.get(id) orelse
             continue;
-        const player = mutation.modify(.{ .achievements = true });
+        const player = mutation.modify(.{});
         const state = findState(player, id).?;
         state.status = .reward_received;
         try reward.grantResource(

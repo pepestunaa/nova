@@ -93,7 +93,7 @@ pub fn grantResource(
 ) Error!void {
     if (quantity == 0)
         return;
-    const player = mutation.modify(.{ .inventory = true });
+    const player = mutation.modify(.{});
     try applyResourceDelta(player, allocator, receipt, resource_id, quantity);
 }
 
@@ -119,7 +119,7 @@ pub fn consumeRecruitmentCost(
 
     if (consumed_tickets == 0 and currency_cost == 0)
         return;
-    const player = mutation.modify(.{ .inventory = true });
+    const player = mutation.modify(.{});
 
     if (consumed_tickets != 0) {
         player.consumeItem(ticket_id, @intCast(consumed_tickets)) catch unreachable;
@@ -164,14 +164,14 @@ pub fn grantCards(
             switch (card_class.kind) {
                 .character => {
                     const handbook_changed = try unlockCharacter(player, allocator, card_id, now);
-                    mutation.affect(.{ .characters = true });
+                    mutation.invalidate(.{ .characters = true });
                     if (handbook_changed)
                         mutation.recordHandbookType(tables.handbook.skin_type);
                     mutation.recordNewCharacter(card_id);
                 },
                 .disc => {
                     const handbook_changed = try unlockDisc(player, allocator, card_id, now);
-                    mutation.affect(.{ .discs = true });
+                    mutation.invalidate(.{ .discs = true });
                     if (handbook_changed)
                         mutation.recordHandbookType(tables.handbook.disc_type);
                 },
@@ -179,7 +179,6 @@ pub fn grantCards(
             receipt.new_card_ids[receipt.new_card_count] = card_id;
             receipt.new_card_count += 1;
         } else {
-            mutation.affect(.{ .inventory = true });
             try addItemTemplateDelta(&receipt.transform_sources, &receipt.transform_source_count, card_id, 1);
             const conversion_item_id: u32 = switch (card_class.kind) {
                 .character => tables.character.fragmentsId(card_id) orelse return error.Full,
@@ -214,7 +213,7 @@ pub fn grantRecruitmentItem(
     if (quantity == 0)
         return;
 
-    const player = mutation.modify(.{ .inventory = true });
+    const player = mutation.modify(.{});
     try applyInventoryItemDelta(player, allocator, receipt, item_id, quantity);
 }
 

@@ -1,11 +1,9 @@
 const proto = @import("proto");
+const research_project = @import("../gameplay/research_project.zig");
 const Scope = @import("../Scope.zig");
-const tables = @import("../tables.zig");
 
-pub fn send(scope: *Scope) !void {
-    for (scope.player.quests.slice()) |quest| {
-        if (quest.quest_type != @intFromEnum(tables.quest.Type.tower))
-            continue;
+pub fn send(scope: *Scope, changes: *const research_project.ChangeSet) !void {
+    for (changes.slice()) |quest| {
         var progress: [1]proto.pb.QuestProgress = .{.{
             .Cur = quest.progress_current,
             .Max = quest.progress_max,

@@ -7,6 +7,7 @@ const Allocator = std.mem.Allocator;
 const gameplay = @import("../../gameplay.zig");
 const tower = gameplay.star_tower;
 
+const Mutation = @import("../../gameplay/mutation.zig");
 const Player = @import("../../store/Player.zig");
 const proto = @import("proto");
 const Scope = @import("../../Scope.zig");
@@ -84,7 +85,7 @@ pub fn send(
     const build_storage_full =
         player.star_tower_builds.len == Player.max_star_tower_builds;
     _ = star_tower_record.preparePendingBuild(player, formation, score);
-    gameplay.research_project.completedAscension(player, completed_difficulty);
+    gameplay.research_project.completedAscension(scope.mutation(), completed_difficulty);
     const build_coin = if (build_storage_full) blk: {
         // TODO: Test what the official server does. Until then, dismantle
         // the Record immediately when storage is full.
@@ -203,7 +204,7 @@ pub fn send(
 }
 
 pub fn addRunNpcAffinity(
-    player: *Player,
+    mutation: *Mutation,
     allocator: Allocator,
     run: *Player.StarTowerRun,
     npc_id: u32,
@@ -212,6 +213,7 @@ pub fn addRunNpcAffinity(
     if (run.affinity_change_count >= Player.StarTowerRun.max_affinity_changes)
         return error.TooManyAffinityChanges;
 
+    const player = mutation.modify(.{ .research_project = true });
     const before = player.npcAffinity(npc_id);
     const after = try player.addNpcAffinity(allocator, npc_id, increase);
     const reward = tower.crossedNpcAffinityReward(npc_id, before, after);
@@ -240,8 +242,6 @@ pub fn addRunNpcAffinity(
             continue;
         quest.progress_current = @min(quest.progress_max, quest.progress_current +| 1);
     }
-
-    gameplay.research_project.refresh(player);
 
     return after;
 }

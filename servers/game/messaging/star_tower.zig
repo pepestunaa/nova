@@ -36,7 +36,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             return scope.reject(.invalid_req);
     }
 
-    const player = scope.mutation().modify(.{ .ascension = true, .research_project = true });
+    const player = scope.mutation().modify(.{});
     const run = &player.star_tower_run;
 
     if (request.EnterReq) |enter| {
@@ -304,13 +304,14 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 run.total_damages[run.total_damage_count] = damage;
                 run.total_damage_count += 1;
             }
-            tower.offerPotentials(
+            const butterflies_inside = tower.offerPotentials(
                 player,
                 run,
                 formation,
                 run.potential_count == 0,
                 null,
             );
+            gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
             if (run.offered_potential_count == 0)
                 return error.NoPotentialChoices;
             const potential_case_id = try tower.addRoomCase(
@@ -371,16 +372,16 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 };
                 change_count += 1;
             }
-            gameplay.research_project.collectedMusicalNotes(player, note_count * 3);
+            gameplay.research_project.collectedMusicalNotes(scope.mutation(), note_count * 3);
             if (surprise_note_triggered)
-                gameplay.research_project.triggeredSurpriseNote(player);
+                gameplay.research_project.triggeredSurpriseNote(scope.mutation());
             var secondary_changes: [tables.disc_secondary.max_changes]tower.SecondaryChange = undefined;
             const secondary_change_slice = tower.reconcileActiveSecondaries(
                 run,
                 formation,
                 &secondary_changes,
             );
-            gameplay.research_project.activatedHarmonySkills(player, shop.activatedSecondaries(secondary_change_slice));
+            gameplay.research_project.activatedHarmonySkills(scope.mutation(), shop.activatedSecondaries(secondary_change_slice));
             var secondaries: [tables.disc_secondary.max_changes]proto.pb.ActiveSecondaryChange = undefined;
             for (secondary_change_slice, 0..) |secondary, index| secondaries[index] = .{
                 .SecondaryId = secondary.id,
@@ -519,9 +520,9 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                 run.strengthen_times +|= 1;
             const strengthen_bonus_count = run.strengthen_bonus_count;
             tower.offerPotentialStrengthening(player, run);
-            gameplay.research_project.usedEnhancementMachine(player);
+            gameplay.research_project.usedEnhancementMachine(scope.mutation());
             if (run.strengthen_bonus_count != strengthen_bonus_count)
-                gameplay.research_project.triggeredPotentialBoost(player);
+                gameplay.research_project.triggeredPotentialBoost(scope.mutation());
             if (run.offered_potential_count == 0) {
                 try scope.respond(proto.pb.StarTowerInteractResp{
                     .Id = request_id,
@@ -592,16 +593,17 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
                     const strengthen_bonus_count = run.strengthen_bonus_count;
                     tower.offerPotentialStrengthening(player, run);
                     if (run.strengthen_bonus_count != strengthen_bonus_count)
-                        gameplay.research_project.triggeredPotentialBoost(player);
+                        gameplay.research_project.triggeredPotentialBoost(scope.mutation());
                 } else {
-                    tower.offerPotentials(
+                    const butterflies_inside = tower.offerPotentials(
                         player,
                         run,
                         formation,
                         selected_case_kind == .select_special_potential,
                         run.offered_potential_character_id,
                     );
-                    gameplay.research_project.refreshedPotentials(player);
+                    gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
+                    gameplay.research_project.refreshedPotentials(scope.mutation());
                 }
                 run.potential_rerolls = rerolls_remaining;
                 if (run.offered_potential_count == 0)
@@ -654,7 +656,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             const potential_level = run.offered_potential_levels[index];
             if (run.offered_potential_bonus_pending[index]) {
                 run.potential_bonus_count +|= 1;
-                gameplay.research_project.triggeredButterfliesInside(player);
+                gameplay.research_project.triggeredButterfliesInside(scope.mutation(), 1);
             }
             if (run.potential_selector_is_strengthen) {
                 const owned_index = tower.potentialIndex(run, potential_id) orelse
@@ -720,13 +722,14 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
 
             if (run.settlement_pending and !run.final_core_potential_pending) {
                 run.final_core_potential_pending = true;
-                tower.offerPotentials(
+                const butterflies_inside = tower.offerPotentials(
                     player,
                     run,
                     formation,
                     true,
                     null,
                 );
+                gameplay.research_project.triggeredButterfliesInside(scope.mutation(), butterflies_inside);
                 if (run.offered_potential_count == 0)
                     return error.NoPotentialChoices;
                 const core_case_id = try tower.addRoomCase(run, .select_special_potential, 0);

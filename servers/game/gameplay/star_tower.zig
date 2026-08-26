@@ -1,7 +1,6 @@
 const std = @import("std");
 
 const Player = @import("../store/Player.zig");
-const research_project = @import("research_project.zig");
 const tables = @import("../tables.zig");
 const tower_growth = @import("tower_growth.zig");
 
@@ -126,7 +125,7 @@ pub fn offerPotentials(
     formation: *const Player.Formation,
     core_only: bool,
     character_override: ?u32,
-) void {
+) u32 {
     const character_id = character_override orelse selectPotentialCharacter(run, formation);
     run.offered_potential_character_id = character_id;
     run.offered_potential_ids = selectPotentialChoices(
@@ -141,6 +140,7 @@ pub fn offerPotentials(
     run.offered_potential_levels = @splat(0);
     run.offered_potential_bonus_pending = @splat(false);
     run.offered_potential_count = 0;
+    var butterflies_inside: u32 = 0;
     const modifiers = growthModifiers(player, run.tower_id);
     for (run.offered_potential_ids, 0..) |potential_id, index| {
         if (potential_id == 0)
@@ -155,7 +155,7 @@ pub fn offerPotentials(
                 run.offered_potential_bonus_pending[index] = true
             else {
                 run.potential_bonus_count +|= 1;
-                research_project.triggeredButterfliesInside(player);
+                butterflies_inside += 1;
             }
         }
         run.offered_potential_levels[index] = level;
@@ -164,6 +164,8 @@ pub fn offerPotentials(
     run.potential_rerolls = modifiers.potential_rerolls;
     run.potential_reroll_price = modifiers.potential_reroll_price;
     run.potential_selector_is_strengthen = false;
+
+    return butterflies_inside;
 }
 
 pub fn offerPotentialStrengthening(

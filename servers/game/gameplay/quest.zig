@@ -68,7 +68,7 @@ pub fn refreshDailyWeeklyMissions(mutation: *Mutation, allocator: Allocator, now
         return false;
 
     return refreshDailyWeeklyMissionsPlayer(
-        mutation.modify(.{ .quests = true }),
+        mutation.modify(.{}),
         allocator,
         now,
     );

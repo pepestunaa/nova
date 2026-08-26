@@ -11,18 +11,54 @@ const tower_growth = @import("tower_growth.zig");
 //
 
 const quest_type = @intFromEnum(tables.quest.Type.tower);
+const QuestSet = std.bit_set.IntegerBitSet(tables.research_project.list.len);
 
-/// Creates the first Research Project tasks. `sync` adds later tasks after
-/// their prerequisite rewards are claimed.
+pub const ChangeSet = struct {
+    entries: [tables.research_project.list.len]Player.Quest = undefined,
+    len: usize = 0,
+
+    pub fn slice(changes: *const ChangeSet) []const Player.Quest {
+        return changes.entries[0..changes.len];
+    }
+};
+
+/// Creates every Research Project task whose prerequisites are already
+/// claimed. Later groups are added during request finalization.
 pub fn initialize(player: *Player, allocator: Allocator) Allocator.Error!void {
-    _ = try sync(player, allocator);
+    var changed: QuestSet = .empty;
+    try syncPlayer(player, allocator, &changed);
 }
 
-/// Refreshes active tasks from saved player state. Claiming a prerequisite
-/// reward, rather than merely completing it, unlocks the next tasks in the UI.
-pub fn sync(player: *Player, allocator: Allocator) Allocator.Error!bool {
-    var changed = false;
-    for (tables.research_project.list) |definition| {
+/// Reconciles active tasks once after all actions in the request have run.
+/// Claiming a prerequisite reward, rather than merely completing it, unlocks
+/// the next tasks in the UI.
+pub fn reconcile(
+    mutation: *Mutation,
+    allocator: Allocator,
+    changes: *ChangeSet,
+) Allocator.Error!void {
+    changes.* = .{};
+    var changed: QuestSet = .empty;
+    var explicitly_changed = mutation.researchProjectQuestIterator();
+    while (explicitly_changed.next()) |index|
+        changed.set(index);
+
+    try syncPlayer(mutation.player, allocator, &changed);
+
+    var iterator = changed.iterator(.{});
+    while (iterator.next()) |index| {
+        const id = tables.research_project.list[index].id;
+        changes.entries[changes.len] = find(mutation.player, id).?.*;
+        changes.len += 1;
+    }
+}
+
+fn syncPlayer(
+    player: *Player,
+    allocator: Allocator,
+    changed: *QuestSet,
+) Allocator.Error!void {
+    for (tables.research_project.list, 0..) |definition, index| {
         if (find(player, definition.id) != null)
             continue;
         if (!prerequisitesClaimed(player, &definition))
@@ -34,8 +70,9 @@ pub fn sync(player: *Player, allocator: Allocator) Allocator.Error!bool {
             .condition = @intFromEnum(definition.condition),
             .condition_param = definition.condition_param,
             .progress_max = definition.target,
+            .progress_current = progressFor(player, &definition),
         });
-        changed = true;
+        changed.set(index);
     }
 
     for (player.quests.entries[0..player.quests.len]) |*quest| {
@@ -47,87 +84,89 @@ pub fn sync(player: *Player, allocator: Allocator) Allocator.Error!bool {
         if (quest.progress_current == progress)
             continue;
         quest.progress_current = progress;
-        changed = true;
+        changed.set(indexOf(definition.id));
     }
-
-    return changed;
 }
 
-pub fn enteredAscension(player: *Player) void {
+pub fn enteredAscension(mutation: *Mutation) void {
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.ascensions +|= 1;
-    refreshActive(player);
 }
 
-pub fn completedAscension(player: *Player, difficulty: u32) void {
-    if (difficulty >= 1 and difficulty <= player.research_project.clears_by_difficulty.len)
-        player.research_project.clears_by_difficulty[difficulty - 1] +|= 1;
-    refreshActive(player);
+pub fn completedAscension(mutation: *Mutation, difficulty: u32) void {
+    const current = mutation.read();
+    if (difficulty == 0 or difficulty > current.research_project.clears_by_difficulty.len)
+        return;
+    const player = mutation.modify(.{ .research_project = true });
+    player.research_project.clears_by_difficulty[difficulty - 1] +|= 1;
 }
 
-pub fn purchasedShopGood(player: *Player, discounted: bool) void {
+pub fn purchasedShopGood(mutation: *Mutation, discounted: bool) void {
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.shop_purchases +|= 1;
     if (discounted)
         player.research_project.discounted_shop_purchases +|= 1;
-    refreshActive(player);
 }
 
-pub fn collectedMusicalNotes(player: *Player, count: u32) void {
-    player.research_project.musical_notes +|= count;
-    refreshActive(player);
-}
-
-pub fn usedEnhancementMachine(player: *Player) void {
-    player.research_project.enhancement_machine_uses +|= 1;
-    refreshActive(player);
-}
-
-pub fn activatedHarmonySkills(player: *Player, count: u32) void {
+pub fn collectedMusicalNotes(mutation: *Mutation, count: u32) void {
     if (count == 0)
         return;
+    const player = mutation.modify(.{ .research_project = true });
+    player.research_project.musical_notes +|= count;
+}
+
+pub fn usedEnhancementMachine(mutation: *Mutation) void {
+    const player = mutation.modify(.{ .research_project = true });
+    player.research_project.enhancement_machine_uses +|= 1;
+}
+
+pub fn activatedHarmonySkills(mutation: *Mutation, count: u32) void {
+    if (count == 0)
+        return;
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.harmony_skills +|= count;
-    refreshActive(player);
 }
 
-/// Rechecks active tasks after another system changes relevant player state,
-/// such as discovering an Anecdote through a Monolith event.
-pub fn refresh(player: *Player) void {
-    refreshActive(player);
-}
-
-pub fn triggeredSurpriseNote(player: *Player) void {
+pub fn triggeredSurpriseNote(mutation: *Mutation) void {
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.surprise_notes +|= 1;
-    refreshActive(player);
 }
 
-pub fn triggeredButterfliesInside(player: *Player) void {
-    player.research_project.butterflies_inside +|= 1;
-    refreshActive(player);
+pub fn triggeredButterfliesInside(mutation: *Mutation, count: u32) void {
+    if (count == 0)
+        return;
+    const player = mutation.modify(.{ .research_project = true });
+    player.research_project.butterflies_inside +|= count;
 }
 
-pub fn triggeredPotentialBoost(player: *Player) void {
+pub fn triggeredPotentialBoost(mutation: *Mutation) void {
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.potential_boosts +|= 1;
-    refreshActive(player);
 }
 
-pub fn refreshedPotentials(player: *Player) void {
+pub fn refreshedPotentials(mutation: *Mutation) void {
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.potential_refreshes +|= 1;
-    refreshActive(player);
 }
 
-pub fn restockedShop(player: *Player) void {
+pub fn restockedShop(mutation: *Mutation) void {
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.shop_restocks +|= 1;
-    refreshActive(player);
 }
 
-pub fn savedRecord(player: *Player, rating: u8) void {
+pub fn savedRecord(mutation: *Mutation, rating: u8) void {
+    if (rating <= mutation.read().research_project.highest_record_rating)
+        return;
+    const player = mutation.modify(.{ .research_project = true });
     player.research_project.highest_record_rating = @max(
         player.research_project.highest_record_rating,
         rating,
     );
-    refreshActive(player);
 }
 
 pub fn claimable(player: *const Player, id: u32) ?*const Player.Quest {
+    if (tables.research_project.get(id) == null)
+        return null;
     const quest = find(player, id) orelse
         return null;
     if (quest.claimed or quest.progress_current < quest.progress_max)
@@ -150,7 +189,7 @@ pub const RewardReceipt = struct {
 
 pub const max_reward_deltas = tables.research_project.list.len * 2;
 
-/// Claims a completed task and lets `sync` expose anything it unlocks.
+/// Claims a completed task. Request finalization exposes anything it unlocks.
 pub fn claim(
     mutation: *Mutation,
     allocator: Allocator,
@@ -164,6 +203,7 @@ pub fn claim(
         var found = false;
         for (current.quests.slice()) |quest| {
             if (quest.quest_type == quest_type and
+                tables.research_project.get(quest.id) != null and
                 !quest.claimed and
                 quest.progress_current >= quest.progress_max)
             {
@@ -178,8 +218,6 @@ pub fn claim(
     }
 
     const player = mutation.modify(.{
-        .inventory = true,
-        .quests = true,
         .research_project = true,
     });
 
@@ -187,21 +225,21 @@ pub fn claim(
         const quests = player.quests.entries[0..player.quests.len];
         for (quests) |*quest| {
             if (quest.quest_type != quest_type or
+                tables.research_project.get(quest.id) == null or
                 quest.claimed or
                 quest.progress_current < quest.progress_max)
                 continue;
 
             try claimQuest(player, allocator, quest, receipt);
+            mutation.recordResearchProjectQuest(quest.id);
         }
-
-        _ = try sync(player, allocator);
 
         return true;
     }
 
     const quest = findMut(player, id).?;
     try claimQuest(player, allocator, quest, receipt);
-    _ = try sync(player, allocator);
+    mutation.recordResearchProjectQuest(id);
 
     return true;
 }
@@ -257,16 +295,6 @@ fn appendDelta(
     std.debug.assert(count.* < entries.len);
     entries[count.*] = .{ .id = id, .quantity = quantity };
     count.* += 1;
-}
-
-fn refreshActive(player: *Player) void {
-    for (player.quests.entries[0..player.quests.len]) |*quest| {
-        if (quest.quest_type != quest_type)
-            continue;
-        const definition = tables.research_project.get(quest.id) orelse
-            continue;
-        quest.progress_current = progressFor(player, definition);
-    }
 }
 
 fn progressFor(player: *const Player, definition: *const tables.research_project.Definition) u32 {
@@ -362,4 +390,104 @@ fn findMut(player: *Player, id: u32) ?*Player.Quest {
     }
 
     return null;
+}
+
+fn indexOf(id: u32) usize {
+    for (tables.research_project.list, 0..) |definition, index| {
+        if (definition.id == id)
+            return index;
+    }
+    unreachable;
+}
+
+//
+
+test "Ascension participation reconciles once and does not repeat completed task changes" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    try initialize(&player, testing.allocator);
+
+    const participation = find(&player, 101).?;
+    try testing.expectEqual(@as(u32, 0), participation.progress_current);
+
+    var first_mutation: Mutation = .init(&player);
+    enteredAscension(&first_mutation);
+    var first_changes: ChangeSet = .{};
+    try reconcile(&first_mutation, testing.allocator, &first_changes);
+
+    try testing.expectEqual(@as(u32, 1), find(&player, 101).?.progress_current);
+    try testing.expectEqual(@as(usize, 1), first_changes.len);
+    try testing.expectEqual(@as(u32, 101), first_changes.slice()[0].id);
+    first_mutation.finish();
+    first_mutation.committed();
+
+    var second_mutation: Mutation = .init(&player);
+    enteredAscension(&second_mutation);
+    var second_changes: ChangeSet = .{};
+    try reconcile(&second_mutation, testing.allocator, &second_changes);
+
+    try testing.expectEqual(@as(u32, 2), player.research_project.ascensions);
+    try testing.expectEqual(@as(usize, 0), second_changes.len);
+}
+
+test "Butterflies Inside actions merge into one final task update" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    try initialize(&player, testing.allocator);
+    const definition = tables.research_project.get(701).?;
+    try player.quests.append(testing.allocator, .{
+        .id = definition.id,
+        .quest_type = quest_type,
+        .condition = @intFromEnum(definition.condition),
+        .condition_param = definition.condition_param,
+        .progress_max = definition.target,
+    });
+
+    var mutation: Mutation = .init(&player);
+    triggeredButterfliesInside(&mutation, 1);
+    triggeredButterfliesInside(&mutation, 2);
+    var changes: ChangeSet = .{};
+    try reconcile(&mutation, testing.allocator, &changes);
+
+    try testing.expectEqual(@as(u32, 3), player.research_project.butterflies_inside);
+    try testing.expectEqual(@as(u32, 3), find(&player, 701).?.progress_current);
+    try testing.expectEqual(@as(usize, 1), changes.len);
+    try testing.expectEqual(@as(u32, 701), changes.slice()[0].id);
+}
+
+test "claim all reports claimed tasks and newly unlocked tasks once" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    try initialize(&player, testing.allocator);
+    findMut(&player, 100).?.progress_current = find(&player, 100).?.progress_max;
+    findMut(&player, 101).?.progress_current = find(&player, 101).?.progress_max;
+
+    var mutation: Mutation = .init(&player);
+    var receipt: RewardReceipt = .{};
+    try testing.expect(try claim(
+        &mutation,
+        testing.allocator,
+        0,
+        &receipt,
+    ));
+    var changes: ChangeSet = .{};
+    try reconcile(&mutation, testing.allocator, &changes);
+
+    try testing.expect(find(&player, 100).?.claimed);
+    try testing.expect(find(&player, 101).?.claimed);
+    try testing.expect(find(&player, 200) != null);
+    try testing.expect(find(&player, 201) == null);
+    try testing.expect(find(&player, 202) != null);
+    try testing.expect(find(&player, 203) != null);
+
+    const expected_ids = [_]u32{ 100, 101, 200, 202, 203 };
+    try testing.expectEqual(expected_ids.len, changes.len);
+    for (changes.slice(), expected_ids) |quest, expected_id|
+        try testing.expectEqual(expected_id, quest.id);
 }
