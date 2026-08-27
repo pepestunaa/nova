@@ -19,6 +19,9 @@ pub const max_achievements = State.max_achievements;
 pub const max_tower_book_potentials = tables.potential.count;
 pub const max_tower_book_potential_rewards = tables.star_tower_book.potential_rewards.len;
 pub const max_star_tower_builds = State.max_star_tower_builds;
+pub const max_mall_purchases = 1_024;
+pub const max_mall_orders = 128;
+pub const max_monthly_cards = 128;
 
 pub const Achievement = State.Achievement;
 pub const Acquisition = State.Acquisition;
@@ -54,6 +57,11 @@ pub const TowerBookPotential = State.TowerBookPotential;
 pub const TowerBookPotentialReward = State.TowerBookPotentialReward;
 pub const TowerGrowth = State.TowerGrowth;
 pub const TutorialLevel = State.TutorialLevel;
+pub const MallPurchase = State.MallPurchase;
+pub const MallPurchaseKind = State.MallPurchaseKind;
+pub const MallOrder = State.MallOrder;
+pub const MallOrderKind = State.MallOrderKind;
+pub const MonthlyCard = State.MonthlyCard;
 
 pub const AchievementTable = List(Achievement);
 pub const AcquisitionTable = List(Acquisition);
@@ -82,6 +90,9 @@ pub const TitleTable = List(Title);
 pub const TowerBookPotentialRewardTable = List(TowerBookPotentialReward);
 pub const TowerBookPotentialTable = List(TowerBookPotential);
 pub const TutorialTable = List(TutorialLevel);
+pub const MallPurchaseTable = List(MallPurchase);
+pub const MallOrderTable = List(MallOrder);
+pub const MonthlyCardTable = List(MonthlyCard);
 
 uid: ?u64 = null,
 is_registered: bool = false,
@@ -122,6 +133,9 @@ newbie_gacha: NewbieGacha = .{},
 gacha_banners: GachaBannerTable,
 gacha_storages: GachaStorageTable,
 gacha_histories: GachaHistoryTable,
+mall_purchases: MallPurchaseTable,
+mall_orders: MallOrderTable,
+monthly_cards: MonthlyCardTable,
 
 pub fn init(uid: ?u64) Player {
     return .{
@@ -151,6 +165,9 @@ pub fn init(uid: ?u64) Player {
         .gacha_banners = .{},
         .gacha_storages = .{},
         .gacha_histories = .{},
+        .mall_purchases = .{},
+        .mall_orders = .{},
+        .monthly_cards = .{},
     };
 }
 
@@ -183,6 +200,9 @@ pub fn deinit(player: *Player, allocator: Allocator) void {
     player.gacha_banners.deinit(allocator);
     player.gacha_storages.deinit(allocator);
     player.gacha_histories.deinit(allocator);
+    player.mall_purchases.deinit(allocator);
+    player.mall_orders.deinit(allocator);
+    player.monthly_cards.deinit(allocator);
 }
 
 pub fn reset(player: *Player, allocator: Allocator) void {
@@ -263,6 +283,81 @@ pub fn consumeResource(player: *Player, id: u32, quantity: i32) error{Insufficie
     }
 
     return error.InsufficientResources;
+}
+
+pub fn mallPurchaseQuantity(player: *const Player, kind: MallPurchaseKind, key: u64, now: i64) u32 {
+    for (player.mall_purchases.slice()) |purchase| {
+        if (purchase.kind == kind and purchase.key == key)
+            return if (purchase.reset_at != 0 and purchase.reset_at <= now) 0 else purchase.quantity;
+    }
+    return 0;
+}
+
+pub fn recordMallPurchase(player: *Player, allocator: Allocator, kind: MallPurchaseKind, key: u64, quantity: u32, reset_at: i64, now: i64) !void {
+    for (player.mall_purchases.mutableSlice()) |*purchase| {
+        if (purchase.kind == kind and purchase.key == key) {
+            const current = if (purchase.reset_at != 0 and purchase.reset_at <= now) 0 else purchase.quantity;
+            purchase.quantity = std.math.add(u32, current, quantity) catch return error.Overflow;
+            purchase.reset_at = reset_at;
+            return;
+        }
+    }
+    if (player.mall_purchases.len == max_mall_purchases)
+        return error.Full;
+    try player.mall_purchases.append(allocator, .{ .kind = kind, .key = key, .quantity = quantity, .reset_at = reset_at });
+}
+
+pub fn mallOrderSequence(player: *const Player, kind: MallOrderKind, key: u64) ?u32 {
+    for (player.mall_orders.slice()) |order| {
+        if (order.kind == kind and order.key == key)
+            return order.sequence;
+    }
+    return null;
+}
+
+pub fn pendingMallOrder(player: *const Player, kind: MallOrderKind, key: u64) ?u32 {
+    const sequence = player.mallOrderSequence(kind, key) orelse return null;
+    return if (sequence == 0) null else sequence;
+}
+
+pub fn setPendingMallOrder(player: *Player, allocator: Allocator, kind: MallOrderKind, key: u64, sequence: u32) !void {
+    for (player.mall_orders.mutableSlice()) |*order| {
+        if (order.kind == kind and order.key == key) {
+            order.sequence = sequence;
+            return;
+        }
+    }
+    if (player.mall_orders.len == max_mall_orders)
+        return error.Full;
+    try player.mall_orders.append(allocator, .{ .kind = kind, .key = key, .sequence = sequence });
+}
+
+pub fn clearPendingMallOrder(player: *Player, kind: MallOrderKind, key: u64) void {
+    for (player.mall_orders.mutableSlice()) |*order| {
+        if (order.kind == kind and order.key == key) {
+            order.sequence = 0;
+            return;
+        }
+    }
+}
+
+pub fn monthlyCard(player: *const Player, key: u64) MonthlyCard {
+    for (player.monthly_cards.slice()) |card|
+        if (card.key == key)
+            return card;
+    return .{ .key = key };
+}
+
+pub fn setMonthlyCard(player: *Player, allocator: Allocator, card: MonthlyCard) !void {
+    for (player.monthly_cards.mutableSlice()) |*existing| {
+        if (existing.key == card.key) {
+            existing.* = card;
+            return;
+        }
+    }
+    if (player.monthly_cards.len == max_monthly_cards)
+        return error.Full;
+    try player.monthly_cards.append(allocator, card);
 }
 
 pub fn getFormation(player: *const Player, number: u32) ?*const Formation {

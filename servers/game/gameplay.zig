@@ -4,6 +4,7 @@ pub const character_progression = @import("gameplay/character_progression.zig");
 pub const energy = @import("gameplay/energy.zig");
 pub const gacha = @import("gameplay/gacha.zig");
 pub const handbook = @import("gameplay/handbook.zig");
+pub const mall = @import("gameplay/mall.zig");
 pub const mutation = @import("gameplay/mutation.zig");
 pub const progression = @import("gameplay/progression.zig");
 pub const quest = @import("gameplay/quest.zig");

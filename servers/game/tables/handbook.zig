@@ -61,21 +61,18 @@ const character_unlock_condition = 10;
 const advance_skin_unlock_condition = 13;
 
 /// Base-skin rows keyed by Trekker.
-const default_skins: []const Entry = blk: {
-    var result: []const Entry = &.{};
-    for (list) |entry| {
-        if (entry.type == skin_type and
-            entry.condition == character_unlock_condition)
-            result = result ++ [1]Entry{entry};
-    }
-    const final = result[0..result.len].*;
-
-    break :blk &final;
-};
+const default_skins = skinEntries(character_unlock_condition);
 
 const by_default_skin_character = lookup.Lookup(
     u32,
     lookup.fieldKeys(u32, default_skins, "character_id"),
+);
+
+const skins = skinEntries(null);
+
+const by_skin_id = lookup.Lookup(
+    u32,
+    lookup.fieldKeys(u32, skins, "skin_id"),
 );
 
 pub fn defaultSkin(character_id: u32) ?Entry {
@@ -83,17 +80,12 @@ pub fn defaultSkin(character_id: u32) ?Entry {
     return default_skins[row];
 }
 
-const advance_skins: []const Entry = blk: {
-    var result: []const Entry = &.{};
-    for (list) |entry| {
-        if (entry.type == skin_type and
-            entry.condition == advance_skin_unlock_condition)
-            result = result ++ [1]Entry{entry};
-    }
-    const final = result[0..result.len].*;
+pub fn skin(skin_id: u32) ?Entry {
+    const row = by_skin_id.find(skin_id) orelse return null;
+    return skins[row];
+}
 
-    break :blk &final;
-};
+const advance_skins = skinEntries(advance_skin_unlock_condition);
 
 const by_advance_skin_character = lookup.Lookup(
     u32,
@@ -103,6 +95,27 @@ const by_advance_skin_character = lookup.Lookup(
 pub fn advanceSkin(character_id: u32) ?Entry {
     const row = by_advance_skin_character.find(character_id) orelse return null;
     return advance_skins[row];
+}
+
+fn skinEntries(comptime condition: ?u32) []const Entry {
+    const matching_count = blk: {
+        var result: usize = 0;
+        inline for (list) |entry| {
+            if (entry.type == skin_type and (condition == null or entry.condition == condition.?))
+                result += 1;
+        }
+        break :blk result;
+    };
+    var result: [matching_count]Entry = undefined;
+    var index: usize = 0;
+    inline for (list) |entry| {
+        if (entry.type != skin_type or (condition != null and entry.condition != condition.?))
+            continue;
+        result[index] = entry;
+        index += 1;
+    }
+    const final = result;
+    return &final;
 }
 
 /// The client stores Gallery flags in big-endian byte order within each

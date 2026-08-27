@@ -163,6 +163,7 @@ fn serve(
 
 test {
     _ = @import("gameplay/gacha.zig");
+    _ = @import("gameplay/mall.zig");
     _ = @import("gameplay/progression.zig");
     _ = @import("gameplay/research_project.zig");
     _ = @import("Scope.zig");

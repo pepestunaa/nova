@@ -5,6 +5,7 @@ const player_view = @import("../view/player.zig");
 const proto = @import("proto");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
+const monthly_card = @import("mall_monthly_card.zig");
 
 //
 
@@ -27,6 +28,9 @@ pub fn player_data_req(scope: *Scope) !void {
     _ = try gameplay.handbook.ensureDefaultSkins(scope.mutation(), scope.gpa);
 
     try response.send(scope);
+    const today = gameplay.mall.cardDay(scope.now);
+    const rewards = try gameplay.mall.grantMonthlyDaily(scope.mutation(), scope.gpa, today);
+    try monthly_card.daily_rewards.send(scope, rewards, today);
 }
 
 pub const response = struct {
@@ -293,7 +297,7 @@ pub const response = struct {
             .Assists = .fromOwnedSlice(assists[0..player.assists.slice().len]),
             .TourGuideQuestGroup = player.progress.tour_guide_quest_group,
             .TutorialLevels = .fromOwnedSlice(tutorial_levels[0..player.tutorials.slice().len]),
-            .DailyMallRewardStatus = player.progress.daily_mall_reward_available,
+            .DailyMallRewardStatus = gameplay.mall.dailyMallRewardAvailable(scope.player, now),
             .TowerTicket = player.progress.tower_ticket,
             .State = .{
                 .Mail = .{ .New = false },

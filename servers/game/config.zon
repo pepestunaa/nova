@@ -7,6 +7,15 @@
     // gender and nickname selection without entering the prologue flow.
     .skip_tutorial = true,
 
+    .shop = .{
+        // Enables purchases from every Shop page. Product lists remain
+        // available when disabled so the client can render the Shop normally.
+        .enable = true,
+
+        // Includes packages whose configured de-list time has passed.
+        .show_historical_packages = false,
+    },
+
     // TCP listen address. Can be overridden by `-a` option.
     .listen_address = "127.0.0.1:20002",
 

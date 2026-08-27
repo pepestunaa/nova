@@ -84,6 +84,7 @@ pub const Basic = extern struct {
 pub const Progress = extern struct {
     story_build_id: u64 = 0,
     tower_ticket_week: i64 = 0,
+    daily_mall_reward_day: i64 = -1,
     /// Client-reported battle achievements use 1 bit per configured ID. New
     /// official accounts receive this 64-byte bitmap cleared.
     achievement_bits: [64]u8 = @splat(0),
@@ -92,9 +93,53 @@ pub const Progress = extern struct {
     /// Research can raise it.
     tower_ticket: u32 = 0,
     star_tower_npc_interactions: u32 = 0,
-    daily_mall_reward_available: bool = true,
+    padding: [4]u8 = @splat(0),
 
-    padding: [3]u8 = @splat(0),
+    comptime {
+        common.mem.assertNoImplicitPadding(@This());
+    }
+};
+
+pub const MallPurchaseKind = enum(u8) {
+    mall_shop,
+    package,
+    gem,
+};
+
+pub const MallOrderKind = enum(u8) {
+    gem,
+    monthly_card,
+};
+
+pub const MallPurchase = extern struct {
+    kind: MallPurchaseKind = .mall_shop,
+    kind_padding: [7]u8 = @splat(0),
+    key: u64 = 0,
+    quantity: u32 = 0,
+    quantity_padding: [4]u8 = @splat(0),
+    reset_at: i64 = 0,
+
+    comptime {
+        common.mem.assertNoImplicitPadding(@This());
+    }
+};
+
+pub const MallOrder = extern struct {
+    kind: MallOrderKind = .gem,
+    kind_padding: [7]u8 = @splat(0),
+    key: u64 = 0,
+    sequence: u32 = 0,
+    sequence_padding: [4]u8 = @splat(0),
+
+    comptime {
+        common.mem.assertNoImplicitPadding(@This());
+    }
+};
+
+pub const MonthlyCard = extern struct {
+    key: u64 = 0,
+    expiry_day: i64 = 0,
+    claimed_day: i64 = -1,
 
     comptime {
         common.mem.assertNoImplicitPadding(@This());

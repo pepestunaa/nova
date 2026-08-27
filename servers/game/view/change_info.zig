@@ -15,6 +15,31 @@ const tables = @import("../tables.zig");
 
 //
 
+pub fn appendReward(
+    arena: Allocator,
+    props: []proto.pb.Any,
+    count: *usize,
+    id: u32,
+    quantity: i32,
+) !void {
+    if (count.* == props.len)
+        return error.Full;
+    if (tables.item.isResource(id)) {
+        const message = proto.pb.Res{ .Tid = id, .Qty = quantity };
+        const bytes = try arena.alloc(u8, proto.encodingLength(proto.pb.Res, &message));
+        var writer = Io.Writer.fixed(bytes);
+        try proto.encode(proto.pb.Res, &writer, &message);
+        props[count.*] = .{ .type_url = "type.googleapis.com/proto.Res", .value = writer.buffered() };
+    } else {
+        const message = proto.pb.Item{ .Id = id, .Tid = id, .Qty = quantity };
+        const bytes = try arena.alloc(u8, proto.encodingLength(proto.pb.Item, &message));
+        var writer = Io.Writer.fixed(bytes);
+        try proto.encode(proto.pb.Item, &writer, &message);
+        props[count.*] = .{ .type_url = "type.googleapis.com/proto.Item", .value = writer.buffered() };
+    }
+    count.* += 1;
+}
+
 const Error = Allocator.Error || proto.EncodeError || error{Full};
 
 pub const Gacha = struct {

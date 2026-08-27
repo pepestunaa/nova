@@ -9,7 +9,7 @@ const Player = @import("../Player.zig");
 //
 
 const player_save_version = 1;
-const max_save_buffers = 48;
+const max_save_buffers = 50;
 const max_player_save_bytes = 16 * 1024 * 1024;
 const max_opaque_tower_bytes = 1024 * 1024;
 
@@ -46,6 +46,9 @@ const Header = extern struct {
     gacha_banners_count: u32,
     gacha_storages_count: u32,
     gacha_histories_count: u32,
+    mall_purchases_count: u32,
+    mall_orders_count: u32,
+    monthly_cards_count: u32,
     checksum: u32 = 0,
 
     comptime {
@@ -82,6 +85,9 @@ const Header = extern struct {
             .gacha_banners_count = @intCast(player.gacha_banners.len),
             .gacha_storages_count = @intCast(player.gacha_storages.len),
             .gacha_histories_count = @intCast(player.gacha_histories.len),
+            .mall_purchases_count = @intCast(player.mall_purchases.len),
+            .mall_orders_count = @intCast(player.mall_orders.len),
+            .monthly_cards_count = @intCast(player.monthly_cards.len),
         };
     }
 };
@@ -100,6 +106,9 @@ fn appendPlayerBody(buffers: *std.ArrayList([]const u8), player: *const Player) 
     buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.gacha_banners.slice()));
     buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.gacha_storages.slice()));
     buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.gacha_histories.slice()));
+    buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.mall_purchases.slice()));
+    buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.mall_orders.slice()));
+    buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.monthly_cards.slice()));
     buffers.appendAssumeCapacity(std.mem.asBytes(&player.characters.unlocked));
     buffers.appendAssumeCapacity(std.mem.sliceAsBytes(&player.characters.entries));
     buffers.appendAssumeCapacity(std.mem.sliceAsBytes(player.guides.slice()));
@@ -181,6 +190,10 @@ fn readPlayerBody(
     try readList(Player.GachaStorage, reader, allocator, &player.gacha_storages, header.gacha_storages_count);
     try readList(Player.GachaHistory, reader, allocator, &player.gacha_histories, header.gacha_histories_count);
 
+    try readList(Player.MallPurchase, reader, allocator, &player.mall_purchases, header.mall_purchases_count);
+    try readList(Player.MallOrder, reader, allocator, &player.mall_orders, header.mall_orders_count);
+    try readList(Player.MonthlyCard, reader, allocator, &player.monthly_cards, header.monthly_cards_count);
+
     try reader.readSliceAll(std.mem.asBytes(&player.characters.unlocked));
     try reader.readSliceAll(std.mem.sliceAsBytes(&player.characters.entries));
 
@@ -218,6 +231,9 @@ fn readPlayerBody(
 
 fn expectedFileSize(header: *const Header) error{InvalidFormat}!usize {
     if (header.star_tower_builds_count > Player.max_star_tower_builds or
+        header.mall_purchases_count > Player.max_mall_purchases or
+        header.mall_orders_count > Player.max_mall_orders or
+        header.monthly_cards_count > Player.max_monthly_cards or
         header.star_tower_map_param_bytes > max_opaque_tower_bytes or
         header.star_tower_client_data_bytes > max_opaque_tower_bytes)
         return error.InvalidFormat;
@@ -244,6 +260,9 @@ fn expectedFileSize(header: *const Header) error{InvalidFormat}!usize {
         .{ .count = header.gacha_banners_count, .size = @sizeOf(Player.GachaBanner) },
         .{ .count = header.gacha_storages_count, .size = @sizeOf(Player.GachaStorage) },
         .{ .count = header.gacha_histories_count, .size = @sizeOf(Player.GachaHistory) },
+        .{ .count = header.mall_purchases_count, .size = @sizeOf(Player.MallPurchase) },
+        .{ .count = header.mall_orders_count, .size = @sizeOf(Player.MallOrder) },
+        .{ .count = header.monthly_cards_count, .size = @sizeOf(Player.MonthlyCard) },
         .{ .count = header.guides_count, .size = @sizeOf(Player.Guide) },
         .{ .count = header.board_count, .size = @sizeOf(Player.BoardEntry) },
         .{ .count = header.handbook_count, .size = @sizeOf(Player.HandbookUnlock) },
@@ -320,9 +339,8 @@ pub fn load(allocator: Allocator, io: Io, uid: u64) LoadError!?Player {
         return error.Corrupted;
     if (header.version != player_save_version)
         return error.Corrupted;
-    const expected_size = expectedFileSize(&header) catch
-        return error.Corrupted;
-    if (expected_size != file_size)
+    const current_size = expectedFileSize(&header) catch return error.Corrupted;
+    if (file_size != current_size)
         return error.Corrupted;
 
     var hash_buffer: [4096]u8 = undefined;
