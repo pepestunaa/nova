@@ -131,11 +131,17 @@ pub fn Logger(comptime log_scope: @EnumLiteral()) type {
     };
 }
 
-/// Saves the request's changes while the cache entry is still locked. If the
-/// save fails, `deinit` restores the last good state.
+/// Saves a registered player's changes while the cache entry is still locked.
+/// Bootstrap state for an account that has not registered yet stays in memory;
+/// there is no player file to write until registration completes. If a save
+/// fails, `deinit` restores the last good state.
 pub fn commit(scope: *Scope) Save.SaveError!void {
     if (!scope.mutation_state.isDirty())
         return;
+    if (!scope.player.is_registered) {
+        scope.mutation_state.committed();
+        return;
+    }
     try Save.save(scope.io, scope.player);
     scope.mutation_state.committed();
 }
@@ -376,4 +382,20 @@ test "protocol rejection cannot follow a persistent mutation" {
         error.InvalidMutationState,
         ensureUnmodified(&state),
     );
+}
+
+test "unregistered player mutations do not require a save file" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+
+    var scope: Scope = undefined;
+    scope.player = &player;
+    scope.mutation_state = .init(&player);
+    _ = scope.mutation_state.modify(.{});
+    scope.mutation_state.finish();
+
+    try scope.commit();
+    try testing.expect(!scope.mutation_state.isDirty());
 }
