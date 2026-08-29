@@ -38,6 +38,13 @@ pub fn finalize(
             now,
             &changes.achievements,
         );
+    if (mutation.invalidates(.client_reports))
+        try achievement.applyClientReports(
+            mutation,
+            allocator,
+            now,
+            &changes.achievements,
+        );
 
     if (mutation.invalidates(.acquisitions) or
         mutation.invalidates(.characters) or

@@ -7,6 +7,13 @@ const tables = @import("../tables.zig");
 
 //
 
+/// Client event identifiers used by the achievement report stream. The enum
+/// is intentionally non-exhaustive so unrelated client events remain valid.
+pub const ClientEvent = enum(u32) {
+    achievement_progress = 200,
+    _,
+};
+
 pub const ChangeSet = struct {
     entries: [tables.achievement.tracked_entry_count]Player.Achievement = undefined,
     len: usize = 0,
@@ -67,6 +74,36 @@ pub fn refreshProgression(mutation: *Mutation, allocator: Allocator, now: i64, c
         };
         const entry = tables.achievement.entry(definition.entry_index);
         try refreshState(mutation, allocator, now, entry, progress, changes);
+    }
+}
+
+/// Applies the positive increments collected from an Ascension victory's
+/// client achievement reports.
+pub fn applyClientReports(
+    mutation: *Mutation,
+    allocator: Allocator,
+    now: i64,
+    changes: *ChangeSet,
+) !void {
+    var reports = mutation.clientReportIterator();
+    while (reports.next()) |report_index| {
+        const report = tables.achievement.client_reports[report_index];
+        const definition = tables.achievement.entry(report.entry_index);
+        const current = find(mutation.read(), definition.id);
+        const previous_progress = if (current) |state| state.progress else 0;
+        const progress = @min(
+            definition.target,
+            previous_progress +| mutation.clientReportDelta(report_index),
+        );
+
+        try refreshState(
+            mutation,
+            allocator,
+            now,
+            definition,
+            progress,
+            changes,
+        );
     }
 }
 
@@ -247,4 +284,76 @@ test "completed and claimed achievements do not notify again" {
         Player.Achievement.Status.reward_received,
         find(&player, definition.id).?.status,
     );
+}
+
+//
+
+test "client report progress saturates and preserves claimed achievements" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    const report = tables.achievement.client_reports[0];
+    const definition = tables.achievement.entry(report.entry_index);
+    try testing.expect(definition.target > 0);
+
+    var completion: Mutation = .init(&player);
+    _ = completion.modify(.{});
+    try testing.expect(completion.recordClientReport(definition.id, definition.target - 1));
+    try testing.expect(completion.recordClientReport(definition.id, 2));
+    try testing.expectEqual(
+        definition.target + 1,
+        completion.clientReportDelta(tables.achievement.clientReportIndex(definition.id).?),
+    );
+
+    var completion_changes: ChangeSet = .{};
+    try applyClientReports(
+        &completion,
+        testing.allocator,
+        123,
+        &completion_changes,
+    );
+    const completed = find(&player, definition.id).?;
+    try testing.expectEqual(definition.target, completed.progress);
+    try testing.expectEqual(Player.Achievement.Status.reward_available, completed.status);
+    try testing.expectEqual(@as(i64, 123), completed.completed_at);
+    try testing.expectEqual(@as(usize, 1), completion_changes.len);
+    completion.finish();
+    completion.committed();
+
+    player.achievements.entries[0].status = .reward_received;
+    var claimed: Mutation = .init(&player);
+    _ = claimed.modify(.{});
+    try testing.expect(claimed.recordClientReport(definition.id, 10));
+    var claimed_changes: ChangeSet = .{};
+    try applyClientReports(
+        &claimed,
+        testing.allocator,
+        456,
+        &claimed_changes,
+    );
+    try testing.expectEqual(@as(usize, 0), claimed_changes.len);
+    try testing.expectEqual(
+        Player.Achievement.Status.reward_received,
+        find(&player, definition.id).?.status,
+    );
+    claimed.finish();
+    claimed.committed();
+}
+
+test "generated client report metadata maps back to its achievement" {
+    const testing = std.testing;
+
+    for (tables.achievement.client_reports, 0..) |report, report_index| {
+        const definition = tables.achievement.entry(report.entry_index);
+        try testing.expectEqual(
+            @as(?u8, @intCast(report_index)),
+            tables.achievement.clientReportIndex(definition.id),
+        );
+        try testing.expect(report.client_condition != 0);
+        if (report.kind == .specific_battle_condition)
+            try testing.expectEqual(@as(usize, 0), report.parameters.len)
+        else
+            try testing.expect(report.parameters.len != 0);
+    }
 }

@@ -37,6 +37,22 @@ pub const Progression = struct {
     element: u8,
 };
 
+pub const ClientReportKind = enum(u3) {
+    elemental_mark,
+    skill_cast,
+    single_attack_damage,
+    low_hp_clear,
+    specific_battle_condition,
+    enemy_type_counter,
+};
+
+pub const ClientReport = struct {
+    entry_index: u8,
+    kind: ClientReportKind,
+    client_condition: u32,
+    parameters: []const u32,
+};
+
 pub const entries = [_]Entry{
     .{ .id = 377, .target = 10, .reward_id = 2, .reward_quantity = 5 },
     .{ .id = 378, .target = 20, .reward_id = 2, .reward_quantity = 5 },
@@ -118,6 +134,245 @@ pub const entries = [_]Entry{
     .{ .id = 402, .target = 20, .reward_id = 2, .reward_quantity = 10 },
     .{ .id = 403, .target = 25, .reward_id = 2, .reward_quantity = 20 },
     .{ .id = 404, .target = 30, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 422, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 423, .target = 50, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 424, .target = 100, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 425, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 426, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 427, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 428, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 429, .target = 50, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 430, .target = 100, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 431, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 432, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 433, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 434, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 435, .target = 50, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 436, .target = 100, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 437, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 438, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 439, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 440, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 441, .target = 50, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 442, .target = 100, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 443, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 444, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 445, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 446, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 447, .target = 50, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 448, .target = 100, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 449, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 450, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 451, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 452, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 453, .target = 50, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 454, .target = 100, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 455, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 456, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 457, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 458, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 459, .target = 20, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 460, .target = 50, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 461, .target = 100, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 462, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 463, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 464, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 465, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 466, .target = 20, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 467, .target = 50, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 468, .target = 100, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 469, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 470, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 471, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 472, .target = 10, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 473, .target = 20, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 474, .target = 50, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 475, .target = 100, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 476, .target = 300, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 477, .target = 500, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 478, .target = 1000, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 479, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 480, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 481, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 482, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 483, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 570, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 571, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 572, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 573, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 574, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 575, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 576, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 577, .target = 30, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 578, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 579, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 580, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 581, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 582, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 583, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 584, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 585, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 586, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 587, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 588, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 589, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 590, .target = 30, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 591, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 592, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 593, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 594, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 595, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 596, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 597, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 598, .target = 666, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 599, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 600, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 601, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 602, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 603, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 604, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 605, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 606, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 607, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 608, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 609, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 610, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 611, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 612, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 613, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 614, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 615, .target = 1, .reward_id = 2, .reward_quantity = 20 },
+    .{ .id = 616, .target = 200, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 617, .target = 1000, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 618, .target = 100, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 619, .target = 600, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 620, .target = 100, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 621, .target = 600, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 622, .target = 200, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 623, .target = 1000, .reward_id = 2, .reward_quantity = 10 },
+    .{ .id = 624, .target = 200, .reward_id = 2, .reward_quantity = 5 },
+    .{ .id = 625, .target = 1000, .reward_id = 2, .reward_quantity = 10 },
+};
+
+pub const client_reports = [_]ClientReport{
+    .{ .entry_index = 80, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{1} },
+    .{ .entry_index = 81, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{1} },
+    .{ .entry_index = 82, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{1} },
+    .{ .entry_index = 83, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{1} },
+    .{ .entry_index = 84, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{1} },
+    .{ .entry_index = 85, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{1} },
+    .{ .entry_index = 86, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{2} },
+    .{ .entry_index = 87, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{2} },
+    .{ .entry_index = 88, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{2} },
+    .{ .entry_index = 89, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{2} },
+    .{ .entry_index = 90, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{2} },
+    .{ .entry_index = 91, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{2} },
+    .{ .entry_index = 92, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{3} },
+    .{ .entry_index = 93, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{3} },
+    .{ .entry_index = 94, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{3} },
+    .{ .entry_index = 95, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{3} },
+    .{ .entry_index = 96, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{3} },
+    .{ .entry_index = 97, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{3} },
+    .{ .entry_index = 98, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{4} },
+    .{ .entry_index = 99, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{4} },
+    .{ .entry_index = 100, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{4} },
+    .{ .entry_index = 101, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{4} },
+    .{ .entry_index = 102, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{4} },
+    .{ .entry_index = 103, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{4} },
+    .{ .entry_index = 104, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{5} },
+    .{ .entry_index = 105, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{5} },
+    .{ .entry_index = 106, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{5} },
+    .{ .entry_index = 107, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{5} },
+    .{ .entry_index = 108, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{5} },
+    .{ .entry_index = 109, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{5} },
+    .{ .entry_index = 110, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{6} },
+    .{ .entry_index = 111, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{6} },
+    .{ .entry_index = 112, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{6} },
+    .{ .entry_index = 113, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{6} },
+    .{ .entry_index = 114, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{6} },
+    .{ .entry_index = 115, .kind = .elemental_mark, .client_condition = 10, .parameters = &.{6} },
+    .{ .entry_index = 116, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 117, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 118, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 119, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 120, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 121, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 122, .kind = .skill_cast, .client_condition = 5, .parameters = &.{5} },
+    .{ .entry_index = 123, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 124, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 125, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 126, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 127, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 128, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 129, .kind = .skill_cast, .client_condition = 5, .parameters = &.{3} },
+    .{ .entry_index = 130, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 131, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 132, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 133, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 134, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 135, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 136, .kind = .skill_cast, .client_condition = 5, .parameters = &.{4} },
+    .{ .entry_index = 137, .kind = .single_attack_damage, .client_condition = 11, .parameters = &.{9999} },
+    .{ .entry_index = 138, .kind = .single_attack_damage, .client_condition = 11, .parameters = &.{99999} },
+    .{ .entry_index = 139, .kind = .single_attack_damage, .client_condition = 11, .parameters = &.{999999} },
+    .{ .entry_index = 140, .kind = .low_hp_clear, .client_condition = 12, .parameters = &.{10} },
+    .{ .entry_index = 141, .kind = .low_hp_clear, .client_condition = 12, .parameters = &.{5} },
+    .{ .entry_index = 142, .kind = .specific_battle_condition, .client_condition = 1305101, .parameters = &.{} },
+    .{ .entry_index = 143, .kind = .specific_battle_condition, .client_condition = 1305102, .parameters = &.{} },
+    .{ .entry_index = 144, .kind = .specific_battle_condition, .client_condition = 1305103, .parameters = &.{} },
+    .{ .entry_index = 145, .kind = .specific_battle_condition, .client_condition = 1000501, .parameters = &.{} },
+    .{ .entry_index = 146, .kind = .specific_battle_condition, .client_condition = 1000502, .parameters = &.{} },
+    .{ .entry_index = 147, .kind = .specific_battle_condition, .client_condition = 1000503, .parameters = &.{} },
+    .{ .entry_index = 148, .kind = .specific_battle_condition, .client_condition = 1000504, .parameters = &.{} },
+    .{ .entry_index = 149, .kind = .specific_battle_condition, .client_condition = 1050101, .parameters = &.{} },
+    .{ .entry_index = 150, .kind = .specific_battle_condition, .client_condition = 1050102, .parameters = &.{} },
+    .{ .entry_index = 151, .kind = .specific_battle_condition, .client_condition = 1050103, .parameters = &.{} },
+    .{ .entry_index = 152, .kind = .specific_battle_condition, .client_condition = 1050104, .parameters = &.{} },
+    .{ .entry_index = 153, .kind = .specific_battle_condition, .client_condition = 5008101, .parameters = &.{} },
+    .{ .entry_index = 154, .kind = .specific_battle_condition, .client_condition = 5008102, .parameters = &.{} },
+    .{ .entry_index = 155, .kind = .specific_battle_condition, .client_condition = 5008103, .parameters = &.{} },
+    .{ .entry_index = 156, .kind = .specific_battle_condition, .client_condition = 5008104, .parameters = &.{} },
+    .{ .entry_index = 157, .kind = .specific_battle_condition, .client_condition = 5008105, .parameters = &.{} },
+    .{ .entry_index = 158, .kind = .specific_battle_condition, .client_condition = 5051101, .parameters = &.{} },
+    .{ .entry_index = 159, .kind = .specific_battle_condition, .client_condition = 5051102, .parameters = &.{} },
+    .{ .entry_index = 160, .kind = .specific_battle_condition, .client_condition = 5050101, .parameters = &.{} },
+    .{ .entry_index = 161, .kind = .specific_battle_condition, .client_condition = 5050102, .parameters = &.{} },
+    .{ .entry_index = 162, .kind = .specific_battle_condition, .client_condition = 5050103, .parameters = &.{} },
+    .{ .entry_index = 163, .kind = .specific_battle_condition, .client_condition = 5052101, .parameters = &.{} },
+    .{ .entry_index = 164, .kind = .specific_battle_condition, .client_condition = 5052102, .parameters = &.{} },
+    .{ .entry_index = 165, .kind = .specific_battle_condition, .client_condition = 5052103, .parameters = &.{} },
+    .{ .entry_index = 166, .kind = .specific_battle_condition, .client_condition = 5053101, .parameters = &.{} },
+    .{ .entry_index = 167, .kind = .specific_battle_condition, .client_condition = 5053102, .parameters = &.{} },
+    .{ .entry_index = 168, .kind = .specific_battle_condition, .client_condition = 5054101, .parameters = &.{} },
+    .{ .entry_index = 169, .kind = .specific_battle_condition, .client_condition = 5054102, .parameters = &.{} },
+    .{ .entry_index = 170, .kind = .specific_battle_condition, .client_condition = 5054103, .parameters = &.{} },
+    .{ .entry_index = 171, .kind = .specific_battle_condition, .client_condition = 5016101, .parameters = &.{} },
+    .{ .entry_index = 172, .kind = .specific_battle_condition, .client_condition = 5016102, .parameters = &.{} },
+    .{ .entry_index = 173, .kind = .specific_battle_condition, .client_condition = 1001201, .parameters = &.{} },
+    .{ .entry_index = 174, .kind = .specific_battle_condition, .client_condition = 1001202, .parameters = &.{} },
+    .{ .entry_index = 175, .kind = .specific_battle_condition, .client_condition = 1001203, .parameters = &.{} },
+    .{ .entry_index = 176, .kind = .specific_battle_condition, .client_condition = 1001204, .parameters = &.{} },
+    .{ .entry_index = 177, .kind = .specific_battle_condition, .client_condition = 1306101, .parameters = &.{} },
+    .{ .entry_index = 178, .kind = .specific_battle_condition, .client_condition = 1306102, .parameters = &.{} },
+    .{ .entry_index = 179, .kind = .specific_battle_condition, .client_condition = 1306103, .parameters = &.{} },
+    .{ .entry_index = 180, .kind = .specific_battle_condition, .client_condition = 5010101, .parameters = &.{} },
+    .{ .entry_index = 181, .kind = .specific_battle_condition, .client_condition = 5010102, .parameters = &.{} },
+    .{ .entry_index = 182, .kind = .specific_battle_condition, .client_condition = 1551001, .parameters = &.{} },
+    .{ .entry_index = 183, .kind = .specific_battle_condition, .client_condition = 1551002, .parameters = &.{} },
+    .{ .entry_index = 184, .kind = .specific_battle_condition, .client_condition = 1551003, .parameters = &.{} },
+    .{ .entry_index = 185, .kind = .specific_battle_condition, .client_condition = 1651001, .parameters = &.{} },
+    .{ .entry_index = 186, .kind = .specific_battle_condition, .client_condition = 5001101, .parameters = &.{} },
+    .{ .entry_index = 187, .kind = .specific_battle_condition, .client_condition = 5055102, .parameters = &.{} },
+    .{ .entry_index = 188, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5006101, 5006102, 5006103, 5006104, 5006105, 5006106, 5006107, 5006181, 5006182, 5006183, 5006184, 5006185, 5006186, 5006187, 5007101, 5007102, 5007103, 5007104, 5007105, 5007106, 5007107, 5007108, 5008101, 5013101, 5013102, 5013103, 5013104, 5013105, 5013106, 5013107 } },
+    .{ .entry_index = 189, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5006101, 5006102, 5006103, 5006104, 5006105, 5006106, 5006107, 5006181, 5006182, 5006183, 5006184, 5006185, 5006186, 5006187, 5007101, 5007102, 5007103, 5007104, 5007105, 5007106, 5007107, 5007108, 5008101, 5013101, 5013102, 5013103, 5013104, 5013105, 5013106, 5013107 } },
+    .{ .entry_index = 190, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5009101, 5009102, 5009103, 5009104, 5009105, 5009106, 5009107, 5014101, 5014102, 5014103, 5014104, 5014105, 5014106, 5014107, 5051101, 5051102, 5053101, 5019101, 5019102, 5019103, 5019104, 5019105, 5019106, 5019107, 1001801, 1001802, 1001803, 1001811, 1001821, 1001831, 1001841, 1001851, 1001861, 1001871 } },
+    .{ .entry_index = 191, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5009101, 5009102, 5009103, 5009104, 5009105, 5009106, 5009107, 5014101, 5014102, 5014103, 5014104, 5014105, 5014106, 5014107, 5051101, 5051102, 5053101, 5019101, 5019102, 5019103, 5019104, 5019105, 5019106, 5019107, 1001801, 1001802, 1001803, 1001811, 1001821, 1001831, 1001841, 1001851, 1001861, 1001871 } },
+    .{ .entry_index = 192, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5023101, 5023181, 5023102, 5023182, 5023103, 5023104, 5023105, 5023186, 5023106, 5023187, 5023107, 5022101, 5022111, 5022121, 5022131, 5022141, 5022151, 5022161, 5024101, 5024102, 5024103, 5024104, 5024105, 5024106, 5024107, 5058101, 5058201, 5057101, 5028101, 5028102, 5028103, 5028104, 5028105, 5028106, 5028107, 5028108, 5021101, 5021102, 5021103, 5021104, 5021105, 5021106, 5021107 } },
+    .{ .entry_index = 193, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5023101, 5023181, 5023102, 5023182, 5023103, 5023104, 5023105, 5023186, 5023106, 5023187, 5023107, 5022101, 5022111, 5022121, 5022131, 5022141, 5022151, 5022161, 5024101, 5024102, 5024103, 5024104, 5024105, 5024106, 5024107, 5058101, 5058201, 5057101, 5028101, 5028102, 5028103, 5028104, 5028105, 5028106, 5028107, 5028108, 5021101, 5021102, 5021103, 5021104, 5021105, 5021106, 5021107 } },
+    .{ .entry_index = 194, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5002101, 5002102, 5002103, 5002104, 5002105, 5002106, 5002107, 5002108, 5003101, 5003181, 5003102, 5003182, 5003103, 5003183, 5003104, 5003184, 5003105, 5003185, 5003106, 5003116, 5003186, 5003107, 5003187, 5016101, 5016102, 5016103, 5016104, 5016105, 5016106, 5016107, 5020101, 5020102, 5020103, 5020104, 5020105, 5020106, 5020107, 5012101, 5012102, 5012103, 5012104, 5012105, 5012106, 5012107, 1001201, 1001202, 1001203, 1001204, 1001205, 1001206, 1001207 } },
+    .{ .entry_index = 195, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5002101, 5002102, 5002103, 5002104, 5002105, 5002106, 5002107, 5002108, 5003101, 5003181, 5003102, 5003182, 5003103, 5003183, 5003104, 5003184, 5003105, 5003185, 5003106, 5003116, 5003186, 5003107, 5003187, 5016101, 5016102, 5016103, 5016104, 5016105, 5016106, 5016107, 5020101, 5020102, 5020103, 5020104, 5020105, 5020106, 5020107, 5012101, 5012102, 5012103, 5012104, 5012105, 5012106, 5012107, 1001201, 1001202, 1001203, 1001204, 1001205, 1001206, 1001207 } },
+    .{ .entry_index = 196, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5004101, 5004102, 5004103, 5004104, 5004105, 5004106, 5004107, 5010101, 5010102, 5010103, 5010104, 5010105, 5010106, 5010107, 5010108, 5018101, 5018102, 5018103, 5018104, 5018105, 5018106, 5018107, 5002001, 5002081, 5002002, 5002003, 5002004, 5002005, 5002006, 5002007, 5002017, 5002009, 5002082, 5002083, 5002084, 5002085, 5002086, 5011101, 5011102, 5011103, 5011104, 5011105, 5011106, 5011107, 5052101 } },
+    .{ .entry_index = 197, .kind = .enemy_type_counter, .client_condition = 14, .parameters = &.{ 5004101, 5004102, 5004103, 5004104, 5004105, 5004106, 5004107, 5010101, 5010102, 5010103, 5010104, 5010105, 5010106, 5010107, 5010108, 5018101, 5018102, 5018103, 5018104, 5018105, 5018106, 5018107, 5002001, 5002081, 5002002, 5002003, 5002004, 5002005, 5002006, 5002007, 5002017, 5002009, 5002082, 5002083, 5002084, 5002085, 5002086, 5011101, 5011102, 5011103, 5011104, 5011105, 5011106, 5011107, 5052101 } },
 };
 
 pub const collection_groups = [_]CollectionGroup{
@@ -189,26 +444,41 @@ pub const progressions = [_]Progression{
 };
 
 pub const collection_entry_count = 22;
-pub const tracked_entry_count = 80;
+pub const client_report_count = 118;
+pub const tracked_entry_count = 198;
 
 const first_entry_id = 325;
-const entry_index_by_id = [_]u8{ 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 75, 76, 77, 78, 79, 80 };
+const entry_index_by_id = [_]u8{ 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 75, 76, 77, 78, 79, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198 };
 
-pub fn collectionEntries(group: CollectionGroup) []const Entry {
-    return entries[group.first..][0..group.count];
-}
+const client_report_index_by_entry = [_]u8{ 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117 };
 
-pub fn entry(index: u8) Entry {
-    return entries[index];
-}
-
-pub fn get(id: u32) ?Entry {
+pub fn index(id: u32) ?u8 {
     if (id < first_entry_id)
         return null;
     const offset = id - first_entry_id;
     if (offset >= entry_index_by_id.len)
         return null;
-    const index = entry_index_by_id[offset];
+    const encoded = entry_index_by_id[offset];
 
-    return if (index == 0) null else entries[index - 1];
+    return if (encoded == 0) null else encoded - 1;
+}
+
+pub fn clientReportIndex(id: u32) ?u8 {
+    const entry_index = index(id) orelse return null;
+    const report_index = client_report_index_by_entry[entry_index];
+
+    return if (report_index == 255) null else report_index;
+}
+
+pub fn collectionEntries(group: CollectionGroup) []const Entry {
+    return entries[group.first..][0..group.count];
+}
+
+pub fn entry(entry_index: u8) Entry {
+    return entries[entry_index];
+}
+
+pub fn get(id: u32) ?Entry {
+    const entry_index = index(id) orelse return null;
+    return entries[entry_index];
 }

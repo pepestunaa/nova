@@ -5,6 +5,7 @@ const Io = std.Io;
 const gameplay = @import("../gameplay.zig");
 const tower = gameplay.star_tower;
 
+const client_reports = @import("star_tower/client_reports.zig");
 const event_interaction = @import("star_tower/event.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
@@ -295,6 +296,8 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             run.final_core_potential_pending = false;
             run.settlement_time = victory.Time;
             try setRunClientData(player, scope.gpa, victory.DateLen, victory.ClientData, victory.DataVersion);
+            if (victory.Events) |events|
+                try client_reports.record(scope.mutation(), events);
             run.total_damages = @splat(0);
             run.total_damage_count = 0;
             var damages = victory.Damages;

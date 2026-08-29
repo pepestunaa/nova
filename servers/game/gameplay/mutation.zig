@@ -12,6 +12,7 @@ pub const Dependency = enum {
     acquisitions,
     characters,
     discs,
+    client_reports,
     research_project,
     tutorials,
     tower_growth,
@@ -22,12 +23,15 @@ const Dependencies = std.EnumSet(Dependency);
 const NewCharacterSet = std.bit_set.IntegerBitSet(tables.character.count);
 const HandbookTypeSet = std.bit_set.IntegerBitSet(tables.handbook.type_count);
 const ResearchProjectQuestSet = std.bit_set.IntegerBitSet(tables.research_project.list.len);
+const ClientReportSet = std.bit_set.IntegerBitSet(tables.achievement.client_report_count);
 
 player: *Player,
 invalidated: Dependencies = .empty,
 new_characters: NewCharacterSet = .empty,
 handbook_types: HandbookTypeSet = .empty,
 research_project_quests: ResearchProjectQuestSet = .empty,
+client_reports: ClientReportSet = .empty,
+client_report_deltas: [tables.achievement.client_report_count]u32 = @splat(0),
 dirty: bool = false,
 finalized: bool = false,
 
@@ -117,6 +121,34 @@ pub fn researchProjectQuestIterator(mutation: *const Mutation) ResearchProjectQu
     return mutation.research_project_quests.iterator(.{});
 }
 
+/// Records a positive amount reported for a client-driven achievement.
+/// Duplicate reports are combined until finalization without allocating.
+pub fn recordClientReport(mutation: *Mutation, achievement_id: u32, delta: u32) bool {
+    std.debug.assert(mutation.dirty and !mutation.finalized);
+
+    if (delta == 0)
+        return false;
+
+    const index = tables.achievement.clientReportIndex(achievement_id) orelse
+        return false;
+    mutation.client_report_deltas[index] +|= delta;
+    mutation.client_reports.set(index);
+    mutation.invalidate(.{ .client_reports = true });
+
+    return true;
+}
+
+/// Iterates over the client-report definitions touched by this request.
+pub fn clientReportIterator(mutation: *const Mutation) ClientReportSet.Iterator(.{}) {
+    return mutation.client_reports.iterator(.{});
+}
+
+/// Returns the total increment for one client-report definition.
+pub fn clientReportDelta(mutation: *const Mutation, index: usize) u32 {
+    std.debug.assert(index < mutation.client_report_deltas.len);
+    return mutation.client_report_deltas[index];
+}
+
 /// Closes the mutation before derived progression and notifications run.
 pub fn finish(mutation: *Mutation) void {
     std.debug.assert(!mutation.finalized);
@@ -193,4 +225,38 @@ test "an empty invalidation still enrolls persistent writes" {
     try testing.expect(mutation.isDirty());
     inline for (@typeInfo(Dependency).@"enum".fields) |field|
         try testing.expect(!mutation.invalidates(@enumFromInt(field.value)));
+}
+
+//
+
+test "client reports aggregate known achievements and ignore invalid input" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    var mutation: Mutation = .init(&player);
+    _ = mutation.modify(.{});
+
+    const report = tables.achievement.client_reports[0];
+    const achievement_id = tables.achievement.entry(report.entry_index).id;
+
+    try testing.expect(!mutation.recordClientReport(achievement_id, 0));
+    try testing.expect(!mutation.recordClientReport(0, 1));
+    try testing.expect(mutation.recordClientReport(achievement_id, 2));
+    try testing.expect(mutation.recordClientReport(achievement_id, 3));
+    try testing.expectEqual(
+        @as(u32, 5),
+        mutation.clientReportDelta(tables.achievement.clientReportIndex(achievement_id).?),
+    );
+    try testing.expect(mutation.invalidates(.client_reports));
+
+    var reports = mutation.clientReportIterator();
+    try testing.expectEqual(
+        @as(?usize, @intCast(tables.achievement.clientReportIndex(achievement_id).?)),
+        reports.next(),
+    );
+    try testing.expectEqual(@as(?usize, null), reports.next());
+
+    mutation.finish();
+    mutation.committed();
 }
