@@ -339,26 +339,50 @@ pub fn refreshAssist(player: *Player, changes: *AssistChanges) void {
 /// next reset.
 pub fn refreshDailyWeeklyMissions(mutation: *Mutation, allocator: Allocator, now: i64) !bool {
     const player = mutation.read();
-    if (!definitionsNeedRefresh(player, &tables.quest.daily, now) and
-        !definitionsNeedRefresh(player, &tables.quest.weekly, now))
+    const daily_needs_refresh = dailyNeedsRefresh(player, now);
+    const weekly_needs_refresh = definitionsNeedRefresh(player, &tables.quest.weekly, now);
+    if (!daily_needs_refresh and !weekly_needs_refresh)
         return false;
 
-    return refreshDailyWeeklyMissionsPlayer(
-        mutation.modify(.{}),
-        allocator,
-        now,
-    );
+    const writable = mutation.modify(.{});
+    var changed = false;
+
+    if (daily_needs_refresh) {
+        const result = try refreshDailyDefinitions(
+            writable,
+            allocator,
+            now,
+            reset.nextDaily(now),
+        );
+        if (result.reset)
+            writable.progress.daily_active_reward_bits = 0;
+        changed = changed or result.changed;
+    }
+
+    if (weekly_needs_refresh) {
+        const weekly_changed = try refreshDefinitions(
+            writable,
+            allocator,
+            &tables.quest.weekly,
+            now,
+            reset.nextWeekly(now),
+        );
+        if (weekly_changed)
+            writable.progress.weekly_active_reward_bits = 0;
+        changed = changed or weekly_changed;
+    }
+
+    return changed;
 }
 
 fn refreshDailyWeeklyMissionsPlayer(player: *Player, allocator: Allocator, now: i64) !bool {
-    const daily_changed = try refreshDefinitions(
+    const daily_result = try refreshDailyDefinitions(
         player,
         allocator,
-        &tables.quest.daily,
         now,
         reset.nextDaily(now),
     );
-    if (daily_changed)
+    if (daily_result.reset)
         player.progress.daily_active_reward_bits = 0;
 
     const weekly_changed = try refreshDefinitions(
@@ -371,7 +395,159 @@ fn refreshDailyWeeklyMissionsPlayer(player: *Player, allocator: Allocator, now: 
     if (weekly_changed)
         player.progress.weekly_active_reward_bits = 0;
 
-    return daily_changed or weekly_changed;
+    return daily_result.changed or weekly_changed;
+}
+
+const DailyRefresh = struct {
+    changed: bool,
+    reset: bool,
+};
+
+fn dailyNeedsRefresh(player: *const Player, now: i64) bool {
+    var selected: [tables.quest.daily.len]bool = undefined;
+    selectDaily(player.uid orelse 0, reset.dayIndex(now), &selected);
+
+    for (selected, 0..) |is_selected, index| {
+        if (!is_selected)
+            continue;
+
+        const definition = tables.quest.daily[index];
+        const quest = findMission(player, .daily, definition.id) orelse
+            return true;
+
+        if (quest.condition != definition.condition or
+            quest.condition_param != definition.condition_param or
+            quest.progress_max != definition.progress_max or
+            quest.expires_at <= now)
+            return true;
+    }
+
+    return false;
+}
+
+fn refreshDailyDefinitions(
+    player: *Player,
+    allocator: Allocator,
+    now: i64,
+    expires_at: i64,
+) Allocator.Error!DailyRefresh {
+    var selected: [tables.quest.daily.len]bool = undefined;
+    selectDaily(player.uid orelse 0, reset.dayIndex(now), &selected);
+
+    var changed = false;
+    var reset_cycle = false;
+    var index: usize = 0;
+
+    while (index < player.quests.len) {
+        const quest = &player.quests.entries[index];
+        if (quest.quest_type != @intFromEnum(tables.quest.Type.daily)) {
+            index += 1;
+            continue;
+        }
+
+        const definition_index = dailyDefinitionIndex(quest.id) orelse {
+            index += 1;
+            continue;
+        };
+
+        if (!selected[definition_index]) {
+            _ = player.quests.swapRemove(index);
+            changed = true;
+            continue;
+        }
+
+        const definition = tables.quest.daily[definition_index];
+        if (quest.condition != definition.condition or
+            quest.condition_param != definition.condition_param or
+            quest.progress_max != definition.progress_max)
+        {
+            quest.condition = definition.condition;
+            quest.condition_param = definition.condition_param;
+            quest.progress_max = definition.progress_max;
+            quest.progress_current = @min(quest.progress_current, quest.progress_max);
+            changed = true;
+        }
+
+        if (quest.expires_at != expires_at) {
+            const expired = quest.expires_at <= now;
+            quest.expires_at = expires_at;
+            quest.progress_current = 0;
+            quest.claimed = false;
+            changed = true;
+            if (expired)
+                reset_cycle = true;
+        }
+
+        index += 1;
+    }
+
+    for (selected, 0..) |is_selected, definition_index| {
+        if (!is_selected)
+            continue;
+
+        if (findMission(player, .daily, tables.quest.daily[definition_index].id) != null)
+            continue;
+
+        try appendDefinition(
+            player,
+            allocator,
+            tables.quest.daily[definition_index],
+            expires_at,
+        );
+        changed = true;
+    }
+
+    return .{
+        .changed = changed,
+        .reset = reset_cycle,
+    };
+}
+
+fn dailyDefinitionIndex(id: u32) ?usize {
+    for (tables.quest.daily, 0..) |definition, index| {
+        if (definition.id == id)
+            return index;
+    }
+
+    return null;
+}
+
+/// Picks the rotating daily missions. The official selector is unknown; this
+/// keeps the observed per-player, per-day behavior stable without storing more
+/// state in the player save.
+fn selectDaily(uid: u64, day: i64, selected: *[tables.quest.daily.len]bool) void {
+    @memset(selected, false);
+
+    var candidates: [tables.quest.daily_rotating.len]usize = undefined;
+    var candidate_count: usize = 0;
+    for (tables.quest.daily, 0..) |definition, index| {
+        if (definition.daily_fixed) {
+            selected[index] = true;
+        } else {
+            candidates[candidate_count] = index;
+            candidate_count += 1;
+        }
+    }
+
+    std.debug.assert(candidate_count == candidates.len);
+
+    var state = uid ^ @as(u64, @bitCast(day));
+    var remaining = candidate_count;
+    var selected_count: usize = 0;
+    while (selected_count < tables.quest.daily_rotation_count) : (selected_count += 1) {
+        const candidate = @as(usize, @intCast(nextDailyRandom(&state) % remaining));
+        selected[candidates[candidate]] = true;
+        remaining -= 1;
+        candidates[candidate] = candidates[remaining];
+    }
+}
+
+fn nextDailyRandom(state: *u64) u64 {
+    state.* +%= 0x9e3779b97f4a7c15;
+    var value = state.*;
+    value = (value ^ (value >> 30)) *% 0xbf58476d1ce4e5b9;
+    value = (value ^ (value >> 27)) *% 0x94d049bb133111eb;
+    return value ^ (value >> 31);
 }
 
 fn definitionsNeedRefresh(
@@ -822,8 +998,81 @@ test "daily and weekly missions track supported actions" {
     try testing.expectEqual(@as(u32, 40), findMission(&player, .weekly, 1007).?.progress_current);
 }
 
+test "daily missions keep fixed entries and a stable rotating pair" {
+    const testing = std.testing;
+
+    const now: i64 = 100;
+
+    var first = Player.init(1);
+    defer first.deinit(testing.allocator);
+    try initialize(&first, testing.allocator, now);
+
+    var second = Player.init(1);
+    defer second.deinit(testing.allocator);
+    try initialize(&second, testing.allocator, now);
+
+    var daily_count: usize = 0;
+    var fixed_count: usize = 0;
+    var rotating_ids: [tables.quest.daily_rotation_count]u32 = undefined;
+    var rotating_count: usize = 0;
+    for (first.quests.slice()) |state| {
+        if (state.quest_type != @intFromEnum(tables.quest.Type.daily))
+            continue;
+
+        daily_count += 1;
+        const definition = definitionFor(.daily, state.id).?;
+        if (definition.daily_fixed) {
+            fixed_count += 1;
+        } else {
+            rotating_ids[rotating_count] = state.id;
+            rotating_count += 1;
+        }
+    }
+
+    try testing.expectEqual(tables.quest.daily_refresh_count, daily_count);
+    try testing.expectEqual(tables.quest.daily_fixed.len, fixed_count);
+    try testing.expectEqual(tables.quest.daily_rotation_count, rotating_count);
+
+    for (rotating_ids[0..rotating_count]) |id|
+        try testing.expect(findMission(&second, .daily, id) != null);
+}
+
+test "daily refresh rotates missions at the reset" {
+    const testing = std.testing;
+
+    const created_at: i64 = 100;
+    const reset_at = reset.nextDaily(created_at);
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    try initialize(&player, testing.allocator, created_at);
+
+    findMissionMut(&player, .daily, 1001).?.progress_current = 1;
+    player.progress.daily_active_reward_bits = 1;
+
+    var mutation: Mutation = .init(&player);
+    try testing.expect(try refreshDailyWeeklyMissions(&mutation, testing.allocator, reset_at));
+
+    var daily_count: usize = 0;
+    for (player.quests.slice()) |state| {
+        if (state.quest_type == @intFromEnum(tables.quest.Type.daily))
+            daily_count += 1;
+    }
+    try testing.expectEqual(tables.quest.daily_refresh_count, daily_count);
+    try testing.expectEqual(@as(u32, 0), findMission(&player, .daily, 1001).?.progress_current);
+    try testing.expectEqual(@as(u8, 0), player.progress.daily_active_reward_bits);
+
+    var selected: [tables.quest.daily.len]bool = undefined;
+    selectDaily(player.uid orelse 0, reset.dayIndex(reset_at), &selected);
+    for (tables.quest.daily, 0..) |definition, index| {
+        const state = findMission(&player, .daily, definition.id);
+        try testing.expectEqual(selected[index], state != null);
+    }
+}
+
 test "login mission progress is counted once per reset day" {
     const testing = std.testing;
+
     const now: i64 = 100;
 
     var player = Player.init(1);
@@ -847,6 +1096,7 @@ test "login mission progress is counted once per reset day" {
 
 test "mission claims grant rewards and reject a second claim" {
     const testing = std.testing;
+
     const now: i64 = 100;
 
     var player = Player.init(1);
@@ -904,6 +1154,7 @@ test "activity rewards are claimed once when enough missions are complete" {
 
 test "daily refresh clears activity rewards at the reset" {
     const testing = std.testing;
+
     const created_at: i64 = 100;
     const reset_at = reset.nextDaily(created_at);
 

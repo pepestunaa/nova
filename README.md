@@ -38,6 +38,14 @@ Astralis currently focuses on Recruitment and Ascension.
 
 - Leveling, skill upgrades, talents.
 
+### Daily and weekly missions
+
+- Daily and weekly mission lists, scheduled resets, and individual or bulk
+  reward claims.
+- Progress for login, Ascension entry/completion and battles, character and
+  Disc level-ups, and the daily shop reward.
+- Daily and weekly activity rewards.
+
 ### Ascension
 
 - Starting, resuming, leaving, and completing runs.
@@ -53,7 +61,11 @@ official server:
 
 - A few advanced Monolith Research effects and unusual Ascension events need more refinement.
 - Fate Cards and Cataclysm Survivor are not implemented yet.
-- Daily and weekly missions are listed and reset on schedule, but their gameplay progress and rewards are not implemented yet.
+- Daily missions use the observed 10 fixed entries plus 2 rotating entries.
+  The official selection formula is unknown, so the exact pair sequence may
+  differ.
+- Some daily and weekly missions are tied to systems or activities that are not
+  implemented (at least yet), so those missions will not progress for now.
 - Character emblems are not implemented yet.
 
 ## Client patch

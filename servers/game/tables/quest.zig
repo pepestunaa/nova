@@ -7,6 +7,7 @@ const raw_tour_guide = @import("tables/TourGuideQuest");
 const raw_tower_event = @import("tables/StarTowerBookEventReward");
 const raw_weekly = @import("tables/WeeklyQuest");
 const raw_weekly_active = @import("tables/WeeklyQuestActive");
+const config = @import("config.zig");
 
 const assist_count: usize = raw_assist.len;
 const daily_count: usize = raw_daily.len;
@@ -14,6 +15,8 @@ const daily_active_count: usize = raw_daily_active.len;
 const tower_event_count: usize = raw_tower_event.len;
 const weekly_count: usize = raw_weekly.len;
 const weekly_active_count: usize = raw_weekly_active.len;
+pub const daily_refresh_count: usize = config.unsignedList(usize, "QuestDailyRefreshCount")[0];
+pub const weekly_refresh_count: usize = config.unsignedList(usize, "QuestWeeklyRefreshCount")[0];
 
 //
 
@@ -35,6 +38,7 @@ pub const tower_event_npc_interaction_condition = 94;
 pub const Definition = struct {
     id: u32,
     type: Type,
+    daily_fixed: bool,
     condition: u32,
     condition_param: u32,
     progress_max: u32,
@@ -57,10 +61,25 @@ pub const ActiveReward = struct {
 
 pub const daily = buildConditional(raw_daily, daily_count, .daily);
 pub const weekly = buildConditional(raw_weekly, weekly_count, .weekly);
+pub const daily_fixed = filterDaily(true);
+pub const daily_rotating = filterDaily(false);
 pub const daily_active = buildActive(raw_daily_active, daily_active_count);
 pub const weekly_active = buildActive(raw_weekly_active, weekly_active_count);
 
+pub const daily_rotation_count: usize = if (daily_refresh_count >= daily_fixed.len)
+    daily_refresh_count - daily_fixed.len
+else
+    0;
+
 comptime {
+    if (daily_refresh_count > daily.len)
+        @compileError("QuestDailyRefreshCount exceeds the DailyQuest table length");
+    if (daily_fixed.len > daily_refresh_count)
+        @compileError("DailyQuest fixed entries exceed QuestDailyRefreshCount");
+    if (daily_rotation_count > daily_rotating.len)
+        @compileError("QuestDailyRefreshCount requires more rotating entries than DailyQuest provides");
+    if (weekly_refresh_count != weekly.len)
+        @compileError("QuestWeeklyRefreshCount does not match the WeeklyQuest table length");
     if (daily_active.len > @bitSizeOf(u8) or weekly_active.len > @bitSizeOf(u8))
         @compileError("daily/weekly activity reward count no longer fits in Progress' u8 bitsets");
 }
@@ -91,6 +110,7 @@ pub const initial_tour_guide = blk: {
         definitions[index] = .{
             .id = raw.id,
             .type = .tour_guide,
+            .daily_fixed = true,
             .condition = 0,
             .condition_param = 0,
             .progress_max = 1,
@@ -113,6 +133,8 @@ fn buildConditional(
     for (raw_list, 0..) |raw, index| definitions[index] = .{
         .id = raw.id,
         .type = quest_type,
+        .daily_fixed = quest_type != .daily or
+            (if (comptime @hasField(@TypeOf(raw), "apear")) raw.apear else false), // Yeah... they made a typo
         .condition = raw.complete_cond,
         .condition_param = parameter(raw.complete_cond_params, 1),
         .progress_max = parameter(raw.complete_cond_params, 0),
@@ -122,6 +144,29 @@ fn buildConditional(
     };
 
     return definitions;
+}
+
+fn filterDaily(comptime fixed: bool) [countDaily(fixed)]Definition {
+    var result: [countDaily(fixed)]Definition = undefined;
+    var index: usize = 0;
+    for (daily) |definition| {
+        if (definition.daily_fixed != fixed)
+            continue;
+        result[index] = definition;
+        index += 1;
+    }
+    
+    return result;
+}
+
+fn countDaily(comptime fixed: bool) usize {
+    var count: usize = 0;
+    for (daily) |definition| {
+        if (definition.daily_fixed == fixed)
+            count += 1;
+    }
+    
+    return count;
 }
 
 fn buildActive(
@@ -163,6 +208,7 @@ fn buildTowerEvent(
     for (raw_list, 0..) |raw, index| definitions[index] = .{
         .id = raw.id,
         .type = .tower_event,
+        .daily_fixed = true,
         .condition = raw.complete_cond,
         .condition_param = parameter(raw.complete_cond_params, 0),
         .progress_max = parameter(raw.complete_cond_params, 1),
@@ -193,6 +239,7 @@ fn buildAssist(
         definitions[index] = .{
             .id = raw.id,
             .type = .assist,
+            .daily_fixed = true,
             .condition = 0,
             .condition_param = 0,
             .progress_max = assistTarget(raw.id),
