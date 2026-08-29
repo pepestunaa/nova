@@ -102,6 +102,7 @@ pub const Progress = extern struct {
     story_build_id: u64 = 0,
     tower_ticket_week: i64 = 0,
     daily_mall_reward_day: i64 = -1,
+    last_login_day: i64 = -1,
     /// Client-reported battle achievements use 1 bit per configured ID. New
     /// official accounts receive this 64-byte bitmap cleared.
     achievement_bits: [64]u8 = @splat(0),
@@ -110,7 +111,12 @@ pub const Progress = extern struct {
     /// Research can raise it.
     tower_ticket: u32 = 0,
     star_tower_npc_interactions: u32 = 0,
-    padding: [4]u8 = @splat(0),
+    /// Bit i is set after the daily/weekly activity reward with ID i + 1 is
+    /// claimed. The current tables have 5 rewards in each track.
+    daily_active_reward_bits: u8 = 0,
+    weekly_active_reward_bits: u8 = 0,
+
+    padding: [2]u8 = @splat(0),
 
     comptime {
         common.mem.assertNoImplicitPadding(@This());

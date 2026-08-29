@@ -24,6 +24,7 @@ const NewCharacterSet = std.bit_set.IntegerBitSet(tables.character.count);
 const HandbookTypeSet = std.bit_set.IntegerBitSet(tables.handbook.type_count);
 const ResearchProjectQuestSet = std.bit_set.IntegerBitSet(tables.research_project.list.len);
 const ClientReportSet = std.bit_set.IntegerBitSet(tables.achievement.client_report_count);
+const MissionSet = std.bit_set.IntegerBitSet(tables.quest.daily.len + tables.quest.weekly.len);
 
 player: *Player,
 invalidated: Dependencies = .empty,
@@ -32,6 +33,7 @@ handbook_types: HandbookTypeSet = .empty,
 research_project_quests: ResearchProjectQuestSet = .empty,
 client_reports: ClientReportSet = .empty,
 client_report_deltas: [tables.achievement.client_report_count]u32 = @splat(0),
+missions: MissionSet = .empty,
 dirty: bool = false,
 finalized: bool = false,
 
@@ -147,6 +149,32 @@ pub fn clientReportIterator(mutation: *const Mutation) ClientReportSet.Iterator(
 pub fn clientReportDelta(mutation: *const Mutation, index: usize) u32 {
     std.debug.assert(index < mutation.client_report_deltas.len);
     return mutation.client_report_deltas[index];
+}
+
+/// Records a daily or weekly mission whose state changed in this request.
+pub fn recordMission(mutation: *Mutation, mission_type: tables.quest.Type, id: u32) void {
+    std.debug.assert(mutation.dirty and !mutation.finalized);
+
+    const definitions = switch (mission_type) {
+        .daily => tables.quest.daily[0..],
+        .weekly => tables.quest.weekly[0..],
+        else => unreachable,
+    };
+    const offset: usize = if (mission_type == .daily) 0 else tables.quest.daily.len;
+    for (definitions, 0..) |definition, index| {
+        if (definition.id != id)
+            continue;
+        mutation.missions.set(offset + index);
+
+        return;
+    }
+
+    unreachable;
+}
+
+/// Iterates over daily/weekly mission definition indexes changed in this request.
+pub fn missionIterator(mutation: *const Mutation) MissionSet.Iterator(.{}) {
+    return mutation.missions.iterator(.{});
 }
 
 /// Closes the mutation before derived progression and notifications run.

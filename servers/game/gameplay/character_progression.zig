@@ -6,6 +6,7 @@ const Player = @import("../store/Player.zig");
 const TalentIndex = Player.Character.TalentNodes.Index;
 
 const progression = @import("upgrade.zig");
+const quest = @import("quest.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -61,6 +62,7 @@ pub fn upgrade(
     const player = mutation.read();
     const character = player.characters.get(character_id) orelse
         return error.InvalidCharacter;
+    const old_level = character.level();
     const cap = tables.character_progression.levelCap(@intCast(character.advance())) orelse
         return error.InvalidCharacter;
     if (character.level() >= cap)
@@ -123,6 +125,10 @@ pub fn upgrade(
     receipt.progression.gold = -gold;
     writable_character.bits.level = @enumFromInt(level);
     writable_character.bits.exp = @enumFromInt(exp);
+
+    const gained_levels = @as(u32, level) - old_level;
+    if (gained_levels != 0)
+        quest.trigger(mutation, .character_upgrade, gained_levels, 0);
 }
 
 pub fn advance(

@@ -24,6 +24,7 @@ pub fn player_reg_req(scope: *Scope) !void {
         registered_at,
     );
     _ = gameplay.energy.refresh(scope.mutation(), now);
+    try gameplay.quest.login(scope.mutation(), scope.gpa, now);
 
     if (config.skip_tutorial) {
         try scope.mutation().modify(.{}).completeGuides(

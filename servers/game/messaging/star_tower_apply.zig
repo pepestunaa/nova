@@ -150,6 +150,7 @@ pub fn star_tower_apply_req(scope: *Scope) !void {
         },
     };
     gameplay.research_project.enteredAscension(scope.mutation());
+    gameplay.quest.trigger(scope.mutation(), .ascension_enter, 1, 0);
     const initial_items = try scope.arena.alloc(
         proto.pb.TowerItemInfo,
         Player.StarTowerRun.max_tower_items,

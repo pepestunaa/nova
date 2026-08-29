@@ -2,14 +2,18 @@ const std = @import("std");
 
 const raw_assist = @import("tables/AssistQuest");
 const raw_daily = @import("tables/DailyQuest");
+const raw_daily_active = @import("tables/DailyQuestActive");
 const raw_tour_guide = @import("tables/TourGuideQuest");
 const raw_tower_event = @import("tables/StarTowerBookEventReward");
 const raw_weekly = @import("tables/WeeklyQuest");
+const raw_weekly_active = @import("tables/WeeklyQuestActive");
 
 const assist_count: usize = raw_assist.len;
 const daily_count: usize = raw_daily.len;
+const daily_active_count: usize = raw_daily_active.len;
 const tower_event_count: usize = raw_tower_event.len;
 const weekly_count: usize = raw_weekly.len;
+const weekly_active_count: usize = raw_weekly_active.len;
 
 //
 
@@ -34,10 +38,33 @@ pub const Definition = struct {
     condition: u32,
     condition_param: u32,
     progress_max: u32,
+    active: u32,
+    reward_id: u32,
+    reward_quantity: i32,
+};
+
+pub const Reward = struct {
+    id: u32,
+    quantity: i32,
+};
+
+pub const ActiveReward = struct {
+    id: u32,
+    required_active: u32,
+    rewards: [2]Reward,
+    reward_count: u8,
 };
 
 pub const daily = buildConditional(raw_daily, daily_count, .daily);
 pub const weekly = buildConditional(raw_weekly, weekly_count, .weekly);
+pub const daily_active = buildActive(raw_daily_active, daily_active_count);
+pub const weekly_active = buildActive(raw_weekly_active, weekly_active_count);
+
+comptime {
+    if (daily_active.len > @bitSizeOf(u8) or weekly_active.len > @bitSizeOf(u8))
+        @compileError("daily/weekly activity reward count no longer fits in Progress' u8 bitsets");
+}
+
 pub const tower_event = buildTowerEvent(raw_tower_event, tower_event_count);
 /// New official accounts receive all 5 chapters of the Ventus and Ignis
 /// Lineup Tutorial tracks. `AssistQuest` defines their rewards and text, but
@@ -67,6 +94,9 @@ pub const initial_tour_guide = blk: {
             .condition = 0,
             .condition_param = 0,
             .progress_max = 1,
+            .active = 0,
+            .reward_id = 0,
+            .reward_quantity = 0,
         };
         index += 1;
     }
@@ -86,7 +116,39 @@ fn buildConditional(
         .condition = raw.complete_cond,
         .condition_param = parameter(raw.complete_cond_params, 1),
         .progress_max = parameter(raw.complete_cond_params, 0),
+        .active = raw.active,
+        .reward_id = raw.item_tid,
+        .reward_quantity = raw.item_qty,
     };
+
+    return definitions;
+}
+
+fn buildActive(
+    comptime raw_list: anytype,
+    comptime raw_count: usize,
+) [raw_count]ActiveReward {
+    var definitions: [raw_count]ActiveReward = undefined;
+    for (raw_list, 0..) |raw, index| {
+        var rewards: [2]Reward = @splat(.{ .id = 0, .quantity = 0 });
+        var reward_count: u8 = 0;
+        if (raw.item_tid1 != 0) {
+            rewards[reward_count] = .{ .id = raw.item_tid1, .quantity = raw.number1 };
+            reward_count += 1;
+        }
+        if (comptime @hasField(@TypeOf(raw), "item_tid2")) {
+            if (raw.item_tid2 != 0) {
+                rewards[reward_count] = .{ .id = raw.item_tid2, .quantity = raw.number2 };
+                reward_count += 1;
+            }
+        }
+        definitions[index] = .{
+            .id = raw.id,
+            .required_active = raw.active,
+            .rewards = rewards,
+            .reward_count = reward_count,
+        };
+    }
 
     return definitions;
 }
@@ -104,6 +166,9 @@ fn buildTowerEvent(
         .condition = raw.complete_cond,
         .condition_param = parameter(raw.complete_cond_params, 0),
         .progress_max = parameter(raw.complete_cond_params, 1),
+        .active = 0,
+        .reward_id = 0,
+        .reward_quantity = 0,
     };
 
     return definitions;
@@ -131,6 +196,9 @@ fn buildAssist(
             .condition = 0,
             .condition_param = 0,
             .progress_max = assistTarget(raw.id),
+            .active = 0,
+            .reward_id = 0,
+            .reward_quantity = 0,
         };
     }
     for (track_quest_counts, 1..) |count, track| {

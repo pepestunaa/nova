@@ -3,6 +3,7 @@ const std = @import("std");
 const Config = @import("../Config.zig");
 const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
+const quest = @import("quest.zig");
 const reset = @import("reset.zig");
 const tables = @import("../tables.zig");
 
@@ -306,6 +307,7 @@ pub fn claimDailyMallReward(mutation: *Mutation, allocator: std.mem.Allocator, n
     const player = mutation.modify(.{});
     player.progress.daily_mall_reward_day = day;
     try player.addResource(allocator, reward.resource_id, reward.quantity);
+    quest.trigger(mutation, .daily_shop_reward, 1, 0);
     return .{ .id = reward.resource_id, .quantity = reward.quantity };
 }
 

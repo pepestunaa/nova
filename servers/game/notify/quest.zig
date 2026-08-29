@@ -21,6 +21,23 @@ pub fn sendLineupTutorial(scope: *Scope, changes: *const quest.AssistChanges) !v
     }
 }
 
+pub fn sendMissionChanges(scope: *Scope, changes: *const quest.MissionChanges) !void {
+    for (changes.slice()) |state| {
+        var progress: [1]proto.pb.QuestProgress = .{.{
+            .Cur = state.progress_current,
+            .Max = state.progress_max,
+        }};
+        const update: proto.pb.Quest = .{
+            .Id = state.id,
+            .Status = if (state.claimed) 2 else if (state.progress_current >= state.progress_max) 1 else 0,
+            .Expire = state.expires_at,
+            .Type = @enumFromInt(state.quest_type),
+            .Progress = .fromOwnedSlice(&progress),
+        };
+        try scope.sink.sendProto(.quest_change_notify, &update);
+    }
+}
+
 pub fn sendNewTrekkerAffinityQuests(scope: *Scope, mutation: *const Mutation) !void {
     var characters = mutation.newCharacterIterator();
     while (characters.next()) |raw_index| {

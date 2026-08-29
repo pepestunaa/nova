@@ -1,5 +1,6 @@
 const std = @import("std");
 
+const gameplay = @import("../gameplay.zig");
 const proto = @import("proto");
 const Scope = @import("../Scope.zig");
 
@@ -57,6 +58,7 @@ pub fn player_login_req(scope: *Scope) !void {
         return scope.reject(.token_expire);
 
     try scope.loadPlayer(account_credentials.uid);
+    try gameplay.quest.login(scope.mutation(), scope.gpa, scope.now);
 
     try scope.respond(proto.pb.LoginResp{ .Token = scope.rotateSessionToken() });
 }

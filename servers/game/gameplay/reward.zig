@@ -8,6 +8,7 @@ const tables = @import("../tables.zig");
 //
 
 pub const max_gacha_changes = tables.gacha_newbie.cards_per_spin * 2 + 1;
+pub const max_reward_changes = 16;
 
 pub const Error = error{Full} || std.mem.Allocator.Error;
 pub const GachaCostError = error{InsufficientCurrency} || Error;
@@ -82,6 +83,8 @@ pub const GachaReceipt = struct {
 
 pub const ResourceReceipt = struct {
     resource_deltas: ResourceDeltaSet = .{},
+    item_deltas: [max_reward_changes]InventoryItemDelta = undefined,
+    item_delta_count: usize = 0,
 };
 
 pub fn grantResource(
@@ -95,6 +98,21 @@ pub fn grantResource(
         return;
     const player = mutation.modify(.{});
     try applyResourceDelta(player, allocator, receipt, resource_id, quantity);
+}
+
+/// Adds an item reward and records it for the response's ChangeInfo.
+pub fn grantItem(
+    mutation: *Mutation,
+    allocator: Allocator,
+    receipt: *ResourceReceipt,
+    template_id: u32,
+    quantity: i32,
+) Error!void {
+    if (quantity == 0)
+        return;
+
+    const player = mutation.modify(.{});
+    try applyRewardItemDelta(player, allocator, receipt, template_id, quantity);
 }
 
 /// Spends Recruitment tickets first, then converts enough premium currency to
@@ -259,6 +277,57 @@ fn applyResourceDelta(player: *Player, allocator: Allocator, receipt: anytype, r
         return;
     try player.addResource(allocator, resource_id, quantity);
     try receipt.resource_deltas.add(resource_id, quantity);
+}
+
+fn applyRewardItemDelta(
+    player: *Player,
+    allocator: Allocator,
+    receipt: *ResourceReceipt,
+    template_id: u32,
+    quantity: i32,
+) Error!void {
+    for (player.items.entries[0..player.items.len]) |*item| {
+        if (item.template_id != template_id)
+            continue;
+        item.quantity +|= quantity;
+        try addRewardItemDelta(receipt, item.id, template_id, quantity, item.expires_at);
+
+        return;
+    }
+
+    const item: Player.Item = .{
+        .id = template_id,
+        .template_id = template_id,
+        .quantity = quantity,
+    };
+    player.items.append(allocator, item) catch
+        return error.Full;
+    try addRewardItemDelta(receipt, item.id, item.template_id, quantity, item.expires_at);
+}
+
+fn addRewardItemDelta(
+    receipt: *ResourceReceipt,
+    id: u64,
+    template_id: u32,
+    quantity: i32,
+    expires_at: i64,
+) error{Full}!void {
+    for (receipt.item_deltas[0..receipt.item_delta_count]) |*item| {
+        if (item.template_id != template_id or item.expires_at != expires_at)
+            continue;
+        item.quantity +|= quantity;
+
+        return;
+    }
+    if (receipt.item_delta_count == receipt.item_deltas.len)
+        return error.Full;
+    receipt.item_deltas[receipt.item_delta_count] = .{
+        .id = id,
+        .template_id = template_id,
+        .quantity = quantity,
+        .expires_at = expires_at,
+    };
+    receipt.item_delta_count += 1;
 }
 
 fn addItemTemplateDelta(

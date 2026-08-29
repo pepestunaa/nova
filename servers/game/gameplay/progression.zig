@@ -11,6 +11,7 @@ const research_project = @import("research_project.zig");
 pub const Changes = struct {
     achievements: achievement.ChangeSet = .{},
     lineup_tutorial: quest.AssistChanges = .{},
+    missions: quest.MissionChanges = .{},
     research_project: research_project.ChangeSet = .{},
 };
 
@@ -62,6 +63,7 @@ pub fn finalize(
             &changes.research_project,
         );
 
+    quest.collectMissionChanges(mutation, &changes.missions);
     mutation.finish();
 }
 
@@ -83,6 +85,7 @@ test "finalization ignores progression families unrelated to the mutation" {
     try testing.expect(mutation.isFinalized());
     try testing.expectEqual(@as(usize, 0), changes.achievements.len);
     try testing.expectEqual(@as(usize, 0), changes.lineup_tutorial.len);
+    try testing.expectEqual(@as(usize, 0), changes.missions.len);
     try testing.expectEqual(@as(usize, 0), changes.research_project.len);
 }
 

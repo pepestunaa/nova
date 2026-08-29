@@ -1,5 +1,6 @@
 const achievement = @import("../../gameplay/achievement.zig");
 const Mutation = @import("../../gameplay/mutation.zig");
+const quest = @import("../../gameplay/quest.zig");
 const proto = @import("proto");
 
 //
@@ -17,7 +18,8 @@ pub fn record(mutation: *Mutation, events: proto.pb.Events.Decoded) !void {
             continue;
         const achievement_id = (try data.next()) orelse
             continue;
-        _ = mutation.recordClientReport(achievement_id, delta);
+        if (mutation.recordClientReport(achievement_id, delta))
+            quest.trigger(mutation, .client_report, delta, achievement_id);
     }
 }
 

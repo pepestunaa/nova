@@ -38,6 +38,7 @@ const namespaces: []const type = &.{
     @import("messaging/player_skin_show.zig"),
     @import("messaging/player_title_edit.zig"),
     @import("messaging/potential_preselection.zig"),
+    @import("messaging/quest.zig"),
     @import("messaging/quest_tower_reward_receive.zig"),
     @import("messaging/star_tower.zig"),
     @import("messaging/star_tower_apply.zig"),

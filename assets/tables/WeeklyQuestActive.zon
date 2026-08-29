@@ -1,0 +1,36 @@
+.{
+    .{
+        .id = 1,
+        .active = 300,
+        .item_tid1 = 30003,
+        .number1 = 10,
+        .item_tid2 = 50003,
+        .number2 = 15,
+    },
+    .{
+        .id = 2,
+        .active = 600,
+        .item_tid1 = 82001,
+        .number1 = 50,
+        .item_tid2 = 82004,
+        .number2 = 50,
+    },
+    .{
+        .id = 3,
+        .active = 900,
+        .item_tid1 = 82007,
+        .number1 = 100,
+    },
+    .{
+        .id = 4,
+        .active = 1200,
+        .item_tid1 = 2,
+        .number1 = 500,
+    },
+    .{
+        .id = 5,
+        .active = 1500,
+        .item_tid1 = 82010,
+        .number1 = 2,
+    },
+}

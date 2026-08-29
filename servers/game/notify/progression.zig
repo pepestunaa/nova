@@ -16,6 +16,7 @@ pub fn send(scope: *Scope, changes: *const gameplay_progression.Changes) !void {
     std.debug.assert(mutation.isFinalized());
 
     try quest.sendLineupTutorial(scope, &changes.lineup_tutorial);
+    try quest.sendMissionChanges(scope, &changes.missions);
     try quest.sendNewTrekkerAffinityQuests(scope, mutation);
     try achievement.send(scope, &changes.achievements);
     try research_project.send(scope, &changes.research_project);

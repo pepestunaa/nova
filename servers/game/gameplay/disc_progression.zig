@@ -3,6 +3,7 @@ const std = @import("std");
 const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const progression = @import("upgrade.zig");
+const quest = @import("quest.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -38,6 +39,7 @@ pub fn strengthen(
         return error.InvalidDisc;
     const disc = ownedDiscConst(player, disc_id) orelse
         return error.InvalidDisc;
+    const old_level = @intFromEnum(disc.level);
     const cap = tables.disc_progression.phaseCap(definition.rarity, @intFromEnum(disc.phase)) orelse
         return error.InvalidDisc;
     if (@intFromEnum(disc.level) >= cap.level)
@@ -100,6 +102,10 @@ pub fn strengthen(
     receipt.gold = -gold;
     writable_disc.level = @enumFromInt(level);
     writable_disc.exp = @enumFromInt(exp);
+
+    const gained_levels = @as(u32, level) - old_level;
+    if (gained_levels != 0)
+        quest.trigger(mutation, .disc_strengthen, gained_levels, 0);
 }
 
 pub fn promote(mutation: *Mutation, disc_id: u32, receipt: *Receipt) Error!void {

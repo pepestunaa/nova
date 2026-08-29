@@ -148,6 +148,20 @@ pub const Resources = struct {
             try formatter.builder.append(arena, proto.pb.Res, &resources[index]);
         }
 
+        const items = try arena.alloc(proto.pb.Item, receipt.item_delta_count);
+        for (
+            receipt.item_deltas[0..receipt.item_delta_count],
+            0..,
+        ) |entry, index| {
+            items[index] = .{
+                .Id = entry.id,
+                .Tid = entry.template_id,
+                .Qty = entry.quantity,
+                .Expire = entry.expires_at,
+            };
+            try formatter.builder.append(arena, proto.pb.Item, &items[index]);
+        }
+
         return formatter.builder.finish();
     }
 };

@@ -19,11 +19,7 @@ pub fn player_data_req(scope: *Scope) !void {
         return;
     }
 
-    _ = try gameplay.quest.refreshDailyWeeklyMissions(
-        scope.mutation(),
-        scope.gpa,
-        scope.now,
-    );
+    try gameplay.quest.login(scope.mutation(), scope.gpa, scope.now);
     _ = gameplay.energy.refresh(scope.mutation(), scope.now);
     _ = try gameplay.handbook.ensureDefaultSkins(scope.mutation(), scope.gpa);
 
@@ -64,6 +60,10 @@ pub const response = struct {
         );
         const quests = try scope.arena.alloc(proto.pb.Quest, player.quests.slice().len);
         const quest_progress = try scope.arena.alloc(proto.pb.QuestProgress, player.quests.slice().len);
+        const daily_active_ids_buffer = try scope.arena.alloc(u32, tables.quest.daily_active.len);
+        const weekly_active_ids_buffer = try scope.arena.alloc(u32, tables.quest.weekly_active.len);
+        const daily_active_ids = gameplay.quest.activeIds(player, .daily, daily_active_ids_buffer);
+        const weekly_active_ids = gameplay.quest.activeIds(player, .weekly, weekly_active_ids_buffer);
         const assists = try scope.arena.alloc(proto.pb.AssistInfo, player.assists.slice().len);
         const tutorial_levels = try scope.arena.alloc(proto.pb.TutorialLevel, player.tutorials.slice().len);
         const story_evidences = try scope.arena.alloc(u32, player.story_evidences.slice().len);
@@ -308,9 +308,11 @@ pub const response = struct {
             .Quests = .{
                 .List = .fromOwnedSlice(quests[0..player.quests.slice().len]),
             },
+            .DailyActiveIds = .fromOwnedSlice(daily_active_ids),
             .Assists = .fromOwnedSlice(assists[0..player.assists.slice().len]),
             .TourGuideQuestGroup = player.progress.tour_guide_quest_group,
             .TutorialLevels = .fromOwnedSlice(tutorial_levels[0..player.tutorials.slice().len]),
+            .WeeklyActiveIds = .fromOwnedSlice(weekly_active_ids),
             .DailyMallRewardStatus = gameplay.mall.dailyMallRewardAvailable(scope.player, now),
             .TowerTicket = player.progress.tower_ticket,
             .State = .{

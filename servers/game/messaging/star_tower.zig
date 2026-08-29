@@ -379,6 +379,7 @@ pub fn star_tower_interact_req(scope: *Scope) !void {
             gameplay.research_project.collectedMusicalNotes(scope.mutation(), note_count * 3);
             if (surprise_note_triggered)
                 gameplay.research_project.triggeredSurpriseNote(scope.mutation());
+            gameplay.quest.trigger(scope.mutation(), .battle_total, 1, 0);
             var secondary_changes: [tables.disc_secondary.max_changes]tower.SecondaryChange = undefined;
             const secondary_change_slice = tower.reconcileActiveSecondaries(
                 run,
