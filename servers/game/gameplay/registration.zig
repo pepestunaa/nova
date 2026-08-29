@@ -32,6 +32,7 @@ pub fn register(
     player.basic = .{
         .created_at = created_at,
         .gender = gender,
+        .head_icon = Player.Basic.headIconForGender(gender),
         .nickname = nickname,
         .energy_updated_at = created_at,
         .energy_next_at = 0,

@@ -49,6 +49,9 @@ pub const response = struct {
         const resources = try scope.arena.alloc(proto.pb.Res, player.resources.slice().len);
         const items = try scope.arena.alloc(proto.pb.Item, player.items.slice().len);
         const titles = try scope.arena.alloc(proto.pb.Title, player.titles.slice().len);
+        const honors = try scope.arena.alloc(proto.pb.HonorInfo, player.basic.honor_ids.len);
+        var profile_characters: [Player.Basic.profile_char_slot_count]proto.pb.CharShow = undefined;
+        const honor_list = try scope.arena.alloc(u32, 0);
         const discs = try scope.arena.alloc(proto.pb.Disc, player.discs.slice().len);
         const formations = try scope.arena.alloc(proto.pb.FormationInfo, player.formations.slice().len);
         const formation_characters = try scope.arena.alloc(
@@ -109,6 +112,13 @@ pub const response = struct {
         for (player.titles.slice(), 0..) |title, index| titles[index] = .{
             .TitleId = title.id,
         };
+        for (honors, player.basic.honor_ids) |*honor, id|
+            honor.* = .{ .Id = id };
+        for (&profile_characters, player.basic.profile_char_ids) |*show, id|
+            show.* = if (player.characters.get(id)) |character|
+                player_view.charShow(id, character)
+            else
+                .{};
         for (player.discs.slice(), 0..) |*disc, index|
             discs[index] = player_view.disc(disc);
         for (player.formations.slice(), 0..) |formation, index| {
@@ -265,6 +275,8 @@ pub const response = struct {
                 .HeadIcon = player.basic.head_icon,
                 .TitlePrefix = player.basic.title_prefix,
                 .TitleSuffix = player.basic.title_suffix,
+                .Signature = player.basic.signature.view(),
+                .Chars = .fromOwnedSlice(&profile_characters),
                 .SkinId = player.basic.profile_skin_id,
                 .CreateTime = player.basic.created_at,
                 .Gender = player.basic.gender == .male,
@@ -277,6 +289,8 @@ pub const response = struct {
             .Board = .fromOwnedSlice(board[0..player.board.slice().len]),
             .Handbook = .fromOwnedSlice(handbook_infos[0..handbook_count]),
             .Titles = .fromOwnedSlice(titles[0..player.titles.slice().len]),
+            .HonorList = .fromOwnedSlice(honor_list),
+            .Honors = .fromOwnedSlice(honors),
             .Discs = .fromOwnedSlice(discs[0..player.discs.slice().len]),
             .Dictionaries = .fromOwnedSlice(dictionary_tabs[0..dictionary_tab_count]),
             .Activities = .fromOwnedSlice(activities[0..active_activities.len]),

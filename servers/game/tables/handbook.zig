@@ -118,6 +118,15 @@ fn skinEntries(comptime condition: ?u32) []const Entry {
     return &final;
 }
 
+pub fn skinCharacterId(skin_id: u32) ?u32 {
+    for (list) |entry| {
+        if (entry.type == skin_type and entry.skin_id == skin_id)
+            return entry.character_id;
+    }
+
+    return null;
+}
+
 /// The client stores Gallery flags in big-endian byte order within each
 /// 64-bit group, matching `UTILS.IsBitSet` in Lua.
 pub fn bitmapByteIndex(index: usize) usize {

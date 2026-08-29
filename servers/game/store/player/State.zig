@@ -16,6 +16,8 @@ pub const max_achievements = tables.achievement.tracked_entry_count;
 pub const max_star_tower_builds = tables.config.unsignedList(usize, "StarTowerBuildNumberMax")[0];
 
 const Nickname = common.mem.LimitedString(64);
+const max_signature_characters = tables.config.unsignedList(usize, "FriendSignatureMax")[0];
+const Signature = common.mem.LimitedString(max_signature_characters * 4);
 
 pub const StarTowerRun = StarTower.Run;
 pub const StarTowerBuild = StarTower.Build;
@@ -41,10 +43,20 @@ pub const GachaHistory = extern struct {
 };
 
 pub const Basic = extern struct {
+    pub const main_head_icon = 101;
+    pub const male_head_icon = 102;
+    pub const honor_slot_count = 3;
+    pub const profile_char_slot_count = 3;
+    pub const signature_max_characters = max_signature_characters;
+
+    pub fn headIconForGender(gender: Gender) u32 {
+        return if (gender == .male) male_head_icon else main_head_icon;
+    }
+
     created_at: i64 = 0,
     energy_updated_at: i64 = 0,
     energy_next_at: i64 = 0,
-    head_icon: u32 = 101,
+    head_icon: u32 = main_head_icon,
     title_prefix: u32 = 1,
     title_suffix: u32 = 2,
     profile_skin_id: u32 = 10301,
@@ -52,11 +64,16 @@ pub const Basic = extern struct {
     level: Level = .min,
     gender: Gender = .female,
     nickname: Nickname = .empty,
+    signature: Signature = .empty,
 
-    padding: [3]u8 = @splat(0),
+    padding: [10]u8 = @splat(0),
     friend_uids: [max_friends]u64 = @splat(0),
     friend_count: u8 = 0,
     friend_stars: [(max_friends + 7) / 8]u8 = @splat(0),
+    honor_ids: [honor_slot_count]u32 = @splat(0),
+    profile_char_ids: [profile_char_slot_count]u32 = @splat(0),
+
+    honor_padding: [8]u8 = @splat(0),
 
     comptime {
         common.mem.assertNoImplicitPadding(@This());

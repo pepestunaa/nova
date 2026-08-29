@@ -7,6 +7,7 @@ pub const handbook = @import("gameplay/handbook.zig");
 pub const mall = @import("gameplay/mall.zig");
 pub const mutation = @import("gameplay/mutation.zig");
 pub const progression = @import("gameplay/progression.zig");
+pub const player_profile = @import("gameplay/player_profile.zig");
 pub const quest = @import("gameplay/quest.zig");
 pub const registration = @import("gameplay/registration.zig");
 pub const research_project = @import("gameplay/research_project.zig");

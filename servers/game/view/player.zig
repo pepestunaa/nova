@@ -57,6 +57,14 @@ pub fn character(id: u32, value: *const Player.Character, buffers: *CharacterBuf
     };
 }
 
+pub fn charShow(id: u32, value: *const Player.Character) proto.pb.CharShow {
+    return .{
+        .CharId = id,
+        .Level = value.level(),
+        .Skin = value.skin,
+    };
+}
+
 pub fn disc(value: *const Player.Disc) proto.pb.Disc {
     return .{
         .Id = value.id,
