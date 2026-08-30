@@ -14,7 +14,7 @@ const tables = @import("../tables.zig");
 
 //
 
-pub const Error = error{NameTooLong} || Allocator.Error;
+pub const Error = error{ NameTooLong, AlreadyRegistered } || Allocator.Error;
 
 const Nickname = common.mem.LimitedString(64);
 
@@ -28,6 +28,9 @@ pub fn register(
     const created_at = registered_at.toSeconds();
     const nickname = Nickname.init(new_nickname) catch
         return error.NameTooLong;
+    if (mutation.read().is_registered)
+        return error.AlreadyRegistered;
+
     const player = mutation.modify(.{});
     player.basic = .{
         .created_at = created_at,
@@ -37,36 +40,6 @@ pub fn register(
         .energy_updated_at = created_at,
         .energy_next_at = 0,
     };
-    player.progress = .{};
-    player.tower_growth = .{};
-    player.research_project = .{};
-    player.characters.clear();
-    player.guides.clear();
-    player.board.clear();
-    player.handbook.clear();
-    player.resources.clear();
-    player.items.clear();
-    player.titles.clear();
-    player.discs.clear();
-    player.formations.clear();
-    player.acquisitions.clear();
-    player.achievements.clear();
-    player.dictionaries.clear();
-    player.quests.clear();
-    player.assists.clear();
-    player.tutorials.clear();
-    player.stories.clear();
-    player.story_choices.clear();
-    player.story_evidences.clear();
-    player.periodic_campaign = .{};
-    player.periodic_quests.clear();
-    player.npc_affinities.clear();
-    player.tower_book_potentials.clear();
-    player.tower_book_potential_rewards.clear();
-    player.clears.clear();
-    player.resetStarTowerRun();
-    player.pending_star_tower_build = .{};
-    player.star_tower_builds.clear();
 
     gacha.initializeNewbieGachaForPlayer(&player.newbie_gacha, registered_at, player.uid orelse 0);
 
@@ -193,3 +166,20 @@ const starter_handbook_unlocks = blk: {
 
     break :blk ids;
 };
+
+//
+
+test "registration rejects an already registered player" {
+    const testing = std.testing;
+
+    var player = Player.init(1);
+    defer player.deinit(testing.allocator);
+    player.is_registered = true;
+
+    var mutation: Mutation = .init(&player);
+    try testing.expectError(
+        error.AlreadyRegistered,
+        register(&mutation, testing.allocator, "Tyrant", .female, .zero),
+    );
+    try testing.expect(!mutation.isDirty());
+}

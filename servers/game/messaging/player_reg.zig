@@ -16,13 +16,16 @@ pub fn player_reg_req(scope: *Scope) !void {
     const request = try scope.source.read(proto.pb.PlayerReg);
     const registered_at = scope.timestamp;
     const now = registered_at.toSeconds();
-    try gameplay.registration.register(
+    gameplay.registration.register(
         scope.mutation(),
         scope.gpa,
         request.Nickname,
         if (request.Gender) .male else .female,
         registered_at,
-    );
+    ) catch |err| switch (err) {
+        error.AlreadyRegistered => return scope.reject(.invalid_req),
+        else => return err,
+    };
     _ = gameplay.energy.refresh(scope.mutation(), now);
     try gameplay.quest.login(scope.mutation(), scope.gpa, now);
 
