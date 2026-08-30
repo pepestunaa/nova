@@ -88,7 +88,7 @@ pub const Basic = extern struct {
 
     pub const Level = enum(u8) {
         min = 1,
-        max = tables.tower_growth.max_player_level,
+        max = tables.world_class.max_level,
         _,
     };
 

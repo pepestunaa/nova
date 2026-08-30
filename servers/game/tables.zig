@@ -32,3 +32,4 @@ pub const star_tower_event = @import("tables/star_tower_event.zig");
 pub const star_tower_note = @import("tables/star_tower_note.zig");
 pub const star_tower_shop = @import("tables/star_tower_shop.zig");
 pub const tower_growth = @import("tables/tower_growth.zig");
+pub const world_class = @import("tables/world_class.zig");
