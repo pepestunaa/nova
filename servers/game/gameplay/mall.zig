@@ -1,13 +1,19 @@
 const std = @import("std");
 
 const Config = @import("../Config.zig");
+const missions = @import("missions.zig");
 const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
-const quest = @import("quest.zig");
 const reset = @import("reset.zig");
 const tables = @import("../tables.zig");
 
-pub const Reward = struct { id: u32, quantity: i32 };
+//
+
+pub const Reward = struct {
+    id: u32,
+    quantity: i32,
+};
+
 const max_gem_conversion_rewards = 3;
 pub const max_rewards = @max(tables.mall_package.max_rewards, max_gem_conversion_rewards);
 
@@ -21,7 +27,8 @@ pub const Receipt = struct {
         for (receipt.rewards[0..receipt.reward_count], 0..) |*reward, index| {
             if (reward.id != id)
                 continue;
-            const merged = std.math.add(i32, reward.quantity, quantity) catch return error.Overflow;
+            const merged = std.math.add(i32, reward.quantity, quantity) catch
+                return error.Overflow;
             if (merged != 0) {
                 reward.quantity = merged;
                 return;
@@ -307,7 +314,7 @@ pub fn claimDailyMallReward(mutation: *Mutation, allocator: std.mem.Allocator, n
     const player = mutation.modify(.{});
     player.progress.daily_mall_reward_day = day;
     try player.addResource(allocator, reward.resource_id, reward.quantity);
-    quest.trigger(mutation, .daily_shop_reward, 1, 0);
+    missions.trigger(mutation, .daily_shop_reward, 1, 0);
     return .{ .id = reward.resource_id, .quantity = reward.quantity };
 }
 

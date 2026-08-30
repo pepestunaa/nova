@@ -2,16 +2,17 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 
 const achievement = @import("achievement.zig");
+const lineup_tutorial = @import("lineup_tutorial.zig");
+const missions = @import("missions.zig");
 const Mutation = @import("mutation.zig");
-const quest = @import("quest.zig");
 const research_project = @import("research_project.zig");
 
 //
 
 pub const Changes = struct {
     achievements: achievement.ChangeSet = .{},
-    lineup_tutorial: quest.AssistChanges = .{},
-    missions: quest.MissionChanges = .{},
+    lineup_tutorial: lineup_tutorial.Changes = .{},
+    missions: missions.Changes = .{},
     research_project: research_project.ChangeSet = .{},
 };
 
@@ -52,7 +53,7 @@ pub fn finalize(
         mutation.invalidates(.discs) or
         mutation.invalidates(.tutorials))
     {
-        quest.refreshAssist(mutation.player, &changes.lineup_tutorial);
+        lineup_tutorial.refresh(mutation.player, &changes.lineup_tutorial);
     }
 
     if (mutation.invalidates(.research_project) or
@@ -63,7 +64,7 @@ pub fn finalize(
             &changes.research_project,
         );
 
-    quest.collectMissionChanges(mutation, &changes.missions);
+    missions.collectMissionChanges(mutation, &changes.missions);
     mutation.finish();
 }
 

@@ -1,9 +1,9 @@
 const std = @import("std");
 
+const missions = @import("missions.zig");
 const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const progression = @import("upgrade.zig");
-const quest = @import("quest.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -105,7 +105,7 @@ pub fn strengthen(
 
     const gained_levels = @as(u32, level) - old_level;
     if (gained_levels != 0)
-        quest.trigger(mutation, .disc_strengthen, gained_levels, 0);
+        missions.trigger(mutation, .disc_strengthen, gained_levels, 0);
 }
 
 pub fn promote(mutation: *Mutation, disc_id: u32, receipt: *Receipt) Error!void {

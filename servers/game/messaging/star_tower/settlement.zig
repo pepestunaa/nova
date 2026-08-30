@@ -86,7 +86,7 @@ pub fn send(
         player.star_tower_builds.len >= Player.max_star_tower_builds;
     _ = star_tower_record.preparePendingBuild(player, formation, score);
     gameplay.research_project.completedAscension(scope.mutation(), completed_difficulty);
-    gameplay.quest.trigger(scope.mutation(), .ascension_clear, 1, completed_difficulty);
+    gameplay.missions.trigger(scope.mutation(), .ascension_clear, 1, completed_difficulty);
     const build_coin = if (build_storage_full) blk: {
         // TODO: Test what the official server does. Until then, dismantle
         // the Record immediately when storage is full.

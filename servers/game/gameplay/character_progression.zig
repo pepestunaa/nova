@@ -1,12 +1,12 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 
-const Mutation = @import("mutation.zig");
 const Player = @import("../store/Player.zig");
 const TalentIndex = Player.Character.TalentNodes.Index;
 
+const missions = @import("missions.zig");
+const Mutation = @import("mutation.zig");
 const progression = @import("upgrade.zig");
-const quest = @import("quest.zig");
 const tables = @import("../tables.zig");
 
 //
@@ -128,7 +128,7 @@ pub fn upgrade(
 
     const gained_levels = @as(u32, level) - old_level;
     if (gained_levels != 0)
-        quest.trigger(mutation, .character_upgrade, gained_levels, 0);
+        missions.trigger(mutation, .character_upgrade, gained_levels, 0);
 }
 
 pub fn advance(

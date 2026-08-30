@@ -59,7 +59,7 @@ pub fn player_login_req(scope: *Scope) !void {
 
     try scope.loadPlayer(account_credentials.uid);
     if (scope.player.is_registered)
-        try gameplay.quest.login(scope.mutation(), scope.gpa, scope.now);
+        try gameplay.missions.login(scope.mutation(), scope.gpa, scope.now);
 
     try scope.respond(proto.pb.LoginResp{ .Token = scope.rotateSessionToken() });
 }

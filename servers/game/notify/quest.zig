@@ -1,10 +1,11 @@
+const lineup_tutorial = @import("../gameplay/lineup_tutorial.zig");
+const missions = @import("../gameplay/missions.zig");
 const Mutation = @import("../gameplay/mutation.zig");
-const quest = @import("../gameplay/quest.zig");
 const proto = @import("proto");
 const Scope = @import("../Scope.zig");
 const tables = @import("../tables.zig");
 
-pub fn sendLineupTutorial(scope: *Scope, changes: *const quest.AssistChanges) !void {
+pub fn sendLineupTutorial(scope: *Scope, changes: *const lineup_tutorial.Changes) !void {
     for (changes.slice()) |state| {
         var progress: [1]proto.pb.QuestProgress = .{.{
             .Cur = state.progress_current,
@@ -21,7 +22,7 @@ pub fn sendLineupTutorial(scope: *Scope, changes: *const quest.AssistChanges) !v
     }
 }
 
-pub fn sendMissionChanges(scope: *Scope, changes: *const quest.MissionChanges) !void {
+pub fn sendMissionChanges(scope: *Scope, changes: *const missions.Changes) !void {
     for (changes.slice()) |state| {
         var progress: [1]proto.pb.QuestProgress = .{.{
             .Cur = state.progress_current,

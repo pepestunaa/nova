@@ -1,6 +1,6 @@
 const achievement = @import("../../gameplay/achievement.zig");
+const missions = @import("../../gameplay/missions.zig");
 const Mutation = @import("../../gameplay/mutation.zig");
-const quest = @import("../../gameplay/quest.zig");
 const proto = @import("proto");
 
 //
@@ -19,7 +19,7 @@ pub fn record(mutation: *Mutation, events: proto.pb.Events.Decoded) !void {
         const achievement_id = (try data.next()) orelse
             continue;
         if (mutation.recordClientReport(achievement_id, delta))
-            quest.trigger(mutation, .client_report, delta, achievement_id);
+            missions.trigger(mutation, .client_report, delta, achievement_id);
     }
 }
 
@@ -28,8 +28,11 @@ pub fn record(mutation: *Mutation, events: proto.pb.Events.Decoded) !void {
 test "Ascension client reports aggregate known events" {
     const std = @import("std");
     const testing = std.testing;
+
     const Player = @import("../../store/Player.zig");
     const tables = @import("../../tables.zig");
+
+    //
 
     var player = Player.init(1);
     defer player.deinit(testing.allocator);

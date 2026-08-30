@@ -36,7 +36,7 @@ fn receiveMission(
 ) !void {
     var receipt: reward.ResourceReceipt = .{};
 
-    const claimed = gameplay.quest.claim(
+    const claimed = gameplay.missions.claim(
         scope.mutation(),
         scope.gpa,
         scope.now,
@@ -73,8 +73,8 @@ fn receiveActiveRewards(
     scope: *Scope,
     mission_type: tables.quest.Type,
 ) !void {
-    var result: gameplay.quest.ActiveClaim = .{};
-    gameplay.quest.claimActive(
+    var result: gameplay.missions.ActiveClaim = .{};
+    gameplay.missions.claimActive(
         scope.mutation(),
         scope.gpa,
         mission_type,
