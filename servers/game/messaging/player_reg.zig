@@ -47,7 +47,7 @@ pub fn player_reg_req(scope: *Scope) !void {
         return;
     }
 
-    try player_data.response.send(scope, now);
+    try player_data.response.send(scope);
 
     log.info("registered player '{s}'", .{scope.player.nickname()});
 }

@@ -3,8 +3,11 @@
     .recv_buffer_size = 16384,
     .send_buffer_size = 16384,
 
-    // Experimental: registrations mark every guide group complete, allowing
+    // Mark every guide group as completed, allowing
     // gender and nickname selection without entering the prologue flow.
+    // This should be left enabled until the server implements every
+    // mode or system that tutorials can interact with
+    // (to avoid having an error in the client)
     .skip_tutorial = true,
 
     .shop = .{
