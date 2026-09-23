@@ -1,7 +1,6 @@
 const std = @import("std");
 const Io = std.Io;
 
-const daily_reward = @import("tables/DailyMallReward");
 const handbook = @import("tables/Handbook");
 const item = @import("tables/Item");
 const mall_gem = @import("tables/MallGem");
@@ -9,6 +8,7 @@ const mall_monthly_card = @import("tables/MallMonthlyCard");
 const mall_package = @import("tables/MallPackage");
 const mall_shop = @import("tables/MallShop");
 const monthly_card = @import("tables/MonthlyCard");
+const time = @import("table_time");
 
 const Reward = struct { id: u32, quantity: i32 };
 
@@ -27,14 +27,13 @@ pub fn generate(_: std.process.Init, writer: *Io.Writer) !void {
             "pub const MallMonthlyCard = struct { id: []const u8, key: u64, monthly_card_id: u32, base_resource_id: u32, base_quantity: i32, duration_days: u32, max_days: u32, daily_rewards: [2]Reward };\n" ++
             "pub const MallGem = struct { id: []const u8, key: u64, base_quantity: i32, experienced_bonus_quantity: i32, maiden_bonus_quantity: i32, base_item_id: u32, experienced_bonus_item_id: u32, maiden_bonus_item_id: u32 };\n" ++
             "pub const MallShop = struct { id: u32, key: u64, stock: i32, currency_id: u32, price: i32, item_id: u32, item_quantity: i32, starts_at: i64, ends_at: i64, refresh_type: RefreshType };\n" ++
-            "pub const DailyMallReward = struct { resource_id: u32, quantity: i32 };\n\n",
+            "\n",
     );
     try writer.print("pub const max_package_rewards = {d};\npub const MallPackage = struct {{ id: []const u8, key: u64, stock: u32, starts_at: i64, ends_at: i64, refresh_type: RefreshType, rewards: [max_package_rewards]Reward, reward_count: usize }};\n\n", .{max_package_rewards});
     try writeMallPackages(writer, max_package_rewards);
     try writeMonthlyCards(writer);
     try writeMallGems(writer);
     try writeMallShop(writer);
-    try writeDailyReward(writer);
 }
 
 fn maxPackageRewards() usize {
@@ -118,11 +117,6 @@ fn writeMallShop(writer: *Io.Writer) !void {
     try writer.writeAll("};\n\n");
 }
 
-fn writeDailyReward(writer: *Io.Writer) !void {
-    validateResource(daily_reward.resource_id, daily_reward.quantity, "DailyMallReward");
-    try writer.print("pub const daily_mall_reward = DailyMallReward{{ .resource_id = {d}, .quantity = {d} }};\n", .{ daily_reward.resource_id, daily_reward.quantity });
-}
-
 fn validateProductId(id: []const u8, comptime table: []const u8) void {
     if (id.len == 0)
         std.debug.panic("{s} id is malformed", .{table});
@@ -187,7 +181,7 @@ fn fieldOr(comptime entry: anytype, comptime name: []const u8, comptime fallback
 }
 
 fn timeField(comptime entry: anytype, comptime name: []const u8) i64 {
-    return if (@hasField(@TypeOf(entry), name)) parseTime(@field(entry, name)) else 0;
+    return if (@hasField(@TypeOf(entry), name)) time.parseTime(@field(entry, name)) else 0;
 }
 
 fn refreshName(comptime value: u8) []const u8 {
@@ -310,39 +304,4 @@ fn dailyCard(comptime card_id: u32) struct { duration: u32, rewards: [2]Reward }
     };
     if (count == 0) @panic("MallMonthlyCard is missing MonthlyCard rewards");
     return .{ .duration = count, .rewards = rewards.? };
-}
-
-fn parseTime(comptime text: []const u8) i64 {
-    if (text.len != 25 or text[4] != '-' or text[7] != '-' or text[10] != 'T' or text[13] != ':' or text[16] != ':' or (text[19] != '+' and text[19] != '-') or text[22] != ':') @panic("unsupported Shop timestamp");
-    const year = parseI64(text[0..4]);
-    const month = parseI64(text[5..7]);
-    const day = parseI64(text[8..10]);
-    const hour = parseI64(text[11..13]);
-    const minute = parseI64(text[14..16]);
-    const second = parseI64(text[17..19]);
-    const offset_hour = parseI64(text[20..22]);
-    const offset_minute = parseI64(text[23..25]);
-    if (month < 1 or month > 12 or day < 1 or day > daysInMonth(year, month) or hour < 0 or hour > 23 or minute < 0 or minute > 59 or second < 0 or second > 59 or offset_hour < 0 or offset_hour > 23 or offset_minute < 0 or offset_minute > 59) @panic("invalid Shop timestamp");
-    const offset = offset_hour * 3_600 + offset_minute * 60;
-    return daysFromCivil(year, month, day) * 86_400 + hour * 3_600 + minute * 60 + second + if (text[19] == '+') -offset else offset;
-}
-
-fn parseI64(text: []const u8) i64 {
-    return std.fmt.parseInt(i64, text, 10) catch @panic("invalid Shop timestamp number");
-}
-fn daysInMonth(year: i64, month: i64) i64 {
-    return switch (month) {
-        2 => if (@mod(year, 4) == 0 and (@mod(year, 100) != 0 or @mod(year, 400) == 0)) 29 else 28,
-        4, 6, 9, 11 => 30,
-        else => 31,
-    };
-}
-fn daysFromCivil(year: i64, month: i64, day: i64) i64 {
-    const adjusted_year = year - @intFromBool(month <= 2);
-    const era = @divFloor(adjusted_year, 400);
-    const year_of_era = adjusted_year - era * 400;
-    const march_month = month + (if (month > 2) @as(i64, -3) else 9);
-    const day_of_year = @divFloor(153 * march_month + 2, 5) + day - 1;
-    const day_of_era = year_of_era * 365 + @divFloor(year_of_era, 4) - @divFloor(year_of_era, 100) + day_of_year;
-    return era * 146_097 + day_of_era - 719_468;
 }

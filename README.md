@@ -7,6 +7,7 @@ This project is not affiliated with the game's developers or publisher.
 ## Contents
 
 - [Compatibility](#compatibility)
+- [Getting started](#getting-started)
 - [What works](#what-works)
 - [Still in progress](#still-in-progress)
 - [Client patch](#client-patch)
@@ -20,11 +21,26 @@ This project is not affiliated with the game's developers or publisher.
 
 ## Compatibility
 
-**Current supported client version:** `1.13.0.131`
+**Current supported client version:** `1.13.0.137`
 
 The server is tested against the version above. Game updates may take time to
 receive compatible resources or protocol changes, and the repository is not
 guaranteed to support the latest client version.
+
+## Getting started
+
+The client needs [Asterism](#client-patch) (client patch) before it can connect to Astralis.
+Once you have that, choose whichever setup method suits you:
+
+- [Prebuilt executables](#prebuilt-executables) if you want to download and run
+  the server directly.
+- [Automatic setup](#automatic-setup) if you want the scripts to clone the
+  repository and prepare Zig for you.
+- [Manual setup](#manual-setup) if you prefer to install the requirements and
+  build it yourself.
+
+After setup, run both server executables (or start both servers through the
+provided scripts), then launch the patched client.
 
 ## What works
 
@@ -76,7 +92,8 @@ It makes the game request from your local server instead of the official server.
 ## Prebuilt executables
 
 Prebuilt binaries are available from the [release page](https://git.xeondev.com/nyan/astralis/releases), 
-extract the compressed file anywhere, then start both servers from the extracted folder.
+extract the compressed file anywhere, then run both server executables from the
+extracted folder.
 
 ## Automatic setup
 

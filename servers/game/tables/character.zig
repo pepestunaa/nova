@@ -1,7 +1,7 @@
 const std = @import("std");
 
-const comptime_utils = @import("comptime.zig");
-const localization = @import("localization.zig");
+const comptime_utils = @import("utils/comptime.zig");
+const localization = @import("utils/localization.zig");
 const lookup = @import("lookup.zig");
 const progression = @import("character_progression.zig");
 

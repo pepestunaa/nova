@@ -1,31 +1,31 @@
 .{
-    .{
-        .key = 0,
-        .value = .{
-            .grade = 1,
-            .fragments_qty = 6,
-            .general_fragment_id = 1000,
-            .substitute_item_id = 24,
-            .substitute_item_qty = 5,
-        },
+  .{
+    .key = 0,
+    .value = .{
+      .grade = 1,
+      .fragments_qty = 6,
+      .general_fragment_id = 1000,
+      .substitute_item_id = 24,
+      .substitute_item_qty = 5,
     },
-    .{
-        .key = 1,
-        .value = .{
-            .grade = 2,
-            .fragments_qty = 6,
-            .general_fragment_id = 1001,
-            .substitute_item_id = 24,
-            .substitute_item_qty = 1,
-        },
+  },
+  .{
+    .key = 1,
+    .value = .{
+      .grade = 2,
+      .fragments_qty = 6,
+      .general_fragment_id = 1001,
+      .substitute_item_id = 24,
+      .substitute_item_qty = 1,
     },
-    .{
-        .key = 2,
-        .value = .{
-            .grade = 3,
-            .fragments_qty = 1,
-            .substitute_item_id = 23,
-            .substitute_item_qty = 5,
-        },
+  },
+  .{
+    .key = 2,
+    .value = .{
+      .grade = 3,
+      .fragments_qty = 1,
+      .substitute_item_id = 23,
+      .substitute_item_qty = 5,
     },
+  },
 }

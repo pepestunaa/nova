@@ -1,1045 +1,1045 @@
 .{
-    .{
-        .id = 1010101,
-        .effect1 = 5,
-        .parameter1 = .{
-            100,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            103,
-            0,
-        },
-    },
-    .{
-        .id = 1010201,
-        .effect1 = 5,
-        .parameter1 = .{
-            120,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1010301,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1020101,
-        .effect1 = 5,
-        .parameter1 = .{
-            120,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            2,
-        },
-    },
-    .{
-        .id = 1020102,
-        .effect1 = 5,
-        .parameter1 = .{
-            120,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            3,
-        },
-    },
-    .{
-        .id = 1020201,
-        .effect1 = 5,
-        .parameter1 = .{
-            160,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            1,
-        },
-    },
-    .{
-        .id = 1020301,
-        .effect1 = 5,
-        .parameter1 = .{
-            200,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1020401,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1030101,
-        .effect1 = 19,
-        .parameter1 = .{
-            5,
-        },
-        .effect2 = 1,
-        .parameter2 = .{
-            150,
-        },
-    },
-    .{
-        .id = 1030201,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1040101,
-        .effect1 = 19,
-        .parameter1 = .{
-            10,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1040201,
-        .effect1 = 5,
-        .parameter1 = .{
-            200,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1040301,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1050101,
-        .effect1 = 1,
-        .parameter1 = .{
-            200,
-        },
-    },
-    .{
-        .id = 1050102,
-        .effect1 = 5,
-        .parameter1 = .{
-            100,
-        },
-    },
-    .{
-        .id = 1050201,
-        .effect1 = 1,
-        .parameter1 = .{
-            650,
-        },
-    },
-    .{
-        .id = 1050202,
-        .effect1 = 5,
-        .parameter1 = .{
-            200,
-        },
-    },
-    .{
-        .id = 1050301,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1060101,
-        .effect1 = 14,
-        .parameter1 = .{
-            989981,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1060102,
-        .effect1 = 14,
-        .parameter1 = .{
-            989981,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            108030102,
-        },
-    },
-    .{
-        .id = 1060201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989983,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            103,
-            0,
-        },
-    },
-    .{
-        .id = 1060301,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1070101,
-        .effect1 = 18,
-        .parameter1 = .{
-            90011,
-            5,
-        },
-    },
-    .{
-        .id = 1070201,
-        .effect1 = 18,
-        .parameter1 = .{
-            90012,
-            5,
-        },
-    },
-    .{
-        .id = 1070301,
-        .effect1 = 18,
-        .parameter1 = .{
-            90013,
-            5,
-        },
-    },
-    .{
-        .id = 1070401,
-        .effect1 = 18,
-        .parameter1 = .{
-            90014,
-            5,
-        },
-    },
-    .{
-        .id = 1070501,
-        .effect1 = 18,
-        .parameter1 = .{
-            90015,
-            5,
-        },
-    },
-    .{
-        .id = 1070601,
-        .effect1 = 18,
-        .parameter1 = .{
-            90016,
-            5,
-        },
-    },
-    .{
-        .id = 1070701,
-        .effect1 = 18,
-        .parameter1 = .{
-            90017,
-            5,
-        },
-    },
-    .{
-        .id = 1070801,
-        .effect1 = 17,
-        .parameter1 = .{
-            5,
-            1,
-        },
-    },
-    .{
-        .id = 1080101,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90011,
-            10,
-        },
-    },
-    .{
-        .id = 1080201,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90012,
-            10,
-        },
-    },
-    .{
-        .id = 1080301,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90013,
-            10,
-        },
-    },
-    .{
-        .id = 1080401,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90014,
-            10,
-        },
-    },
-    .{
-        .id = 1080501,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90015,
-            10,
-        },
-    },
-    .{
-        .id = 1080601,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90016,
-            10,
-        },
-    },
-    .{
-        .id = 1080701,
-        .effect1 = 5,
-        .parameter1 = .{
-            140,
-        },
-        .effect2 = 18,
-        .parameter2 = .{
-            90017,
-            10,
-        },
-    },
-    .{
-        .id = 1080801,
-        .effect1 = 5,
-        .parameter1 = .{
-            90,
-        },
-        .effect2 = 17,
-        .parameter2 = .{
-            10,
-            1,
-        },
-    },
-    .{
-        .id = 1080901,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1090101,
-        .effect1 = 1,
-        .parameter1 = .{
-            100,
-        },
-    },
-    .{
-        .id = 1090102,
-        .effect1 = 3,
-        .parameter1 = .{
-            103,
-            0,
-        },
-    },
-    .{
-        .id = 1090201,
-        .effect1 = 5,
-        .parameter1 = .{
-            120,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1100101,
-        .effect1 = 1,
-        .parameter1 = .{
-            120,
-        },
-    },
-    .{
-        .id = 1100102,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1100201,
-        .effect1 = 5,
-        .parameter1 = .{
-            160,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1110101,
-        .effect1 = 14,
-        .parameter1 = .{
-            989991,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1110201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989981,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            103,
-            0,
-        },
-    },
-    .{
-        .id = 1120101,
-        .effect1 = 14,
-        .parameter1 = .{
-            989991,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1120201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989982,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1130101,
-        .effect1 = 14,
-        .parameter1 = .{
-            989991,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1130201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989982,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1130301,
-        .effect1 = 14,
-        .parameter1 = .{
-            989984,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1140101,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1140201,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1140301,
-        .effect1 = 17,
-        .parameter1 = .{
-            10,
-            1,
-        },
-    },
-    .{
-        .id = 1140401,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1140501,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1150101,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1150201,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1150301,
-        .effect1 = 3,
-        .parameter1 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1150401,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1150501,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1160101,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1160201,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1160301,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1160401,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1160501,
-        .effect1 = 16,
-        .parameter1 = .{
-            100140101,
-        },
-    },
-    .{
-        .id = 1170101,
-        .effect1 = 1,
-        .parameter1 = .{
-            100,
-        },
-    },
-    .{
-        .id = 1170102,
-        .effect1 = 6,
-        .parameter1 = .{
-            100,
-        },
-    },
-    .{
-        .id = 1170103,
-        .effect1 = 14,
-        .parameter1 = .{
-            989992,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1170104,
-        .effect1 = 14,
-        .parameter1 = .{
-            989982,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110102,
-        },
-    },
-    .{
-        .id = 1170201,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1180101,
-        .effect1 = 1,
-        .parameter1 = .{
-            100,
-        },
-    },
-    .{
-        .id = 1180102,
-        .effect1 = 6,
-        .parameter1 = .{
-            100,
-        },
-    },
-    .{
-        .id = 1180103,
-        .effect1 = 14,
-        .parameter1 = .{
-            989992,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1180104,
-        .effect1 = 14,
-        .parameter1 = .{
-            989982,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110102,
-        },
-    },
-    .{
-        .id = 1180105,
-        .effect1 = 3,
-        .parameter1 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1180201,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1190101,
-        .effect1 = 1,
-        .parameter1 = .{
-            120,
-        },
-    },
-    .{
-        .id = 1190102,
-        .effect1 = 6,
-        .parameter1 = .{
-            120,
-        },
-    },
-    .{
-        .id = 1190103,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1190201,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1200101,
-        .effect1 = 5,
-        .parameter1 = .{
-            50,
-        },
-        .effect2 = 17,
-        .parameter2 = .{
-            5,
-            1,
-        },
-    },
-    .{
-        .id = 1200201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989992,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1200202,
-        .effect1 = 17,
-        .parameter1 = .{
-            5,
-            1,
-        },
-    },
-    .{
-        .id = 1210101,
-        .effect1 = 5,
-        .parameter1 = .{
-            100,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1210201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989992,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1210202,
-        .effect1 = 3,
-        .parameter1 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1220101,
-        .effect1 = 5,
-        .parameter1 = .{
-            180,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1220201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989992,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1220202,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1230101,
-        .effect1 = 5,
-        .parameter1 = .{
-            50,
-        },
-        .effect2 = 14,
-        .parameter2 = .{
-            989991,
-        },
-        .effect3 = 16,
-        .parameter3 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1230201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989982,
-        },
-        .effect2 = 3,
-        .parameter2 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1240101,
-        .effect1 = 3,
-        .parameter1 = .{
-            101,
-            0,
-        },
-    },
-    .{
-        .id = 1240102,
-        .effect1 = 14,
-        .parameter1 = .{
-            989991,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1240103,
-        .effect1 = 14,
-        .parameter1 = .{
-            989982,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110102,
-        },
-    },
-    .{
-        .id = 1240201,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1250101,
-        .effect1 = 3,
-        .parameter1 = .{
-            103,
-            0,
-        },
-    },
-    .{
-        .id = 1250102,
-        .effect1 = 14,
-        .parameter1 = .{
-            989991,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1250103,
-        .effect1 = 14,
-        .parameter1 = .{
-            989981,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110102,
-        },
-    },
-    .{
-        .id = 1250201,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            0,
-        },
-    },
-    .{
-        .id = 1250202,
-        .effect1 = 14,
-        .parameter1 = .{
-            989992,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1250203,
-        .effect1 = 14,
-        .parameter1 = .{
-            989984,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110102,
-        },
-    },
-    .{
-        .id = 1250301,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
-    .{
-        .id = 1260101,
-        .effect1 = 3,
-        .parameter1 = .{
-            103,
-            2,
-        },
-    },
-    .{
-        .id = 1260102,
-        .effect1 = 3,
-        .parameter1 = .{
-            103,
-            3,
-        },
-    },
-    .{
-        .id = 1260201,
-        .effect1 = 14,
-        .parameter1 = .{
-            989991,
-        },
-        .effect2 = 16,
-        .parameter2 = .{
-            1110101,
-        },
-    },
-    .{
-        .id = 1270101,
-        .effect1 = 3,
-        .parameter1 = .{
-            101,
-            2,
-        },
-    },
-    .{
-        .id = 1270102,
-        .effect1 = 3,
-        .parameter1 = .{
-            101,
-            3,
-        },
-    },
-    .{
-        .id = 1270201,
-        .effect1 = 17,
-        .parameter1 = .{
-            5,
-            1,
-        },
-    },
-    .{
-        .id = 1280101,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            2,
-        },
-    },
-    .{
-        .id = 1280102,
-        .effect1 = 3,
-        .parameter1 = .{
-            104,
-            3,
-        },
-    },
-    .{
-        .id = 1280201,
-        .effect1 = 1,
-        .parameter1 = .{
-            30,
-        },
-    },
+  .{
+    .id = 1010101,
+    .effect1 = 5,
+    .parameter1 = .{
+      100,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      103,
+      0,
+    },
+  },
+  .{
+    .id = 1010201,
+    .effect1 = 5,
+    .parameter1 = .{
+      120,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1010301,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1020101,
+    .effect1 = 5,
+    .parameter1 = .{
+      120,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      2,
+    },
+  },
+  .{
+    .id = 1020102,
+    .effect1 = 5,
+    .parameter1 = .{
+      120,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      3,
+    },
+  },
+  .{
+    .id = 1020201,
+    .effect1 = 5,
+    .parameter1 = .{
+      160,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      1,
+    },
+  },
+  .{
+    .id = 1020301,
+    .effect1 = 5,
+    .parameter1 = .{
+      200,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1020401,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1030101,
+    .effect1 = 19,
+    .parameter1 = .{
+      5,
+    },
+    .effect2 = 1,
+    .parameter2 = .{
+      150,
+    },
+  },
+  .{
+    .id = 1030201,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1040101,
+    .effect1 = 19,
+    .parameter1 = .{
+      10,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1040201,
+    .effect1 = 5,
+    .parameter1 = .{
+      200,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1040301,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1050101,
+    .effect1 = 1,
+    .parameter1 = .{
+      200,
+    },
+  },
+  .{
+    .id = 1050102,
+    .effect1 = 5,
+    .parameter1 = .{
+      100,
+    },
+  },
+  .{
+    .id = 1050201,
+    .effect1 = 1,
+    .parameter1 = .{
+      650,
+    },
+  },
+  .{
+    .id = 1050202,
+    .effect1 = 5,
+    .parameter1 = .{
+      200,
+    },
+  },
+  .{
+    .id = 1050301,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1060101,
+    .effect1 = 14,
+    .parameter1 = .{
+      989981,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1060102,
+    .effect1 = 14,
+    .parameter1 = .{
+      989981,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      108030102,
+    },
+  },
+  .{
+    .id = 1060201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989983,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      103,
+      0,
+    },
+  },
+  .{
+    .id = 1060301,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1070101,
+    .effect1 = 18,
+    .parameter1 = .{
+      90011,
+      5,
+    },
+  },
+  .{
+    .id = 1070201,
+    .effect1 = 18,
+    .parameter1 = .{
+      90012,
+      5,
+    },
+  },
+  .{
+    .id = 1070301,
+    .effect1 = 18,
+    .parameter1 = .{
+      90013,
+      5,
+    },
+  },
+  .{
+    .id = 1070401,
+    .effect1 = 18,
+    .parameter1 = .{
+      90014,
+      5,
+    },
+  },
+  .{
+    .id = 1070501,
+    .effect1 = 18,
+    .parameter1 = .{
+      90015,
+      5,
+    },
+  },
+  .{
+    .id = 1070601,
+    .effect1 = 18,
+    .parameter1 = .{
+      90016,
+      5,
+    },
+  },
+  .{
+    .id = 1070701,
+    .effect1 = 18,
+    .parameter1 = .{
+      90017,
+      5,
+    },
+  },
+  .{
+    .id = 1070801,
+    .effect1 = 17,
+    .parameter1 = .{
+      5,
+      1,
+    },
+  },
+  .{
+    .id = 1080101,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90011,
+      10,
+    },
+  },
+  .{
+    .id = 1080201,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90012,
+      10,
+    },
+  },
+  .{
+    .id = 1080301,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90013,
+      10,
+    },
+  },
+  .{
+    .id = 1080401,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90014,
+      10,
+    },
+  },
+  .{
+    .id = 1080501,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90015,
+      10,
+    },
+  },
+  .{
+    .id = 1080601,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90016,
+      10,
+    },
+  },
+  .{
+    .id = 1080701,
+    .effect1 = 5,
+    .parameter1 = .{
+      140,
+    },
+    .effect2 = 18,
+    .parameter2 = .{
+      90017,
+      10,
+    },
+  },
+  .{
+    .id = 1080801,
+    .effect1 = 5,
+    .parameter1 = .{
+      90,
+    },
+    .effect2 = 17,
+    .parameter2 = .{
+      10,
+      1,
+    },
+  },
+  .{
+    .id = 1080901,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1090101,
+    .effect1 = 1,
+    .parameter1 = .{
+      100,
+    },
+  },
+  .{
+    .id = 1090102,
+    .effect1 = 3,
+    .parameter1 = .{
+      103,
+      0,
+    },
+  },
+  .{
+    .id = 1090201,
+    .effect1 = 5,
+    .parameter1 = .{
+      120,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1100101,
+    .effect1 = 1,
+    .parameter1 = .{
+      120,
+    },
+  },
+  .{
+    .id = 1100102,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1100201,
+    .effect1 = 5,
+    .parameter1 = .{
+      160,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1110101,
+    .effect1 = 14,
+    .parameter1 = .{
+      989991,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1110201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989981,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      103,
+      0,
+    },
+  },
+  .{
+    .id = 1120101,
+    .effect1 = 14,
+    .parameter1 = .{
+      989991,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1120201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989982,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1130101,
+    .effect1 = 14,
+    .parameter1 = .{
+      989991,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1130201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989982,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1130301,
+    .effect1 = 14,
+    .parameter1 = .{
+      989984,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1140101,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1140201,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1140301,
+    .effect1 = 17,
+    .parameter1 = .{
+      10,
+      1,
+    },
+  },
+  .{
+    .id = 1140401,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1140501,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1150101,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1150201,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1150301,
+    .effect1 = 3,
+    .parameter1 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1150401,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1150501,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1160101,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1160201,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1160301,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1160401,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1160501,
+    .effect1 = 16,
+    .parameter1 = .{
+      100140101,
+    },
+  },
+  .{
+    .id = 1170101,
+    .effect1 = 1,
+    .parameter1 = .{
+      100,
+    },
+  },
+  .{
+    .id = 1170102,
+    .effect1 = 6,
+    .parameter1 = .{
+      100,
+    },
+  },
+  .{
+    .id = 1170103,
+    .effect1 = 14,
+    .parameter1 = .{
+      989992,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1170104,
+    .effect1 = 14,
+    .parameter1 = .{
+      989982,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110102,
+    },
+  },
+  .{
+    .id = 1170201,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1180101,
+    .effect1 = 1,
+    .parameter1 = .{
+      100,
+    },
+  },
+  .{
+    .id = 1180102,
+    .effect1 = 6,
+    .parameter1 = .{
+      100,
+    },
+  },
+  .{
+    .id = 1180103,
+    .effect1 = 14,
+    .parameter1 = .{
+      989992,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1180104,
+    .effect1 = 14,
+    .parameter1 = .{
+      989982,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110102,
+    },
+  },
+  .{
+    .id = 1180105,
+    .effect1 = 3,
+    .parameter1 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1180201,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1190101,
+    .effect1 = 1,
+    .parameter1 = .{
+      120,
+    },
+  },
+  .{
+    .id = 1190102,
+    .effect1 = 6,
+    .parameter1 = .{
+      120,
+    },
+  },
+  .{
+    .id = 1190103,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1190201,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1200101,
+    .effect1 = 5,
+    .parameter1 = .{
+      50,
+    },
+    .effect2 = 17,
+    .parameter2 = .{
+      5,
+      1,
+    },
+  },
+  .{
+    .id = 1200201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989992,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1200202,
+    .effect1 = 17,
+    .parameter1 = .{
+      5,
+      1,
+    },
+  },
+  .{
+    .id = 1210101,
+    .effect1 = 5,
+    .parameter1 = .{
+      100,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1210201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989992,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1210202,
+    .effect1 = 3,
+    .parameter1 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1220101,
+    .effect1 = 5,
+    .parameter1 = .{
+      180,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1220201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989992,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1220202,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1230101,
+    .effect1 = 5,
+    .parameter1 = .{
+      50,
+    },
+    .effect2 = 14,
+    .parameter2 = .{
+      989991,
+    },
+    .effect3 = 16,
+    .parameter3 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1230201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989982,
+    },
+    .effect2 = 3,
+    .parameter2 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1240101,
+    .effect1 = 3,
+    .parameter1 = .{
+      101,
+      0,
+    },
+  },
+  .{
+    .id = 1240102,
+    .effect1 = 14,
+    .parameter1 = .{
+      989991,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1240103,
+    .effect1 = 14,
+    .parameter1 = .{
+      989982,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110102,
+    },
+  },
+  .{
+    .id = 1240201,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1250101,
+    .effect1 = 3,
+    .parameter1 = .{
+      103,
+      0,
+    },
+  },
+  .{
+    .id = 1250102,
+    .effect1 = 14,
+    .parameter1 = .{
+      989991,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1250103,
+    .effect1 = 14,
+    .parameter1 = .{
+      989981,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110102,
+    },
+  },
+  .{
+    .id = 1250201,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      0,
+    },
+  },
+  .{
+    .id = 1250202,
+    .effect1 = 14,
+    .parameter1 = .{
+      989992,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1250203,
+    .effect1 = 14,
+    .parameter1 = .{
+      989984,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110102,
+    },
+  },
+  .{
+    .id = 1250301,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
+  .{
+    .id = 1260101,
+    .effect1 = 3,
+    .parameter1 = .{
+      103,
+      2,
+    },
+  },
+  .{
+    .id = 1260102,
+    .effect1 = 3,
+    .parameter1 = .{
+      103,
+      3,
+    },
+  },
+  .{
+    .id = 1260201,
+    .effect1 = 14,
+    .parameter1 = .{
+      989991,
+    },
+    .effect2 = 16,
+    .parameter2 = .{
+      1110101,
+    },
+  },
+  .{
+    .id = 1270101,
+    .effect1 = 3,
+    .parameter1 = .{
+      101,
+      2,
+    },
+  },
+  .{
+    .id = 1270102,
+    .effect1 = 3,
+    .parameter1 = .{
+      101,
+      3,
+    },
+  },
+  .{
+    .id = 1270201,
+    .effect1 = 17,
+    .parameter1 = .{
+      5,
+      1,
+    },
+  },
+  .{
+    .id = 1280101,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      2,
+    },
+  },
+  .{
+    .id = 1280102,
+    .effect1 = 3,
+    .parameter1 = .{
+      104,
+      3,
+    },
+  },
+  .{
+    .id = 1280201,
+    .effect1 = 1,
+    .parameter1 = .{
+      30,
+    },
+  },
 }

@@ -1,44 +1,44 @@
 .{
-    .{
-        .id = 1,
-        .goods_group_id = 1,
-        .show_item = 90003,
-    },
-    .{
-        .id = 2,
-        .goods_group_id = 1,
-        .show_item = 90003,
-    },
-    .{
-        .id = 3,
-        .goods_group_id = 2,
-        .show_item = 90002,
-        .show_item_num = 5,
-    },
-    .{
-        .id = 4,
-        .goods_group_id = 3,
-        .show_item = 90003,
-    },
-    .{
-        .id = 5,
-        .goods_group_id = 3,
-        .show_item = 90003,
-    },
-    .{
-        .id = 6,
-        .goods_group_id = 4,
-        .show_item = 90003,
-    },
-    .{
-        .id = 7,
-        .goods_group_id = 5,
-        .show_item = 90003,
-    },
-    .{
-        .id = 8,
-        .goods_group_id = 6,
-        .show_item = 90002,
-        .show_item_num = 15,
-    },
+  .{
+    .id = 1,
+    .goods_group_id = 1,
+    .show_item = 90003,
+  },
+  .{
+    .id = 2,
+    .goods_group_id = 1,
+    .show_item = 90003,
+  },
+  .{
+    .id = 3,
+    .goods_group_id = 2,
+    .show_item = 90002,
+    .show_item_num = 5,
+  },
+  .{
+    .id = 4,
+    .goods_group_id = 3,
+    .show_item = 90003,
+  },
+  .{
+    .id = 5,
+    .goods_group_id = 3,
+    .show_item = 90003,
+  },
+  .{
+    .id = 6,
+    .goods_group_id = 4,
+    .show_item = 90003,
+  },
+  .{
+    .id = 7,
+    .goods_group_id = 5,
+    .show_item = 90003,
+  },
+  .{
+    .id = 8,
+    .goods_group_id = 6,
+    .show_item = 90002,
+    .show_item_num = 15,
+  },
 }

@@ -35,13 +35,10 @@ pub fn mall_shop_list_req(scope: *Scope) !void {
 
 pub fn daily_mall_reward_receive_req(scope: *Scope) !void {
     _ = try scope.source.read(proto.pb.Nil);
-    const reward = gameplay.mall.claimDailyMallReward(scope.mutation(), scope.gpa, scope.now) catch |err| switch (err) {
+    const receipt = gameplay.mall.claimDailyMallReward(scope.mutation(), scope.gpa, scope.now, config.shop) catch |err| switch (err) {
         else => return mall.reject(scope, err),
     };
-    var props: [1]proto.pb.Any = undefined;
-    var count: usize = 0;
-    try change_info.appendReward(scope.arena, &props, &count, reward.id, reward.quantity);
-    try scope.respond(proto.pb.ChangeInfo{ .Props = .fromOwnedSlice(props[0..count]) });
+    try scope.respond(try mall.change(scope, receipt));
 }
 
 pub fn mall_shop_order_req(scope: *Scope) !void {

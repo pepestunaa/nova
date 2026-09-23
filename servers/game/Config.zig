@@ -10,4 +10,10 @@ server_garble_key: []const u8,
 pub const Shop = struct {
     enable: bool,
     show_historical_packages: bool,
+    daily_mall_rewards: [2]Reward,
+};
+
+pub const Reward = struct {
+    id: u32,
+    quantity: i32,
 };

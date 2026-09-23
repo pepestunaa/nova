@@ -9,6 +9,12 @@ const tables = @import("../tables.zig");
 
 //
 
+const GemConversion = struct {
+    const paid_item_id: u32 = 3;
+    const free_item_id: u32 = 4;
+    const output_item_id: u32 = 2;
+};
+
 pub const Reward = struct {
     id: u32,
     quantity: i32,
@@ -205,24 +211,24 @@ pub fn gemConvert(mutation: *Mutation, allocator: std.mem.Allocator, requested: 
     const quantity = std.math.cast(i32, requested) orelse return error.InvalidInput;
     if (quantity <= 0)
         return error.InvalidInput;
-    const currency = tables.gem_currency.currency;
     const current = mutation.read();
-    const free_stone = @max(current.resourceQuantity(currency.free_item_id), 0);
-    const paid_stone = @max(current.resourceQuantity(currency.paid_item_id), 0);
+    const free_stone = @max(current.resourceQuantity(GemConversion.free_item_id), 0);
+    const paid_stone = @max(current.resourceQuantity(GemConversion.paid_item_id), 0);
     if (@as(i64, free_stone) + @as(i64, paid_stone) < quantity)
         return error.InsufficientResources;
 
     const consume_paid = @min(quantity, paid_stone);
     const consume_free = quantity - consume_paid;
     const player = mutation.modify(.{});
-    try player.addResource(allocator, currency.free_item_id, -consume_free);
-    try player.addResource(allocator, currency.paid_item_id, -consume_paid);
-    try player.addResource(allocator, currency.gem_item_id, quantity);
+    try player.addResource(allocator, GemConversion.free_item_id, -consume_free);
+    try player.addResource(allocator, GemConversion.paid_item_id, -consume_paid);
+    try player.addResource(allocator, GemConversion.output_item_id, quantity);
 
     var receipt: Receipt = .{};
-    try receipt.append(currency.gem_item_id, quantity);
-    try receipt.append(currency.paid_item_id, -consume_paid);
-    try receipt.append(currency.free_item_id, -consume_free);
+    try receipt.append(GemConversion.output_item_id, quantity);
+    try receipt.append(GemConversion.paid_item_id, -consume_paid);
+    try receipt.append(GemConversion.free_item_id, -consume_free);
+
     return receipt;
 }
 
@@ -306,16 +312,42 @@ pub fn mallShopOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: u32,
     return receipt;
 }
 
-pub fn claimDailyMallReward(mutation: *Mutation, allocator: std.mem.Allocator, now: i64) !Reward {
+pub fn claimDailyMallReward(
+    mutation: *Mutation,
+    allocator: std.mem.Allocator,
+    now: i64,
+    shop: Config.Shop,
+) !Receipt {
     const day = cardDay(now);
     if (mutation.read().progress.daily_mall_reward_day == day)
         return error.NoRewards;
-    const reward = tables.daily_mall_reward.reward;
+
+    var configured_count: usize = 0;
+    for (shop.daily_mall_rewards) |reward| {
+        if (reward.id == 0 and reward.quantity == 0)
+            continue;
+        if (reward.id == 0 or reward.quantity <= 0)
+            return error.InvalidInput;
+        configured_count += 1;
+    }
+    if (configured_count == 0)
+        return error.NoRewards;
+
     const player = mutation.modify(.{});
+    var receipt: Receipt = .{};
+    for (shop.daily_mall_rewards) |reward| {
+        if (reward.id == 0 and reward.quantity == 0)
+            continue;
+        if (tables.item.isResource(reward.id))
+            try player.addResource(allocator, reward.id, reward.quantity)
+        else
+            try player.addItem(allocator, reward.id, reward.quantity);
+        try receipt.append(reward.id, reward.quantity);
+    }
     player.progress.daily_mall_reward_day = day;
-    try player.addResource(allocator, reward.resource_id, reward.quantity);
     missions.trigger(mutation, .daily_shop_reward, 1, 0);
-    return .{ .id = reward.resource_id, .quantity = reward.quantity };
+
+    return receipt;
 }
 
 pub fn dailyMallRewardAvailable(player: *const Player, now: i64) bool {

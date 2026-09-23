@@ -1,6 +1,6 @@
 const std = @import("std");
 
-const comptime_utils = @import("comptime.zig");
+const comptime_utils = @import("utils/comptime.zig");
 const lookup = @import("lookup.zig");
 
 const raw_list = @import("tables/AffinityQuest");

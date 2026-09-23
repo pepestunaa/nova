@@ -1,1078 +1,1147 @@
 .{
-    .{
-        .id = "AffinityMaxEffectLevel",
-        .value = "50",
-    },
-    .{
-        .id = "DamageConvertToScoreRatio",
-        .value = "1",
-    },
-    .{
-        .id = "ScoreBossTimeLimit",
-        .value = "180",
-    },
-    .{
-        .id = "StarTowerReconnMaxCnt",
-        .value = "99999",
-    },
-    .{
-        .id = "FateCardDropBasicProb",
-        .value = "0",
-    },
-    .{
-        .id = "FateCardDropIncrementProb",
-        .value = "0",
-    },
-    .{
-        .id = "FateCardDropCountMax",
-        .value = "0",
-    },
-    .{
-        .id = "FateCardGiveUpCompensation",
-        .value = "{\"11\":30}",
-    },
-    .{
-        .id = "HighRiskRoomWeightList",
-        .value = "30,70",
-    },
-    .{
-        .id = "HighRiskRoomAppearMinFloor",
-        .value = "99",
-    },
-    .{
-        .id = "DefaultEventId",
-        .value = "121",
-    },
-    .{
-        .id = "LimitedTimeChallengeRoomTypeList",
-        .value = "2,3,4,5",
-    },
-    .{
-        .id = "EndOfBossBattleRecoveryHPEffectId",
-        .value = "989970",
-    },
-    .{
-        .id = "StrengthenMachineGoldConsume",
-        .value = "120,180,240,320,400,600,800",
-    },
-    .{
-        .id = "EndOfBossBattleRecoveryHPProb",
-        .value = "100",
-    },
-    .{
-        .id = "StarTowerBuildNumberMax",
-        .value = "100",
-    },
-    .{
-        .id = "StarTowerBuildAutoLockScore",
-        .value = "5800",
-    },
-    .{
-        .id = "StarTowerBuildTransformParas",
-        .value = "100,3,100",
-    },
-    .{
-        .id = "StarTowerFloorOfCreateBuild",
-        .value = "1",
-    },
-    .{
-        .id = "StarTowerHistoryMapLimit",
-        .value = "3",
-    },
-    .{
-        .id = "StarTowerPlayerVoiceDelay",
-        .value = "0.5",
-    },
-    .{
-        .id = "StarTowerBuildDeleteReturnItemId",
-        .value = "12",
-    },
-    .{
-        .id = "EliteBattleRoomAppearRecoveryHPProb",
-        .value = "100",
-    },
-    .{
-        .id = "EndOfEliteBattleRecoveryHPEffectId",
-        .value = "989970",
-    },
-    .{
-        .id = "DangerRoomAppearRecoveryHPProb",
-        .value = "100",
-    },
-    .{
-        .id = "EndOfDangerBattleRecoveryHPEffectId",
-        .value = "989970",
-    },
-    .{
-        .id = "HorrorRoomAppearRecoveryHPProb",
-        .value = "100",
-    },
-    .{
-        .id = "EndOfHorrorBattleRecoveryHPEffectId",
-        .value = "989970",
-    },
-    .{
-        .id = "BuildPassiveSkillRarityScores",
-        .value = "200,150,100,100,100",
-    },
-    .{
-        .id = "StarTowerInitialCornNumber",
-        .value = "200",
-    },
-    .{
-        .id = "StarTowerDiscExtraSubSlotCount",
-        .value = "1",
-    },
-    .{
-        .id = "NPCAffinityNumberOfInteractions",
-        .value = "60",
-    },
-    .{
-        .id = "SubNoteSkillGroupNumber",
-        .value = "3",
-    },
-    .{
-        .id = "SubNotePrimaryDropProbe",
-        .value = "8000",
-    },
-    .{
-        .id = "SubNotePrimaryWeightArea",
-        .value = "100,150",
-    },
-    .{
-        .id = "SubNoteSecondaryWeightArea",
-        .value = "100,200",
-    },
-    .{
-        .id = "StarTowerGrowthItemIds",
-        .value = "51",
-    },
-    .{
-        .id = "NewPlayerDefaultClearStory",
-        .value = "0",
-    },
-    .{
-        .id = "TimeUnlockStory",
-        .value = "STm06_06",
-    },
-    .{
-        .id = "StoryUnlockTime",
-        .value = "2026-01-20T12:00:00+08:00",
-    },
-    .{
-        .id = "TraceHuntMaxHuntProgress",
-        .value = "10000",
-    },
-    .{
-        .id = "TraceHuntMaxTraceProgress",
-        .value = "10000",
-    },
-    .{
-        .id = "TraceHuntAutoAssistCount",
-        .value = "2",
-    },
-    .{
-        .id = "TraceHuntRequestItem",
-        .value = "10,20,60",
-    },
-    .{
-        .id = "TraceHuntPermitItem",
-        .value = "50,4,12",
-    },
-    .{
-        .id = "TraceHuntRequestItemTid",
-        .value = "38",
-    },
-    .{
-        .id = "TraceHuntPermitItemTid",
-        .value = "39",
-    },
-    .{
-        .id = "TraceHuntBossHuntLimitTime",
-        .value = "3600",
-    },
-    .{
-        .id = "TraceHuntRecommendationLimit",
-        .value = "3",
-    },
-    .{
-        .id = "TraceHuntTokenTid",
-        .value = "37",
-    },
-    .{
-        .id = "TraceHuntPieceNeedTraceProgress",
-        .value = "20,40,60,80,100",
-    },
-    .{
-        .id = "TraceHuntRefreshHelpCD",
-        .value = "120",
-    },
-    .{
-        .id = "TraceHuntPieceSuffixOrder",
-        .value = "_LT,_LB,_RT,_RB,_Center",
-    },
-    .{
-        .id = "TraceHuntHelpEmergencyTime",
-        .value = "300",
-    },
-    .{
-        .id = "TraceHuntShopID",
-        .value = "4",
-    },
-    .{
-        .id = "TraceHuntBossTimeLimit",
-        .value = "60",
-    },
-    .{
-        .id = "TraceHuntMaxMultiTrace",
-        .value = "5",
-    },
-    .{
-        .id = "TraceHuntControlEmergencyTime",
-        .value = "5",
-    },
-    .{
-        .id = "TraceHuntNPCId",
-        .value = "916402",
-    },
-    .{
-        .id = "VampireTalentResetTimeInterval",
-        .value = "30",
-    },
-    .{
-        .id = "FateCardBookToVampireTalentPoint",
-        .value = "5",
-    },
-    .{
-        .id = "VampireDropExperienceMinInterval",
-        .value = "30",
-    },
-    .{
-        .id = "VampireDropExperienceMaxInterval",
-        .value = "90",
-    },
-    .{
-        .id = "VampireMonsterMaxCount",
-        .value = "60",
-    },
-    .{
-        .id = "vampireExp",
-        .value = "5",
-    },
-    .{
-        .id = "vampireTreasure",
-        .value = "1",
-    },
-    .{
-        .id = "vampireHp",
-        .value = "1",
-    },
-    .{
-        .id = "vampireMp",
-        .value = "1",
-    },
-    .{
-        .id = "vampireAtk",
-        .value = "1",
-    },
-    .{
-        .id = "vampireGet",
-        .value = "1",
-    },
-    .{
-        .id = "vampireClear",
-        .value = "1",
-    },
-    .{
-        .id = "VampireChestDropNumberAndWeight",
-        .value = "{\"1\":20,\"2\":25,\"3\":20}",
-    },
-    .{
-        .id = "VampireBonusConfig",
-        .value = "[[100,120],[200,150],[300,200]]",
-    },
-    .{
-        .id = "VampireBonusTime",
-        .value = "10",
-    },
-    .{
-        .id = "VampireBaseBundle",
-        .value = "101,102",
-    },
-    .{
-        .id = "Activity_Banner_Interval_Time",
-        .value = "3",
-    },
-    .{
-        .id = "TrekkerVersusAddHotValueRangePreMinute",
-        .value = "1000,3000",
-    },
-    .{
-        .id = "Cookie_ErrorTime",
-        .value = "0.8",
-    },
-    .{
-        .id = "IceCreamMaxTotalScore",
-        .value = "5000000",
-    },
-    .{
-        .id = "IceCreamUseItemLimit",
-        .value = "999",
-    },
-    .{
-        .id = "IceCreamFeverTime",
-        .value = "10",
-    },
-    .{
-        .id = "IceCreamMaxLevelId",
-        .value = "2017",
-    },
-    .{
-        .id = "IceCreamSpecialCustomerId",
-        .value = "966002",
-    },
-    .{
-        .id = "IceCreamSpecialCustomerOrderNum",
-        .value = "6",
-    },
-    .{
-        .id = "IceCreamSpecialCustomerProbability",
-        .value = "0.5",
-    },
-    .{
-        .id = "IceCreamGuidanceDuration",
-        .value = "2",
-    },
-    .{
-        .id = "IceCreamPatienceGroup",
-        .value = "10",
-    },
-    .{
-        .id = "IceCreamPatienceLowerValue",
-        .value = "5",
-    },
-    .{
-        .id = "IceCreamPatiencePerReduce",
-        .value = "2",
-    },
-    .{
-        .id = "JointDrill_Challenge_Tickets_Id",
-        .value = "36",
-    },
-    .{
-        .id = "JointDrill_Challenge_Tickets_Max",
-        .value = "3",
-    },
-    .{
-        .id = "JointDrill_Challenge_Time_Max",
-        .value = "3600",
-    },
-    .{
-        .id = "JointDrill_Challenge_Time_OverFlow",
-        .value = "4200",
-    },
-    .{
-        .id = "JointDrill_Failed_Reward_Mail_Id",
-        .value = "2092",
-    },
-    .{
-        .id = "PenguinCardMaxRound",
-        .value = "5",
-    },
-    .{
-        .id = "PenguinCardMaxSlot",
-        .value = "6",
-    },
-    .{
-        .id = "PenguinCardHandCardCount",
-        .value = "5",
-    },
-    .{
-        .id = "PenguinCardMaxBuyLimit",
-        .value = "5",
-    },
-    .{
-        .id = "PenguinCardMaxCheckRound",
-        .value = "3",
-    },
-    .{
-        .id = "PenguinCardRoundUpgradeCost",
-        .value = "0,500,3000,20000,50000",
-    },
-    .{
-        .id = "PenguinCardSlotUpgradeCost",
-        .value = "0,0,0,1000,2000,10000",
-    },
-    .{
-        .id = "PenguinCardBuyLimitUpgradeCost",
-        .value = "0,100,800,1500,5000",
-    },
-    .{
-        .id = "PenguinCardCheckRoundUpgradeCost",
-        .value = "1500,3000,6000",
-    },
-    .{
-        .id = "PenguinCardFeverScore",
-        .value = "999",
-    },
-    .{
-        .id = "PenguinCardRollCount",
-        .value = "3",
-    },
-    .{
-        .id = "PenguinCardCheckRoundBuffId",
-        .value = "701",
-    },
-    .{
-        .id = "PhoneChatTimeInterval",
-        .value = "24",
-    },
-    .{
-        .id = "PhoneChatTriggerMax",
-        .value = "1",
-    },
-    .{
-        .id = "PhoneChatUnderwayMax",
-        .value = "2",
-    },
-    .{
-        .id = "TalentResetTimeInterval",
-        .value = "1",
-    },
-    .{
-        .id = "TalentResetItemId",
-        .value = "0",
-    },
-    .{
-        .id = "TalentResetItemQty",
-        .value = "0",
-    },
-    .{
-        .id = "TalentGroupResetItemId",
-        .value = "0",
-    },
-    .{
-        .id = "TalentGroupResetItemQty",
-        .value = "0",
-    },
-    .{
-        .id = "TalentSingleResetItemId",
-        .value = "0",
-    },
-    .{
-        .id = "TalentSingleResetItemQty",
-        .value = "0",
-    },
-    .{
-        .id = "EquipmentDepotMax_Client",
-        .value = "1000",
-    },
-    .{
-        .id = "EquipmentDecomposeMax",
-        .value = "50",
-    },
-    .{
-        .id = "EquipmentGuaranteedRange",
-        .value = "[35,45]",
-    },
-    .{
-        .id = "EquipmentTagMatchAddition",
-        .value = "100",
-    },
-    .{
-        .id = "DiscStrengthenGoldFactor",
-        .value = "250,250,250,250,250",
-    },
-    .{
-        .id = "DiscRarityLimitBreakMax",
-        .value = "5,5,5,5,5",
-    },
-    .{
-        .id = "DiscStoryReadLimit",
-        .value = "1",
-    },
-    .{
-        .id = "DiscSubNoteSkillMaxLevel",
-        .value = "99",
-    },
-    .{
-        .id = "DiscL2dUnlock",
-        .value = "2",
-    },
-    .{
-        .id = "DiscAVGStoryReadLimit",
-        .value = "2",
-    },
-    .{
-        .id = "Dating_Gift_Favorability_Addition",
-        .value = "2",
-    },
-    .{
-        .id = "Dating_Max_Send_Gift_Count",
-        .value = "1",
-    },
-    .{
-        .id = "Dating_Single_Event_Time",
-        .value = "2",
-    },
-    .{
-        .id = "Dating_Event_Max_Count",
-        .value = "9",
-    },
-    .{
-        .id = "Dating_Return_Salute_Id",
-        .value = "113",
-    },
-    .{
-        .id = "Dating_Max_Daily_Count",
-        .value = "5",
-    },
-    .{
-        .id = "PhoneGiftJumpTo",
-        .value = "13",
-    },
-    .{
-        .id = "Dating_Event_Base_Affinity",
-        .value = "25",
-    },
-    .{
-        .id = "SoldierInitialCoinNumber",
-        .value = "5",
-    },
-    .{
-        .id = "SoldierInitialChessNumber",
-        .value = "3",
-    },
-    .{
-        .id = "SoldierChessCostToQuantity",
-        .value = "{\"1\":27,\"2\":27,\"3\":18,\"4\":9,\"5\":9}",
-    },
-    .{
-        .id = "SoldierChessEventBattle",
-        .value = "5,11,16",
-    },
-    .{
-        .id = "SoldierCoinWinningStreak",
-        .value = "{\"0\":1,\"2\":2,\"5\":3}",
-    },
-    .{
-        .id = "SoldierCoinLosingStreak",
-        .value = "{\"0\":1,\"2\":2,\"5\":3}",
-    },
-    .{
-        .id = "SoldierCoinInterest",
-        .value = "10,1,5",
-    },
-    .{
-        .id = "SoldierBuyExp",
-        .value = "4,4",
-    },
-    .{
-        .id = "SoldierRefreshCost",
-        .value = "2",
-    },
-    .{
-        .id = "SoldierSkillCoinMax",
-        .value = "300",
-    },
-    .{
-        .id = "DailyShopSignReward",
-        .value = "{\"33001\":10}",
-    },
-    .{
-        .id = "DailyShopCountRange",
-        .value = "[5,8]",
-    },
-    .{
-        .id = "DailyShopRandomDrop",
-        .value = "900000",
-    },
-    .{
-        .id = "DailyMallRandomDrop",
-        .value = "900001",
-    },
-    .{
-        .id = "TimeZone",
-        .value = "-7",
-    },
-    .{
-        .id = "DailyRefreshOffsetHour",
-        .value = "13",
-    },
-    .{
-        .id = "EnableExchange",
-        .value = "android_official,ios_official,pc_official,pc_exp,android_test_1,ios_test_1,pc_test_1,pc_test_2",
-    },
-    .{
-        .id = "LampNoticeScrollSpeed",
-        .value = "100",
-    },
-    .{
-        .id = "PotentialShowDetail",
-        .value = "1",
-    },
-    .{
-        .id = "SkillShowDetail",
-        .value = "1",
-    },
-    .{
-        .id = "NewPlayerManHeadIcon",
-        .value = "101001",
-    },
-    .{
-        .id = "NewPlayerWoManHeadIcon",
-        .value = "100101",
-    },
-    .{
-        .id = "NewPlayerFriendSkin",
-        .value = "10301",
-    },
-    .{
-        .id = "NewPlayerTitlePrefix",
-        .value = "1",
-    },
-    .{
-        .id = "NewPlayerTitleSuffix",
-        .value = "2",
-    },
-    .{
-        .id = "NewPlayerBoardCharacter",
-        .value = "410301",
-    },
-    .{
-        .id = "NewPlayerStarTowerTicket",
-        .value = "3",
-    },
-    .{
-        .id = "CharUpgradeGoldPerExp",
-        .value = "150",
-    },
-    .{
-        .id = "CharMaxPonLevel",
-        .value = "9",
-    },
-    .{
-        .id = "LevelSuccessDelay",
-        .value = "1",
-    },
-    .{
-        .id = "ZoomFreeze",
-        .value = "0.2",
-    },
-    .{
-        .id = "ZoomInDurationTime",
-        .value = "1",
-    },
-    .{
-        .id = "ZoomOutTime",
-        .value = "0.1",
-    },
-    .{
-        .id = "DungeonSettlementDelay",
-        .value = "0.1",
-    },
-    .{
-        .id = "LevelDefeatDelay",
-        .value = "0",
-    },
-    .{
-        .id = "LevelTeleporterDelay",
-        .value = "0",
-    },
-    .{
-        .id = "AutoFormationLevel",
-        .value = "10",
-    },
-    .{
-        .id = "BaseSuppress",
-        .value = "0.1",
-    },
-    .{
-        .id = "DynamicSuppress",
-        .value = "0.9",
-    },
-    .{
-        .id = "TutorialSettlementDelayTime",
-        .value = "0",
-    },
-    .{
-        .id = "EnergyObtainLimit",
-        .value = "999",
-    },
-    .{
-        .id = "EnergyTrWorldClassExp",
-        .value = "1000",
-    },
-    .{
-        .id = "EnergyMaxLimit",
-        .value = "240",
-    },
-    .{
-        .id = "EnergyGain",
-        .value = "6",
-    },
-    .{
-        .id = "EnergyBatteryGain",
-        .value = "18",
-    },
-    .{
-        .id = "EnergyBatteryMax",
-        .value = "2400",
-    },
-    .{
-        .id = "EnergyBatteryUIEnable",
-        .value = "0",
-    },
-    .{
-        .id = "EnergyBatteryOpenTime",
-        .value = "2026-08-31T17:00:00+08:00",
-    },
-    .{
-        .id = "MailMax",
-        .value = "100",
-    },
-    .{
-        .id = "FriendMax",
-        .value = "50",
-    },
-    .{
-        .id = "FriendApplyMax",
-        .value = "30",
-    },
-    .{
-        .id = "FriendSignatureMax",
-        .value = "30",
-    },
-    .{
-        .id = "FriendReceiveEnergyMax",
-        .value = "30",
-    },
-    .{
-        .id = "FriendReceiveEnergyCount",
-        .value = "1",
-    },
-    .{
-        .id = "QuestDailyRefreshCount",
-        .value = "12",
-    },
-    .{
-        .id = "QuestWeeklyRefreshCount",
-        .value = "13",
-    },
-    .{
-        .id = "BattlePassWeeklyExpLimit",
-        .value = "18000",
-    },
-    .{
-        .id = "BloodSpecialEffectThresholdValue",
-        .value = "30",
-    },
-    .{
-        .id = "SelectRole_Main",
-        .value = "SelectRole_Main",
-    },
-    .{
-        .id = "SelectRole_Rogue",
-        .value = "SelectRole_Roguelike",
-    },
-    .{
-        .id = "SelectRole_InfinityTower",
-        .value = "SelectRole_InfinityTower",
-    },
-    .{
-        .id = "CharacterSkin_Scene",
-        .value = "SelectRole_Main",
-    },
-    .{
-        .id = "ServerOpenTime",
-        .value = "2023-10-17T05:00:00+08:00",
-    },
-    .{
-        .id = "SeasonEndThreshold",
-        .value = "82800",
-    },
-    .{
-        .id = "HFCtimer",
-        .value = "1",
-    },
-    .{
-        .id = "HFCcounter",
-        .value = "5",
-    },
-    .{
-        .id = "Hangtimer",
-        .value = "20",
-    },
-    .{
-        .id = "NpcHFCcounter",
-        .value = "1",
-    },
-    .{
-        .id = "NpcHFCtimer",
-        .value = "5",
-    },
-    .{
-        .id = "NpcHangtimer",
-        .value = "20",
-    },
-    .{
-        .id = "SkinZoomRange",
-        .value = "0.5,1.5",
-    },
-    .{
-        .id = "WeaponAdvanceSequence",
-        .value = "0,2,3,4",
-    },
-    .{
-        .id = "WeaponUpgradeGoldPerExp",
-        .value = "500",
-    },
-    .{
-        .id = "MaterialCraftingLimit",
-        .value = "999",
-    },
-    .{
-        .id = "MaxHistoryPanel",
-        .value = "99",
-    },
-    .{
-        .id = "MainViewDragThreshold",
-        .value = "200",
-    },
-    .{
-        .id = "CharDragThreshold",
-        .value = "200",
-    },
-    .{
-        .id = "DiscDragThreshold",
-        .value = "200",
-    },
-    .{
-        .id = "DelaySkipSpecialRewardTime",
-        .value = "1",
-    },
-    .{
-        .id = "AffinityGiftPreferenceProp",
-        .value = "50,0,-20",
-    },
-    .{
-        .id = "AffinityGiftSendCount",
-        .value = "10",
-    },
-    .{
-        .id = "AffinityL2dPlayInterval",
-        .value = "2",
-    },
-    .{
-        .id = "AgentMaximumQuantity",
-        .value = "4",
-    },
-    .{
-        .id = "HighResistanceValueUpperLimit",
-        .value = "2000",
-    },
-    .{
-        .id = "HighResistanceValueLowerLimit",
-        .value = "751",
-    },
-    .{
-        .id = "HighResistanceAmendUpperLimit",
-        .value = "0.99",
-    },
-    .{
-        .id = "HighResistanceAmendLowerLimit",
-        .value = "0.9",
-    },
-    .{
-        .id = "MiddleResistanceValueUpperLimit",
-        .value = "750",
-    },
-    .{
-        .id = "MiddleResistanceValueLowerLimit",
-        .value = "251",
-    },
-    .{
-        .id = "MiddleResistanceAmendUpperLimit",
-        .value = "0.6",
-    },
-    .{
-        .id = "MiddleResistanceAmendLowerLimit",
-        .value = "0.35",
-    },
-    .{
-        .id = "LowResistanceValueUpperLimit",
-        .value = "250",
-    },
-    .{
-        .id = "LowResistanceValueLowerLimit",
-        .value = "0",
-    },
-    .{
-        .id = "LowResistanceAmendUpperLimit",
-        .value = "0.25",
-    },
-    .{
-        .id = "LowResistanceAmendLowerLimit",
-        .value = "0",
-    },
-    .{
-        .id = "HudResistanceTipInterval",
-        .value = "2",
-    },
-    .{
-        .id = "AgentSpecialRewardsProp",
-        .value = "20",
-    },
-    .{
-        .id = "AgentMaximumSpecialRewards",
-        .value = "4",
-    },
-    .{
-        .id = "RegionBossChallengeTicker",
-        .value = "3",
-    },
-    .{
-        .id = "CharGiftFirstStageVoKey",
-        .value = "thankEx",
-    },
-    .{
-        .id = "CharGiftSecondStageVoKey",
-        .value = "thank",
-    },
-    .{
-        .id = "CharGiftThirdStageVoKey",
-        .value = "thankSmall",
-    },
-    .{
-        .id = "IsShowComBtn",
-        .value = "1",
-    },
-    .{
-        .id = "GuideMaxClickCount",
-        .value = "5",
-    },
-    .{
-        .id = "GuideMaxWaitTime",
-        .value = "3",
-    },
-    .{
-        .id = "LevelMenu_Resource_IconGroup_1",
-        .value = "Icon/Item/item_32001,Icon/Item/item_32013,Icon/Item/item_32022,Icon/Item/item_35001",
-    },
-    .{
-        .id = "LevelMenu_Resource_IconGroup_2",
-        .value = "Icon/Item/item_20073,Icon/Item/item_20083,Icon/Item/item_20093,Icon/Item/item_35002",
-    },
-    .{
-        .id = "LevelMenu_Resource_IconGroup_3",
-        .value = "Icon/Item/item_1,Icon/Item/item_30003,Icon/Item/item_50004,Icon/Item/item_35003",
-    },
-    .{
-        .id = "LevelMenu_Resource_IconGroup_4",
-        .value = "Icon/Item/item_1,Icon/Item/item_35001,Icon/Item/item_35003,Icon/Item/item_35002",
-    },
-    .{
-        .id = "NewbieGachaRule",
-        .value = "5,30,1",
-    },
-    .{
-        .id = "NetworkAutoRetryCount",
-        .value = "3",
-    },
-    .{
-        .id = "NetworkRetryTotalCount",
-        .value = "5",
-    },
-    .{
-        .id = "PhoneChatTopLimit",
-        .value = "3",
-    },
-    .{
-        .id = "PhoneDatingAffinityLimit",
-        .value = "6",
-    },
-    .{
-        .id = "WeekBossTicketMax",
-        .value = "3",
-    },
-    .{
-        .id = "InfinityOpenDayActivityId",
-        .value = "201002",
-    },
-    .{
-        .id = "TouchEffect_Main",
-        .value = "2026Summer/P_Main_Summer",
-    },
-    .{
-        .id = "TouchEffect_Slide",
-        .value = "2026Summer/P_Slide_Summer",
-    },
-    .{
-        .id = "RedDot",
-        .value = "zs_common_new_4_summer",
-    },
-    .{
-        .id = "TrekkerVersusInitHotValue",
-        .value = "100000",
-    },
-    .{
-        .id = "PotentialPreselectionMaxCount",
-        .value = "50",
-    },
-    .{
-        .id = "PotentialPreselectionMaxLevel",
-        .value = "6",
-    },
-    .{
-        .id = "PotentialAllSwitchRecomm",
-        .value = "1",
-    },
-    .{
-        .id = "TrekkerVersusIdleRewardRedDotTime",
-        .value = "12",
-    },
-    .{
-        .id = "TrekkerVersusIdleRewardMaxTime",
-        .value = "48",
-    },
-    .{
-        .id = "TravelerDuel_BottomBanner",
-        .value = "banner_l_7",
-    },
-    .{
-        .id = "TravelerDuel_LeftMiddleBanner",
-        .value = "AssetBundles/UI/big_sprites/banner_m_2",
-    },
-    .{
-        .id = "CBTBlock",
-        .value = "0",
-    },
-    .{
-        .id = "CharGemAttrNum",
-        .value = "4",
-    },
-    .{
-        .id = "CharGemAlterGemNum",
-        .value = "4",
-    },
-    .{
-        .id = "CharGemPresetNum",
-        .value = "3",
-    },
-    .{
-        .id = "CharGemHighQualityNum",
-        .value = "2",
-    },
-    .{
-        .id = "CharGemOverlockCount",
-        .value = "2",
-    },
-    .{
-        .id = "NickNameResetTimeLimit",
-        .value = "604800",
-    },
-    .{
-        .id = "BreakOut_LevelClosed",
-        .value = "2026-02-24T10:59:59+08:00",
-    },
+  .{
+    .id = "Activity_Banner_Interval_Time",
+    .value = "3",
+  },
+  .{
+    .id = "AffinityGiftPreferenceProp",
+    .value = "50,0,-20",
+  },
+  .{
+    .id = "AffinityGiftSendCount",
+    .value = "10",
+  },
+  .{
+    .id = "AffinityL2dPlayInterval",
+    .value = "2",
+  },
+  .{
+    .id = "AffinityMaxEffectLevel",
+    .value = "50",
+  },
+  .{
+    .id = "AgentMaximumQuantity",
+    .value = "4",
+  },
+  .{
+    .id = "AgentMaximumSpecialRewards",
+    .value = "4",
+  },
+  .{
+    .id = "AgentSpecialRewardsProp",
+    .value = "20",
+  },
+  .{
+    .id = "AutoFormationLevel",
+    .value = "10",
+  },
+  .{
+    .id = "BaseSuppress",
+    .value = "0.1",
+  },
+  .{
+    .id = "BattlePassWeeklyExpLimit",
+    .value = "18000",
+  },
+  .{
+    .id = "BloodSpecialEffectThresholdValue",
+    .value = "30",
+  },
+  .{
+    .id = "BreakOut_LevelClosed",
+    .value = "2026-02-24T10:59:59+08:00",
+  },
+  .{
+    .id = "BuildPassiveSkillRarityScores",
+    .value = "200,150,100,100,100",
+  },
+  .{
+    .id = "CBTBlock",
+    .value = "0",
+  },
+  .{
+    .id = "CharacterSkin_Scene",
+    .value = "SelectRole_Main",
+  },
+  .{
+    .id = "CharDragThreshold",
+    .value = "200",
+  },
+  .{
+    .id = "CharGemAlterGemNum",
+    .value = "4",
+  },
+  .{
+    .id = "CharGemAttrNum",
+    .value = "4",
+  },
+  .{
+    .id = "CharGemHighQualityNum",
+    .value = "2",
+  },
+  .{
+    .id = "CharGemOverlockCount",
+    .value = "2",
+  },
+  .{
+    .id = "CharGemPresetNum",
+    .value = "3",
+  },
+  .{
+    .id = "CharGiftFirstStageVoKey",
+    .value = "thankEx",
+  },
+  .{
+    .id = "CharGiftSecondStageVoKey",
+    .value = "thank",
+  },
+  .{
+    .id = "CharGiftThirdStageVoKey",
+    .value = "thankSmall",
+  },
+  .{
+    .id = "CharMaxPonLevel",
+    .value = "9",
+  },
+  .{
+    .id = "CharUpgradeGoldPerExp",
+    .value = "150",
+  },
+  .{
+    .id = "Cookie_ErrorTime",
+    .value = "0.8",
+  },
+  .{
+    .id = "DailyMallRandomDrop",
+    .value = "900001",
+  },
+  .{
+    .id = "DailyRefreshOffsetHour",
+    .value = "13",
+  },
+  .{
+    .id = "DailyShopCountRange",
+    .value = "[5,8]",
+  },
+  .{
+    .id = "DailyShopRandomDrop",
+    .value = "900000",
+  },
+  .{
+    .id = "DailyShopSignReward",
+    .value = "{\"33001\":10}",
+  },
+  .{
+    .id = "DamageConvertToScoreRatio",
+    .value = "1",
+  },
+  .{
+    .id = "DangerRoomAppearRecoveryHPProb",
+    .value = "100",
+  },
+  .{
+    .id = "Dating_Event_Base_Affinity",
+    .value = "25",
+  },
+  .{
+    .id = "Dating_Event_Max_Count",
+    .value = "9",
+  },
+  .{
+    .id = "Dating_Gift_Favorability_Addition",
+    .value = "2",
+  },
+  .{
+    .id = "Dating_Max_Daily_Count",
+    .value = "5",
+  },
+  .{
+    .id = "Dating_Max_Send_Gift_Count",
+    .value = "1",
+  },
+  .{
+    .id = "Dating_Return_Salute_Id",
+    .value = "113",
+  },
+  .{
+    .id = "Dating_Single_Event_Time",
+    .value = "2",
+  },
+  .{
+    .id = "DefaultEventId",
+    .value = "121",
+  },
+  .{
+    .id = "DelaySkipSpecialRewardTime",
+    .value = "1",
+  },
+  .{
+    .id = "DiscAVGStoryReadLimit",
+    .value = "2",
+  },
+  .{
+    .id = "DiscDragThreshold",
+    .value = "200",
+  },
+  .{
+    .id = "DiscL2dUnlock",
+    .value = "2",
+  },
+  .{
+    .id = "DiscRarityLimitBreakMax",
+    .value = "5,5,5,5,5",
+  },
+  .{
+    .id = "DiscStoryReadLimit",
+    .value = "1",
+  },
+  .{
+    .id = "DiscStrengthenGoldFactor",
+    .value = "250,250,250,250,250",
+  },
+  .{
+    .id = "DiscSubNoteSkillMaxLevel",
+    .value = "99",
+  },
+  .{
+    .id = "DungeonSettlementDelay",
+    .value = "0.1",
+  },
+  .{
+    .id = "DynamicSuppress",
+    .value = "0.9",
+  },
+  .{
+    .id = "EliteBattleRoomAppearRecoveryHPProb",
+    .value = "100",
+  },
+  .{
+    .id = "EnableExchange",
+    .value = "android_official,ios_official,pc_official,pc_steam,pc_exp,pc_test_1_steam,android_test_1,ios_test_1,pc_test_1,pc_test_2_steam,pc_test_2",
+  },
+  .{
+    .id = "EndOfBossBattleRecoveryHPEffectId",
+    .value = "989970",
+  },
+  .{
+    .id = "EndOfBossBattleRecoveryHPProb",
+    .value = "100",
+  },
+  .{
+    .id = "EndOfDangerBattleRecoveryHPEffectId",
+    .value = "989970",
+  },
+  .{
+    .id = "EndOfEliteBattleRecoveryHPEffectId",
+    .value = "989970",
+  },
+  .{
+    .id = "EndOfHorrorBattleRecoveryHPEffectId",
+    .value = "989970",
+  },
+  .{
+    .id = "EnergyBatteryGain",
+    .value = "18",
+  },
+  .{
+    .id = "EnergyBatteryMax",
+    .value = "2400",
+  },
+  .{
+    .id = "EnergyBatteryOpenTime",
+    .value = "2026-08-31T17:00:00+08:00",
+  },
+  .{
+    .id = "EnergyBatteryUIEnable",
+    .value = "0",
+  },
+  .{
+    .id = "EnergyGain",
+    .value = "6",
+  },
+  .{
+    .id = "EnergyMaxLimit",
+    .value = "240",
+  },
+  .{
+    .id = "EnergyObtainLimit",
+    .value = "999",
+  },
+  .{
+    .id = "EnergyTrWorldClassExp",
+    .value = "1000",
+  },
+  .{
+    .id = "EquipmentDecomposeMax",
+    .value = "50",
+  },
+  .{
+    .id = "EquipmentDepotMax_Client",
+    .value = "1000",
+  },
+  .{
+    .id = "EquipmentGuaranteedRange",
+    .value = "[35,45]",
+  },
+  .{
+    .id = "EquipmentTagMatchAddition",
+    .value = "100",
+  },
+  .{
+    .id = "FateCardBookToVampireTalentPoint",
+    .value = "5",
+  },
+  .{
+    .id = "FateCardDropBasicProb",
+    .value = "0",
+  },
+  .{
+    .id = "FateCardDropCountMax",
+    .value = "0",
+  },
+  .{
+    .id = "FateCardDropIncrementProb",
+    .value = "0",
+  },
+  .{
+    .id = "FateCardGiveUpCompensation",
+    .value = "{\"11\":30}",
+  },
+  .{
+    .id = "FriendApplyMax",
+    .value = "30",
+  },
+  .{
+    .id = "FriendMax",
+    .value = "50",
+  },
+  .{
+    .id = "FriendReceiveEnergyCount",
+    .value = "1",
+  },
+  .{
+    .id = "FriendReceiveEnergyMax",
+    .value = "30",
+  },
+  .{
+    .id = "FriendSignatureMax",
+    .value = "30",
+  },
+  .{
+    .id = "GuideMaxClickCount",
+    .value = "5",
+  },
+  .{
+    .id = "GuideMaxWaitTime",
+    .value = "3",
+  },
+  .{
+    .id = "Hangtimer",
+    .value = "20",
+  },
+  .{
+    .id = "HFCcounter",
+    .value = "5",
+  },
+  .{
+    .id = "HFCtimer",
+    .value = "1",
+  },
+  .{
+    .id = "HighResistanceAmendLowerLimit",
+    .value = "0.9",
+  },
+  .{
+    .id = "HighResistanceAmendUpperLimit",
+    .value = "0.99",
+  },
+  .{
+    .id = "HighResistanceValueLowerLimit",
+    .value = "751",
+  },
+  .{
+    .id = "HighResistanceValueUpperLimit",
+    .value = "2000",
+  },
+  .{
+    .id = "HighRiskRoomAppearMinFloor",
+    .value = "99",
+  },
+  .{
+    .id = "HighRiskRoomWeightList",
+    .value = "30,70",
+  },
+  .{
+    .id = "HorrorRoomAppearRecoveryHPProb",
+    .value = "100",
+  },
+  .{
+    .id = "HudDamageMergeInterval",
+    .value = "1",
+  },
+  .{
+    .id = "HudResistanceTipInterval",
+    .value = "2",
+  },
+  .{
+    .id = "IceCreamFeverTime",
+    .value = "10",
+  },
+  .{
+    .id = "IceCreamGuidanceDuration",
+    .value = "2",
+  },
+  .{
+    .id = "IceCreamMaxLevelId",
+    .value = "2017",
+  },
+  .{
+    .id = "IceCreamMaxTotalScore",
+    .value = "5000000",
+  },
+  .{
+    .id = "IceCreamPatienceGroup",
+    .value = "10",
+  },
+  .{
+    .id = "IceCreamPatienceLowerValue",
+    .value = "5",
+  },
+  .{
+    .id = "IceCreamPatiencePerReduce",
+    .value = "2",
+  },
+  .{
+    .id = "IceCreamSpecialCustomerId",
+    .value = "966002",
+  },
+  .{
+    .id = "IceCreamSpecialCustomerOrderNum",
+    .value = "6",
+  },
+  .{
+    .id = "IceCreamSpecialCustomerProbability",
+    .value = "0.5",
+  },
+  .{
+    .id = "IceCreamUseItemLimit",
+    .value = "999",
+  },
+  .{
+    .id = "InfinityOpenDayActivityId",
+    .value = "201002",
+  },
+  .{
+    .id = "IsShowComBtn",
+    .value = "1",
+  },
+  .{
+    .id = "JointDrill_Challenge_Tickets_Id",
+    .value = "36",
+  },
+  .{
+    .id = "JointDrill_Challenge_Tickets_Max",
+    .value = "3",
+  },
+  .{
+    .id = "JointDrill_Challenge_Time_Max",
+    .value = "3600",
+  },
+  .{
+    .id = "JointDrill_Challenge_Time_OverFlow",
+    .value = "4200",
+  },
+  .{
+    .id = "JointDrill_Failed_Reward_Mail_Id",
+    .value = "2092",
+  },
+  .{
+    .id = "LampNoticeScrollSpeed",
+    .value = "100",
+  },
+  .{
+    .id = "LevelDefeatDelay",
+    .value = "0",
+  },
+  .{
+    .id = "LevelMenu_Resource_IconGroup_1",
+    .value = "Icon/Item/item_32001,Icon/Item/item_32013,Icon/Item/item_32022,Icon/Item/item_35001",
+  },
+  .{
+    .id = "LevelMenu_Resource_IconGroup_2",
+    .value = "Icon/Item/item_20073,Icon/Item/item_20083,Icon/Item/item_20093,Icon/Item/item_35002",
+  },
+  .{
+    .id = "LevelMenu_Resource_IconGroup_3",
+    .value = "Icon/Item/item_1,Icon/Item/item_30003,Icon/Item/item_50004,Icon/Item/item_35003",
+  },
+  .{
+    .id = "LevelMenu_Resource_IconGroup_4",
+    .value = "Icon/Item/item_1,Icon/Item/item_35001,Icon/Item/item_35003,Icon/Item/item_35002",
+  },
+  .{
+    .id = "LevelSuccessDelay",
+    .value = "1",
+  },
+  .{
+    .id = "LevelTeleporterDelay",
+    .value = "0",
+  },
+  .{
+    .id = "LimitedTimeChallengeRoomTypeList",
+    .value = "2,3,4,5",
+  },
+  .{
+    .id = "LowResistanceAmendLowerLimit",
+    .value = "0",
+  },
+  .{
+    .id = "LowResistanceAmendUpperLimit",
+    .value = "0.25",
+  },
+  .{
+    .id = "LowResistanceValueLowerLimit",
+    .value = "0",
+  },
+  .{
+    .id = "LowResistanceValueUpperLimit",
+    .value = "250",
+  },
+  .{
+    .id = "MailMax",
+    .value = "100",
+  },
+  .{
+    .id = "MainViewDragThreshold",
+    .value = "200",
+  },
+  .{
+    .id = "MaterialCraftingLimit",
+    .value = "999",
+  },
+  .{
+    .id = "MaxHistoryPanel",
+    .value = "20",
+  },
+  .{
+    .id = "MiddleResistanceAmendLowerLimit",
+    .value = "0.35",
+  },
+  .{
+    .id = "MiddleResistanceAmendUpperLimit",
+    .value = "0.6",
+  },
+  .{
+    .id = "MiddleResistanceValueLowerLimit",
+    .value = "251",
+  },
+  .{
+    .id = "MiddleResistanceValueUpperLimit",
+    .value = "750",
+  },
+  .{
+    .id = "NetworkAutoRetryCount",
+    .value = "3",
+  },
+  .{
+    .id = "NetworkRetryTotalCount",
+    .value = "5",
+  },
+  .{
+    .id = "NewbieGachaRule",
+    .value = "5,30,1",
+  },
+  .{
+    .id = "NewPlayerBoardCharacter",
+    .value = "410301",
+  },
+  .{
+    .id = "NewPlayerDefaultClearStory",
+    .value = "0",
+  },
+  .{
+    .id = "NewPlayerFriendSkin",
+    .value = "10301",
+  },
+  .{
+    .id = "NewPlayerManHeadIcon",
+    .value = "101001",
+  },
+  .{
+    .id = "NewPlayerStarTowerTicket",
+    .value = "3",
+  },
+  .{
+    .id = "NewPlayerTitlePrefix",
+    .value = "1",
+  },
+  .{
+    .id = "NewPlayerTitleSuffix",
+    .value = "2",
+  },
+  .{
+    .id = "NewPlayerWoManHeadIcon",
+    .value = "100101",
+  },
+  .{
+    .id = "NickNameResetTimeLimit",
+    .value = "604800",
+  },
+  .{
+    .id = "NPCAffinityNumberOfInteractions",
+    .value = "60",
+  },
+  .{
+    .id = "NpcHangtimer",
+    .value = "20",
+  },
+  .{
+    .id = "NpcHFCcounter",
+    .value = "1",
+  },
+  .{
+    .id = "NpcHFCtimer",
+    .value = "5",
+  },
+  .{
+    .id = "OwenHonorConvertItem",
+    .value = "1,20000",
+  },
+  .{
+    .id = "PenguinCardAideRollCount",
+    .value = "2",
+  },
+  .{
+    .id = "PenguinCardBuyLimitUpgradeCost",
+    .value = "0,100,800,1500,5000",
+  },
+  .{
+    .id = "PenguinCardCheckRoundBuffId",
+    .value = "701",
+  },
+  .{
+    .id = "PenguinCardCheckRoundUpgradeCost",
+    .value = "1500,3000,6000",
+  },
+  .{
+    .id = "PenguinCardEndlessAideUpgradeCost",
+    .value = "0,70,150",
+  },
+  .{
+    .id = "PenguinCardEndlessDebuffShowList",
+    .value = "2101,2111,2112,2121,2131,2132,2133,2141,2151",
+  },
+  .{
+    .id = "PenguinCardEndlessInitialAdditionScore",
+    .value = "40,110,100,140",
+  },
+  .{
+    .id = "PenguinCardEndlessInitialAide",
+    .value = "1",
+  },
+  .{
+    .id = "PenguinCardEndlessMaxAide",
+    .value = "3",
+  },
+  .{
+    .id = "PenguinCardEndlessMaxRound",
+    .value = "6",
+  },
+  .{
+    .id = "PenguinCardEndlessRetryBuffId",
+    .value = "2000",
+  },
+  .{
+    .id = "PenguinCardEndlessRollCardCost",
+    .value = "5,20,150,400,800",
+  },
+  .{
+    .id = "PenguinCardEndlessRoundUpgradeCost",
+    .value = "0,0,350,560,600,780",
+  },
+  .{
+    .id = "PenguinCardEndlessScoreUpgradeCost",
+    .value = "20,80,380,560",
+  },
+  .{
+    .id = "PenguinCardFeverScore",
+    .value = "999",
+  },
+  .{
+    .id = "PenguinCardHandCardCount",
+    .value = "5",
+  },
+  .{
+    .id = "PenguinCardMaxBuyLimit",
+    .value = "5",
+  },
+  .{
+    .id = "PenguinCardMaxCheckRound",
+    .value = "3",
+  },
+  .{
+    .id = "PenguinCardMaxHP",
+    .value = "3",
+  },
+  .{
+    .id = "PenguinCardMaxRound",
+    .value = "5",
+  },
+  .{
+    .id = "PenguinCardMaxSlot",
+    .value = "6",
+  },
+  .{
+    .id = "PenguinCardRollCount",
+    .value = "3",
+  },
+  .{
+    .id = "PenguinCardRoundUpgradeCost",
+    .value = "0,500,3000,20000,50000",
+  },
+  .{
+    .id = "PenguinCardSlotUpgradeCost",
+    .value = "0,0,0,1000,2000,10000",
+  },
+  .{
+    .id = "PhoneChatTimeInterval",
+    .value = "24",
+  },
+  .{
+    .id = "PhoneChatTopLimit",
+    .value = "3",
+  },
+  .{
+    .id = "PhoneChatTriggerMax",
+    .value = "1",
+  },
+  .{
+    .id = "PhoneChatUnderwayMax",
+    .value = "2",
+  },
+  .{
+    .id = "PhoneDatingAffinityLimit",
+    .value = "6",
+  },
+  .{
+    .id = "PhoneGiftJumpTo",
+    .value = "13",
+  },
+  .{
+    .id = "PotentialAllSwitchRecomm",
+    .value = "1",
+  },
+  .{
+    .id = "PotentialPreselectionMaxCount",
+    .value = "50",
+  },
+  .{
+    .id = "PotentialPreselectionMaxLevel",
+    .value = "6",
+  },
+  .{
+    .id = "PotentialShowDetail",
+    .value = "1",
+  },
+  .{
+    .id = "QuestDailyRefreshCount",
+    .value = "12",
+  },
+  .{
+    .id = "QuestWeeklyRefreshCount",
+    .value = "13",
+  },
+  .{
+    .id = "RedDot",
+  },
+  .{
+    .id = "RegionBossChallengeTicker",
+    .value = "3",
+  },
+  .{
+    .id = "ScoreBossTimeLimit",
+    .value = "180",
+  },
+  .{
+    .id = "SeasonEndThreshold",
+    .value = "100800",
+  },
+  .{
+    .id = "SelectRole_InfinityTower",
+    .value = "SelectRole_InfinityTower",
+  },
+  .{
+    .id = "SelectRole_Main",
+    .value = "SelectRole_Main",
+  },
+  .{
+    .id = "SelectRole_Rogue",
+    .value = "SelectRole_Roguelike",
+  },
+  .{
+    .id = "ServerOpenTime",
+    .value = "2023-10-17T05:00:00+08:00",
+  },
+  .{
+    .id = "SkillShowDetail",
+    .value = "1",
+  },
+  .{
+    .id = "SkinZoomRange",
+    .value = "0.5,1.5",
+  },
+  .{
+    .id = "SoldierBuyExp",
+    .value = "4,4",
+  },
+  .{
+    .id = "SoldierChessCostToQuantity",
+    .value = "{\"1\":27,\"2\":27,\"3\":18,\"4\":9,\"5\":9}",
+  },
+  .{
+    .id = "SoldierChessEventBattle",
+    .value = "5,11,16",
+  },
+  .{
+    .id = "SoldierCoinInterest",
+    .value = "10,1,5",
+  },
+  .{
+    .id = "SoldierCoinLosingStreak",
+    .value = "{\"0\":1,\"2\":2,\"5\":3}",
+  },
+  .{
+    .id = "SoldierCoinWinningStreak",
+    .value = "{\"0\":1,\"2\":2,\"5\":3}",
+  },
+  .{
+    .id = "SoldierInitialChessNumber",
+    .value = "3",
+  },
+  .{
+    .id = "SoldierInitialCoinNumber",
+    .value = "5",
+  },
+  .{
+    .id = "SoldierRefreshCost",
+    .value = "2",
+  },
+  .{
+    .id = "SoldierSkillCoinMax",
+    .value = "300",
+  },
+  .{
+    .id = "StarTowerBuildAutoLockScore",
+    .value = "5800",
+  },
+  .{
+    .id = "StarTowerBuildDeleteReturnItemId",
+    .value = "12",
+  },
+  .{
+    .id = "StarTowerBuildNumberMax",
+    .value = "100",
+  },
+  .{
+    .id = "StarTowerBuildTransformParas",
+    .value = "100,3,100",
+  },
+  .{
+    .id = "StarTowerDiscExtraSubSlotCount",
+    .value = "1",
+  },
+  .{
+    .id = "StarTowerFloorOfCreateBuild",
+    .value = "1",
+  },
+  .{
+    .id = "StarTowerGrowthItemIds",
+    .value = "51",
+  },
+  .{
+    .id = "StarTowerHistoryMapLimit",
+    .value = "3",
+  },
+  .{
+    .id = "StarTowerInitialCornNumber",
+    .value = "200",
+  },
+  .{
+    .id = "StarTowerPlayerVoiceDelay",
+    .value = "0.5",
+  },
+  .{
+    .id = "StarTowerReconnMaxCnt",
+    .value = "99999",
+  },
+  .{
+    .id = "StoryUnlockTime",
+    .value = "2026-01-20T12:00:00+08:00",
+  },
+  .{
+    .id = "StrengthenMachineGoldConsume",
+    .value = "120,180,240,320,400,600,800",
+  },
+  .{
+    .id = "SubNotePrimaryDropProbe",
+    .value = "8000",
+  },
+  .{
+    .id = "SubNotePrimaryWeightArea",
+    .value = "100,150",
+  },
+  .{
+    .id = "SubNoteSecondaryWeightArea",
+    .value = "100,200",
+  },
+  .{
+    .id = "SubNoteSkillGroupNumber",
+    .value = "3",
+  },
+  .{
+    .id = "TalentGroupResetItemId",
+    .value = "0",
+  },
+  .{
+    .id = "TalentGroupResetItemQty",
+    .value = "0",
+  },
+  .{
+    .id = "TalentResetItemId",
+    .value = "0",
+  },
+  .{
+    .id = "TalentResetItemQty",
+    .value = "0",
+  },
+  .{
+    .id = "TalentResetTimeInterval",
+    .value = "1",
+  },
+  .{
+    .id = "TalentSingleResetItemId",
+    .value = "0",
+  },
+  .{
+    .id = "TalentSingleResetItemQty",
+    .value = "0",
+  },
+  .{
+    .id = "TimeUnlockStory",
+    .value = "STm06_06",
+  },
+  .{
+    .id = "TimeZone",
+    .value = "-7",
+  },
+  .{
+    .id = "TouchEffect_Main",
+  },
+  .{
+    .id = "TouchEffect_Slide",
+  },
+  .{
+    .id = "TraceHuntAutoAssistCount",
+    .value = "2",
+  },
+  .{
+    .id = "TraceHuntBossHuntLimitTime",
+    .value = "3600",
+  },
+  .{
+    .id = "TraceHuntBossTimeLimit",
+    .value = "60",
+  },
+  .{
+    .id = "TraceHuntControlEmergencyTime",
+    .value = "5",
+  },
+  .{
+    .id = "TraceHuntHardBossShowAtk",
+    .value = "10",
+  },
+  .{
+    .id = "TraceHuntHardBossShowDef",
+    .value = "10",
+  },
+  .{
+    .id = "TraceHuntHardBossTimeLimit",
+    .value = "45",
+  },
+  .{
+    .id = "TraceHuntHardOpenControlId",
+    .value = "5",
+  },
+  .{
+    .id = "TraceHuntHelpEmergencyTime",
+    .value = "300",
+  },
+  .{
+    .id = "TraceHuntMaxHuntProgress",
+    .value = "10000",
+  },
+  .{
+    .id = "TraceHuntMaxMultiTrace",
+    .value = "5",
+  },
+  .{
+    .id = "TraceHuntMaxTraceProgress",
+    .value = "10000",
+  },
+  .{
+    .id = "TraceHuntNPCId",
+    .value = "916402",
+  },
+  .{
+    .id = "TraceHuntPermitItem",
+    .value = "50,4,12",
+  },
+  .{
+    .id = "TraceHuntPermitItemTid",
+    .value = "39",
+  },
+  .{
+    .id = "TraceHuntPieceNeedTraceProgress",
+    .value = "20,40,60,80,100",
+  },
+  .{
+    .id = "TraceHuntPieceSuffixOrder",
+    .value = "_LT,_LB,_RT,_RB,_Center",
+  },
+  .{
+    .id = "TraceHuntRecommendationLimit",
+    .value = "3",
+  },
+  .{
+    .id = "TraceHuntRefreshHelpCD",
+    .value = "120",
+  },
+  .{
+    .id = "TraceHuntRequestItem",
+    .value = "10,20,60",
+  },
+  .{
+    .id = "TraceHuntRequestItemTid",
+    .value = "38",
+  },
+  .{
+    .id = "TraceHuntShopID",
+    .value = "4",
+  },
+  .{
+    .id = "TraceHuntTokenTid",
+    .value = "37",
+  },
+  .{
+    .id = "TravelerDuel_BottomBanner",
+    .value = "banner_l_7",
+  },
+  .{
+    .id = "TravelerDuel_LeftMiddleBanner",
+    .value = "AssetBundles/UI/big_sprites/banner_m_2",
+  },
+  .{
+    .id = "TrekkerVersusAddHotValueRangePreMinute",
+    .value = "1000,3000",
+  },
+  .{
+    .id = "TrekkerVersusIdleRewardMaxTime",
+    .value = "48",
+  },
+  .{
+    .id = "TrekkerVersusIdleRewardRedDotTime",
+    .value = "12",
+  },
+  .{
+    .id = "TrekkerVersusInitHotValue",
+    .value = "100000",
+  },
+  .{
+    .id = "TutorialSettlementDelayTime",
+    .value = "0",
+  },
+  .{
+    .id = "vampireAtk",
+    .value = "1",
+  },
+  .{
+    .id = "VampireBaseBundle",
+    .value = "101,102",
+  },
+  .{
+    .id = "VampireBonusConfig",
+    .value = "[[100,120],[200,150],[300,200]]",
+  },
+  .{
+    .id = "VampireBonusTime",
+    .value = "10",
+  },
+  .{
+    .id = "VampireChestDropNumberAndWeight",
+    .value = "{\"1\":20,\"2\":25,\"3\":20}",
+  },
+  .{
+    .id = "vampireClear",
+    .value = "1",
+  },
+  .{
+    .id = "VampireDropExperienceMaxInterval",
+    .value = "90",
+  },
+  .{
+    .id = "VampireDropExperienceMinInterval",
+    .value = "30",
+  },
+  .{
+    .id = "vampireExp",
+    .value = "5",
+  },
+  .{
+    .id = "vampireGet",
+    .value = "1",
+  },
+  .{
+    .id = "vampireHp",
+    .value = "1",
+  },
+  .{
+    .id = "VampireMonsterMaxCount",
+    .value = "60",
+  },
+  .{
+    .id = "vampireMp",
+    .value = "1",
+  },
+  .{
+    .id = "VampireTalentResetTimeInterval",
+    .value = "30",
+  },
+  .{
+    .id = "vampireTreasure",
+    .value = "1",
+  },
+  .{
+    .id = "WeaponAdvanceSequence",
+    .value = "0,2,3,4",
+  },
+  .{
+    .id = "WeaponUpgradeGoldPerExp",
+    .value = "500",
+  },
+  .{
+    .id = "WeekBossTicketMax",
+    .value = "3",
+  },
+  .{
+    .id = "ZoomFreeze",
+    .value = "0.2",
+  },
+  .{
+    .id = "ZoomInDurationTime",
+    .value = "1",
+  },
+  .{
+    .id = "ZoomOutTime",
+    .value = "0.1",
+  },
 }

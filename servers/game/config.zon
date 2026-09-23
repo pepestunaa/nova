@@ -17,6 +17,15 @@
 
         // Includes packages whose configured de-list time has passed.
         .show_historical_packages = false,
+
+        // Rewards granted by the daily shop claim.
+        // Set an entry to { .id = 0, .quantity = 0 } to disable that slot.
+        // This option is not affected by the `enable` value from the shop
+        // config.
+        .daily_mall_rewards = .{
+            .{ .id = 1, .quantity = 25_000 },
+            .{ .id = 82007, .quantity = 5 },
+        },
     },
 
     // TCP listen address. Can be overridden by `-a` option.

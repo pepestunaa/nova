@@ -1,346 +1,346 @@
 .{
-    .{
-        .id = 10101,
-        .desc = "EventOptions.10101.1",
-    },
-    .{
-        .id = 10102,
-        .desc = "EventOptions.10102.1",
-    },
-    .{
-        .id = 10103,
-        .desc = "EventOptions.10103.1",
-    },
-    .{
-        .id = 10201,
-        .desc = "EventOptions.10201.1",
-    },
-    .{
-        .id = 10202,
-        .desc = "EventOptions.10202.1",
-    },
-    .{
-        .id = 10203,
-        .desc = "EventOptions.10203.1",
-    },
-    .{
-        .id = 10204,
-        .desc = "EventOptions.10204.1",
-    },
-    .{
-        .id = 10301,
-        .desc = "EventOptions.10301.1",
-    },
-    .{
-        .id = 10302,
-        .desc = "EventOptions.10302.1",
-    },
-    .{
-        .id = 10401,
-        .desc = "EventOptions.10401.1",
-    },
-    .{
-        .id = 10402,
-        .desc = "EventOptions.10402.1",
-    },
-    .{
-        .id = 10403,
-        .desc = "EventOptions.10403.1",
-    },
-    .{
-        .id = 10501,
-        .desc = "EventOptions.10501.1",
-    },
-    .{
-        .id = 10502,
-        .desc = "EventOptions.10502.1",
-    },
-    .{
-        .id = 10503,
-        .desc = "EventOptions.10503.1",
-    },
-    .{
-        .id = 10601,
-        .desc = "EventOptions.10601.1",
-    },
-    .{
-        .id = 10602,
-        .desc = "EventOptions.10602.1",
-    },
-    .{
-        .id = 10603,
-        .desc = "EventOptions.10603.1",
-    },
-    .{
-        .id = 10701,
-        .desc = "EventOptions.10701.1",
-    },
-    .{
-        .id = 10702,
-        .desc = "EventOptions.10702.1",
-    },
-    .{
-        .id = 10703,
-        .desc = "EventOptions.10703.1",
-    },
-    .{
-        .id = 10704,
-        .desc = "EventOptions.10704.1",
-    },
-    .{
-        .id = 10705,
-        .desc = "EventOptions.10705.1",
-    },
-    .{
-        .id = 10706,
-        .desc = "EventOptions.10706.1",
-    },
-    .{
-        .id = 10707,
-        .desc = "EventOptions.10707.1",
-    },
-    .{
-        .id = 10708,
-        .desc = "EventOptions.10708.1",
-    },
-    .{
-        .id = 10801,
-        .desc = "EventOptions.10801.1",
-    },
-    .{
-        .id = 10802,
-        .desc = "EventOptions.10802.1",
-    },
-    .{
-        .id = 10803,
-        .desc = "EventOptions.10803.1",
-    },
-    .{
-        .id = 10804,
-        .desc = "EventOptions.10804.1",
-    },
-    .{
-        .id = 10805,
-        .desc = "EventOptions.10805.1",
-    },
-    .{
-        .id = 10806,
-        .desc = "EventOptions.10806.1",
-    },
-    .{
-        .id = 10807,
-        .desc = "EventOptions.10807.1",
-    },
-    .{
-        .id = 10808,
-        .desc = "EventOptions.10808.1",
-    },
-    .{
-        .id = 10809,
-        .desc = "EventOptions.10809.1",
-    },
-    .{
-        .id = 10901,
-        .desc = "EventOptions.10901.1",
-    },
-    .{
-        .id = 10902,
-        .desc = "EventOptions.10902.1",
-    },
-    .{
-        .id = 11001,
-        .desc = "EventOptions.11001.1",
-    },
-    .{
-        .id = 11002,
-        .desc = "EventOptions.11002.1",
-    },
-    .{
-        .id = 11101,
-        .desc = "EventOptions.11101.1",
-    },
-    .{
-        .id = 11102,
-        .desc = "EventOptions.11102.1",
-    },
-    .{
-        .id = 11201,
-        .desc = "EventOptions.11201.1",
-    },
-    .{
-        .id = 11202,
-        .desc = "EventOptions.11202.1",
-    },
-    .{
-        .id = 11301,
-        .desc = "EventOptions.11301.1",
-    },
-    .{
-        .id = 11302,
-        .desc = "EventOptions.11302.1",
-    },
-    .{
-        .id = 11303,
-        .desc = "EventOptions.11303.1",
-    },
-    .{
-        .id = 11401,
-        .desc = "EventOptions.11401.1",
-    },
-    .{
-        .id = 11402,
-        .desc = "EventOptions.11402.1",
-    },
-    .{
-        .id = 11403,
-        .desc = "EventOptions.11403.1",
-    },
-    .{
-        .id = 11404,
-        .desc = "EventOptions.11404.1",
-    },
-    .{
-        .id = 11405,
-        .desc = "EventOptions.11405.1",
-    },
-    .{
-        .id = 11501,
-        .desc = "EventOptions.11501.1",
-    },
-    .{
-        .id = 11502,
-        .desc = "EventOptions.11502.1",
-    },
-    .{
-        .id = 11503,
-        .desc = "EventOptions.11503.1",
-    },
-    .{
-        .id = 11504,
-        .desc = "EventOptions.11504.1",
-    },
-    .{
-        .id = 11505,
-        .desc = "EventOptions.11505.1",
-    },
-    .{
-        .id = 11601,
-        .desc = "EventOptions.11601.1",
-    },
-    .{
-        .id = 11602,
-        .desc = "EventOptions.11602.1",
-    },
-    .{
-        .id = 11603,
-        .desc = "EventOptions.11603.1",
-    },
-    .{
-        .id = 11604,
-        .desc = "EventOptions.11604.1",
-    },
-    .{
-        .id = 11605,
-        .desc = "EventOptions.11605.1",
-    },
-    .{
-        .id = 11701,
-        .desc = "EventOptions.11701.1",
-    },
-    .{
-        .id = 11702,
-        .desc = "EventOptions.11702.1",
-    },
-    .{
-        .id = 11801,
-        .desc = "EventOptions.11801.1",
-    },
-    .{
-        .id = 11802,
-        .desc = "EventOptions.11802.1",
-    },
-    .{
-        .id = 11901,
-        .desc = "EventOptions.11901.1",
-    },
-    .{
-        .id = 11902,
-        .desc = "EventOptions.11902.1",
-    },
-    .{
-        .id = 12001,
-        .desc = "EventOptions.12001.1",
-    },
-    .{
-        .id = 12002,
-        .desc = "EventOptions.12002.1",
-    },
-    .{
-        .id = 12101,
-        .desc = "EventOptions.12101.1",
-    },
-    .{
-        .id = 12102,
-        .desc = "EventOptions.12102.1",
-    },
-    .{
-        .id = 12201,
-        .desc = "EventOptions.12201.1",
-    },
-    .{
-        .id = 12202,
-        .desc = "EventOptions.12202.1",
-    },
-    .{
-        .id = 12301,
-        .desc = "EventOptions.12301.1",
-    },
-    .{
-        .id = 12302,
-        .desc = "EventOptions.12302.1",
-    },
-    .{
-        .id = 12401,
-        .desc = "EventOptions.12401.1",
-    },
-    .{
-        .id = 12402,
-        .desc = "EventOptions.12402.1",
-    },
-    .{
-        .id = 12501,
-        .desc = "EventOptions.12501.1",
-    },
-    .{
-        .id = 12502,
-        .desc = "EventOptions.12502.1",
-    },
-    .{
-        .id = 12503,
-        .desc = "EventOptions.12503.1",
-    },
-    .{
-        .id = 12601,
-        .desc = "EventOptions.12601.1",
-    },
-    .{
-        .id = 12602,
-        .desc = "EventOptions.12602.1",
-    },
-    .{
-        .id = 12701,
-        .desc = "EventOptions.12701.1",
-    },
-    .{
-        .id = 12702,
-        .desc = "EventOptions.12702.1",
-    },
-    .{
-        .id = 12801,
-        .desc = "EventOptions.12801.1",
-    },
-    .{
-        .id = 12802,
-        .desc = "EventOptions.12802.1",
-    },
+  .{
+    .id = 10101,
+    .desc = "EventOptions.10101.1",
+  },
+  .{
+    .id = 10102,
+    .desc = "EventOptions.10102.1",
+  },
+  .{
+    .id = 10103,
+    .desc = "EventOptions.10103.1",
+  },
+  .{
+    .id = 10201,
+    .desc = "EventOptions.10201.1",
+  },
+  .{
+    .id = 10202,
+    .desc = "EventOptions.10202.1",
+  },
+  .{
+    .id = 10203,
+    .desc = "EventOptions.10203.1",
+  },
+  .{
+    .id = 10204,
+    .desc = "EventOptions.10204.1",
+  },
+  .{
+    .id = 10301,
+    .desc = "EventOptions.10301.1",
+  },
+  .{
+    .id = 10302,
+    .desc = "EventOptions.10302.1",
+  },
+  .{
+    .id = 10401,
+    .desc = "EventOptions.10401.1",
+  },
+  .{
+    .id = 10402,
+    .desc = "EventOptions.10402.1",
+  },
+  .{
+    .id = 10403,
+    .desc = "EventOptions.10403.1",
+  },
+  .{
+    .id = 10501,
+    .desc = "EventOptions.10501.1",
+  },
+  .{
+    .id = 10502,
+    .desc = "EventOptions.10502.1",
+  },
+  .{
+    .id = 10503,
+    .desc = "EventOptions.10503.1",
+  },
+  .{
+    .id = 10601,
+    .desc = "EventOptions.10601.1",
+  },
+  .{
+    .id = 10602,
+    .desc = "EventOptions.10602.1",
+  },
+  .{
+    .id = 10603,
+    .desc = "EventOptions.10603.1",
+  },
+  .{
+    .id = 10701,
+    .desc = "EventOptions.10701.1",
+  },
+  .{
+    .id = 10702,
+    .desc = "EventOptions.10702.1",
+  },
+  .{
+    .id = 10703,
+    .desc = "EventOptions.10703.1",
+  },
+  .{
+    .id = 10704,
+    .desc = "EventOptions.10704.1",
+  },
+  .{
+    .id = 10705,
+    .desc = "EventOptions.10705.1",
+  },
+  .{
+    .id = 10706,
+    .desc = "EventOptions.10706.1",
+  },
+  .{
+    .id = 10707,
+    .desc = "EventOptions.10707.1",
+  },
+  .{
+    .id = 10708,
+    .desc = "EventOptions.10708.1",
+  },
+  .{
+    .id = 10801,
+    .desc = "EventOptions.10801.1",
+  },
+  .{
+    .id = 10802,
+    .desc = "EventOptions.10802.1",
+  },
+  .{
+    .id = 10803,
+    .desc = "EventOptions.10803.1",
+  },
+  .{
+    .id = 10804,
+    .desc = "EventOptions.10804.1",
+  },
+  .{
+    .id = 10805,
+    .desc = "EventOptions.10805.1",
+  },
+  .{
+    .id = 10806,
+    .desc = "EventOptions.10806.1",
+  },
+  .{
+    .id = 10807,
+    .desc = "EventOptions.10807.1",
+  },
+  .{
+    .id = 10808,
+    .desc = "EventOptions.10808.1",
+  },
+  .{
+    .id = 10809,
+    .desc = "EventOptions.10809.1",
+  },
+  .{
+    .id = 10901,
+    .desc = "EventOptions.10901.1",
+  },
+  .{
+    .id = 10902,
+    .desc = "EventOptions.10902.1",
+  },
+  .{
+    .id = 11001,
+    .desc = "EventOptions.11001.1",
+  },
+  .{
+    .id = 11002,
+    .desc = "EventOptions.11002.1",
+  },
+  .{
+    .id = 11101,
+    .desc = "EventOptions.11101.1",
+  },
+  .{
+    .id = 11102,
+    .desc = "EventOptions.11102.1",
+  },
+  .{
+    .id = 11201,
+    .desc = "EventOptions.11201.1",
+  },
+  .{
+    .id = 11202,
+    .desc = "EventOptions.11202.1",
+  },
+  .{
+    .id = 11301,
+    .desc = "EventOptions.11301.1",
+  },
+  .{
+    .id = 11302,
+    .desc = "EventOptions.11302.1",
+  },
+  .{
+    .id = 11303,
+    .desc = "EventOptions.11303.1",
+  },
+  .{
+    .id = 11401,
+    .desc = "EventOptions.11401.1",
+  },
+  .{
+    .id = 11402,
+    .desc = "EventOptions.11402.1",
+  },
+  .{
+    .id = 11403,
+    .desc = "EventOptions.11403.1",
+  },
+  .{
+    .id = 11404,
+    .desc = "EventOptions.11404.1",
+  },
+  .{
+    .id = 11405,
+    .desc = "EventOptions.11405.1",
+  },
+  .{
+    .id = 11501,
+    .desc = "EventOptions.11501.1",
+  },
+  .{
+    .id = 11502,
+    .desc = "EventOptions.11502.1",
+  },
+  .{
+    .id = 11503,
+    .desc = "EventOptions.11503.1",
+  },
+  .{
+    .id = 11504,
+    .desc = "EventOptions.11504.1",
+  },
+  .{
+    .id = 11505,
+    .desc = "EventOptions.11505.1",
+  },
+  .{
+    .id = 11601,
+    .desc = "EventOptions.11601.1",
+  },
+  .{
+    .id = 11602,
+    .desc = "EventOptions.11602.1",
+  },
+  .{
+    .id = 11603,
+    .desc = "EventOptions.11603.1",
+  },
+  .{
+    .id = 11604,
+    .desc = "EventOptions.11604.1",
+  },
+  .{
+    .id = 11605,
+    .desc = "EventOptions.11605.1",
+  },
+  .{
+    .id = 11701,
+    .desc = "EventOptions.11701.1",
+  },
+  .{
+    .id = 11702,
+    .desc = "EventOptions.11702.1",
+  },
+  .{
+    .id = 11801,
+    .desc = "EventOptions.11801.1",
+  },
+  .{
+    .id = 11802,
+    .desc = "EventOptions.11802.1",
+  },
+  .{
+    .id = 11901,
+    .desc = "EventOptions.11901.1",
+  },
+  .{
+    .id = 11902,
+    .desc = "EventOptions.11902.1",
+  },
+  .{
+    .id = 12001,
+    .desc = "EventOptions.12001.1",
+  },
+  .{
+    .id = 12002,
+    .desc = "EventOptions.12002.1",
+  },
+  .{
+    .id = 12101,
+    .desc = "EventOptions.12101.1",
+  },
+  .{
+    .id = 12102,
+    .desc = "EventOptions.12102.1",
+  },
+  .{
+    .id = 12201,
+    .desc = "EventOptions.12201.1",
+  },
+  .{
+    .id = 12202,
+    .desc = "EventOptions.12202.1",
+  },
+  .{
+    .id = 12301,
+    .desc = "EventOptions.12301.1",
+  },
+  .{
+    .id = 12302,
+    .desc = "EventOptions.12302.1",
+  },
+  .{
+    .id = 12401,
+    .desc = "EventOptions.12401.1",
+  },
+  .{
+    .id = 12402,
+    .desc = "EventOptions.12402.1",
+  },
+  .{
+    .id = 12501,
+    .desc = "EventOptions.12501.1",
+  },
+  .{
+    .id = 12502,
+    .desc = "EventOptions.12502.1",
+  },
+  .{
+    .id = 12503,
+    .desc = "EventOptions.12503.1",
+  },
+  .{
+    .id = 12601,
+    .desc = "EventOptions.12601.1",
+  },
+  .{
+    .id = 12602,
+    .desc = "EventOptions.12602.1",
+  },
+  .{
+    .id = 12701,
+    .desc = "EventOptions.12701.1",
+  },
+  .{
+    .id = 12702,
+    .desc = "EventOptions.12702.1",
+  },
+  .{
+    .id = 12801,
+    .desc = "EventOptions.12801.1",
+  },
+  .{
+    .id = 12802,
+    .desc = "EventOptions.12802.1",
+  },
 }

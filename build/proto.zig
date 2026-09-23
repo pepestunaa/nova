@@ -32,15 +32,15 @@ pub fn main(init: std.process.Init) void {
     }
     const enums: EnumSymbols = .{ .names = enum_names.items };
 
-    var stdout_buffer: [4096]u8 = undefined;
-    var stdout = Io.File.writerStreaming(.stdout(), io, &stdout_buffer);
+    var generated: Io.Writer.Allocating = .init(init.arena.allocator());
+    defer generated.deinit();
 
     var cwd_buffer: [Io.Dir.max_path_bytes]u8 = undefined;
     const cwd_len = Io.Dir.cwd().realPath(io, &cwd_buffer) catch |err|
         fatal("couldn't determine the working directory: {t}", .{err});
     const cwd_path = cwd_buffer[0..cwd_len];
 
-    writeOutputFileHeader(&stdout.interface) catch |err|
+    writeOutputFileHeader(&generated.writer) catch |err|
         fatal("couldn't write output: {t}", .{err});
 
     for (args[1..]) |path| {
@@ -55,11 +55,28 @@ pub fn main(init: std.process.Init) void {
         var arena: std.heap.ArenaAllocator = .init(gpa);
         defer arena.deinit();
 
-        writeGeneratedCodeForProto(arena.allocator(), &stdout.interface, content, cwd_path, path, enums) catch |err|
+        writeGeneratedCodeForProto(arena.allocator(), &generated.writer, content, cwd_path, path, enums) catch |err|
             fatal("failed to generate code for '{s}': {t}", .{ path, err });
     }
 
-    stdout.interface.flush() catch fatal("failed to write to stdout", .{});
+    const source = generated.toOwnedSliceSentinel(0) catch
+        fatal("couldn't finalize generated source", .{});
+    defer init.arena.allocator().free(source);
+
+    var tree = std.zig.Ast.parse(init.arena.allocator(), source, .zig) catch
+        fatal("couldn't parse generated source", .{});
+    defer tree.deinit(init.arena.allocator());
+    if (tree.errors.len != 0)
+        fatal("generated source is not valid Zig", .{});
+
+    const formatted = tree.renderAlloc(init.arena.allocator()) catch
+        fatal("couldn't format generated source", .{});
+    defer init.arena.allocator().free(formatted);
+
+    var stdout_buffer: [4096]u8 = undefined;
+    var stdout = Io.File.writerStreaming(.stdout(), io, &stdout_buffer);
+    stdout.interface.writeAll(formatted) catch fatal("failed to write to stdout", .{});
+    stdout.interface.flush() catch fatal("failed to flush stdout", .{});
 }
 
 fn writeOutputFileHeader(out: *Io.Writer) !void {

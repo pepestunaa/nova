@@ -1,4 +1,4 @@
-const localization = @import("localization.zig");
+const localization = @import("utils/localization.zig");
 const lookup = @import("lookup.zig");
 
 pub const Code = @import("error_code_generated").Code;

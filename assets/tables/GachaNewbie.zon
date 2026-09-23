@@ -1,7 +1,7 @@
 .{
-    .{
-        .id = 5,
-        .spin_count = 20,
-        .save_count = 5,
-    },
+  .{
+    .id = 5,
+    .spin_count = 20,
+    .save_count = 5,
+  },
 }

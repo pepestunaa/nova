@@ -6,9 +6,17 @@ const Io = std.Io;
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+    const strip = b.option(
+        bool,
+        "strip",
+        "Strip debug information from compiled binaries",
+    ) orelse false;
 
     const table_assets = collectTableAssets(b);
     const asset_generators = discoverAssetGenerators(b);
+    const table_time = b.createModule(.{
+        .root_source_file = b.path("servers/game/tables/utils/time.zig"),
+    });
     const asset_registry_source = writeAssetRegistry(b, asset_generators);
     const asset_registry = b.createModule(.{
         .root_source_file = asset_registry_source,
@@ -20,6 +28,7 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         });
         addModuleAssets(module, table_assets);
+        module.addImport("table_time", table_time);
         asset_registry.addImport(
             b.fmt("asset/{s}", .{generator.name}),
             module,
@@ -83,7 +92,7 @@ pub fn build(b: *std.Build) void {
     });
     net_msg_id_gen.root_module.addAnonymousImport(
         "net_msg_id",
-        .{ .root_source_file = b.path("assets/protocol/NetMsgId.zon") },
+        .{ .root_source_file = b.path("assets/protocol/net_msg_id.zon") },
     );
     const generated_net_msg_id_output = b.addRunArtifact(net_msg_id_gen).captureStdOut(.{
         .basename = "net_msg_id.zig",
@@ -97,6 +106,39 @@ pub fn build(b: *std.Build) void {
         "generate-net-msg-id",
         "Regenerate generated/net_msg_id.zig from NetMsgId",
     ).dependOn(&update_generated_net_msg_id.step);
+
+    const generate_protocol = b.step(
+        "generate-protocol",
+        "Regenerate generated/protocol.zig from .proto files",
+    );
+    if (collectProtocolSources(b)) |protocol_sources| {
+        const protocol_gen = b.addExecutable(.{
+            .name = "protocol_gen",
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("build/proto.zig"),
+                .target = b.graph.host,
+                .optimize = optimize,
+            }),
+        });
+        const run_protocol_gen = b.addRunArtifact(protocol_gen);
+        for (protocol_sources) |source|
+            run_protocol_gen.addFileArg(b.path(source));
+
+        const generated_protocol_output = run_protocol_gen.captureStdOut(.{
+            .basename = "protocol.zig",
+        });
+        const update_generated_protocol = b.addUpdateSourceFiles();
+        update_generated_protocol.addCopyFileToSource(
+            generated_protocol_output,
+            "generated/protocol.zig",
+        );
+        generate_protocol.dependOn(&update_generated_protocol.step);
+    } else {
+        const missing_sources = b.addFail(
+            ".proto files are unavailable, move them to assets/protocol/pb before generating",
+        );
+        generate_protocol.dependOn(&missing_sources.step);
+    }
 
     const generated_net_msg_id = b.createModule(.{
         .root_source_file = b.path("generated/net_msg_id.zig"),
@@ -142,6 +184,7 @@ pub fn build(b: *std.Build) void {
                 },
                 .target = target,
                 .optimize = optimize,
+                .strip = strip,
             },
         ),
     });
@@ -175,6 +218,7 @@ pub fn build(b: *std.Build) void {
                 },
                 .target = target,
                 .optimize = optimize,
+                .strip = strip,
             },
         ),
     });
@@ -385,6 +429,55 @@ fn collectTableAssets(b: *std.Build) []const ModuleAsset {
 
     return assets.toOwnedSlice(b.allocator) catch
         @panic("out of memory while registering table assets");
+}
+
+fn collectProtocolSources(b: *std.Build) ?[]const []const u8 {
+    const root_path = b.pathFromRoot("assets/protocol/pb");
+    var root = Io.Dir.openDirAbsolute(
+        b.graph.io,
+        root_path,
+        .{ .iterate = true },
+    ) catch |err|
+        switch (err) {
+            error.FileNotFound => return null,
+            else => std.debug.panic("couldn't open proto directory: {t}", .{err}),
+        };
+    defer root.close(b.graph.io);
+
+    var walker = root.walk(b.allocator) catch |err|
+        std.debug.panic("couldn't walk proto directory: {t}", .{err});
+    defer walker.deinit();
+
+    var sources: std.ArrayList([]const u8) = .empty;
+    while (walker.next(b.graph.io) catch |err|
+        std.debug.panic("couldn't read proto directory: {t}", .{err})) |entry|
+    {
+        if (entry.kind != .file or !std.mem.endsWith(u8, entry.path, ".proto"))
+            continue;
+
+        sources.append(b.allocator, b.fmt("assets/protocol/pb/{s}", .{entry.path})) catch
+            @panic("out of memory while registering proto sources");
+    }
+
+    if (sources.items.len == 0) {
+        sources.deinit(b.allocator);
+        return null;
+    }
+
+    const result = sources.toOwnedSlice(b.allocator) catch
+        @panic("out of memory while registering proto sources");
+    std.mem.sort(
+        []const u8,
+        result,
+        {},
+        struct {
+            fn lessThan(_: void, lhs: []const u8, rhs: []const u8) bool {
+                return std.mem.lessThan(u8, lhs, rhs);
+            }
+        }.lessThan,
+    );
+
+    return result;
 }
 
 fn addModuleAssets(module: *std.Build.Module, assets: []const ModuleAsset) void {
