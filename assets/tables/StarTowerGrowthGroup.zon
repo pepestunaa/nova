@@ -1,25 +1,25 @@
 .{
-  .{
-    .id = 1,
-    .world_class = 1,
-    .name = "StarTowerGrowthGroup.1.1",
-  },
-  .{
-    .id = 2,
-    .pre_group = 1,
-    .world_class = 10,
-    .name = "StarTowerGrowthGroup.2.1",
-  },
-  .{
-    .id = 3,
-    .pre_group = 2,
-    .world_class = 20,
-    .name = "StarTowerGrowthGroup.3.1",
-  },
-  .{
-    .id = 4,
-    .pre_group = 3,
-    .world_class = 30,
-    .name = "StarTowerGrowthGroup.4.1",
-  },
+    .{
+        .id = 1,
+        .world_class = 1,
+        .name = "StarTowerGrowthGroup.1.1",
+    },
+    .{
+        .id = 2,
+        .pre_group = 1,
+        .world_class = 10,
+        .name = "StarTowerGrowthGroup.2.1",
+    },
+    .{
+        .id = 3,
+        .pre_group = 2,
+        .world_class = 20,
+        .name = "StarTowerGrowthGroup.3.1",
+    },
+    .{
+        .id = 4,
+        .pre_group = 3,
+        .world_class = 30,
+        .name = "StarTowerGrowthGroup.4.1",
+    },
 }

@@ -124,7 +124,7 @@ pub fn advance(material_set: u8, target_level: u8) ?Advance {
         return null;
     if (material_set >= generated.advance_materials.len)
         return null;
-    const step = generated.advance_shape[target_level - 1];
+    const step = generated.advance_shape[material_set][target_level - 1];
     var costs: [generated.max_costs]Cost = undefined;
     resolveCosts(step.costs, &generated.advance_materials[material_set], &costs);
 
@@ -140,7 +140,7 @@ pub fn skillUpgrade(material_set: u8, target_level: u8) ?SkillUpgrade {
         return null;
     if (material_set >= generated.skill_materials.len)
         return null;
-    const step = generated.skill_shape[target_level - 1];
+    const step = generated.skill_shape[material_set][target_level - 1];
     var costs: [generated.max_costs]Cost = undefined;
     resolveCosts(step.costs, &generated.skill_materials[material_set], &costs);
 

@@ -1,2240 +1,2240 @@
 .{
-  .{
-    .key = 0,
-    .value = .{
-      .group = 101,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 1,
-    .value = .{
-      .group = 101,
-      .times = 1,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 2,
-    .value = .{
-      .group = 101,
-      .times = 2,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 3,
-    .value = .{
-      .group = 101,
-      .times = 3,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 4,
-    .value = .{
-      .group = 101,
-      .times = 4,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 5,
-    .value = .{
-      .group = 101,
-      .times = 5,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 6,
-    .value = .{
-      .group = 101,
-      .times = 6,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 7,
-    .value = .{
-      .group = 101,
-      .times = 7,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 8,
-    .value = .{
-      .group = 101,
-      .times = 8,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 9,
-    .value = .{
-      .group = 101,
-      .times = 9,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 10,
-    .value = .{
-      .group = 101,
-      .times = 10,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 11,
-    .value = .{
-      .group = 101,
-      .times = 11,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 12,
-    .value = .{
-      .group = 101,
-      .times = 12,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 13,
-    .value = .{
-      .group = 101,
-      .times = 13,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 14,
-    .value = .{
-      .group = 101,
-      .times = 14,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 15,
-    .value = .{
-      .group = 101,
-      .times = 15,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 16,
-    .value = .{
-      .group = 101,
-      .times = 16,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 17,
-    .value = .{
-      .group = 101,
-      .times = 17,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 18,
-    .value = .{
-      .group = 101,
-      .times = 18,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 19,
-    .value = .{
-      .group = 101,
-      .times = 19,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 20,
-    .value = .{
-      .group = 101,
-      .times = 20,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 21,
-    .value = .{
-      .group = 101,
-      .times = 21,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 22,
-    .value = .{
-      .group = 101,
-      .times = 22,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 23,
-    .value = .{
-      .group = 101,
-      .times = 23,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 24,
-    .value = .{
-      .group = 101,
-      .times = 24,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 25,
-    .value = .{
-      .group = 101,
-      .times = 25,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 26,
-    .value = .{
-      .group = 101,
-      .times = 26,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 27,
-    .value = .{
-      .group = 101,
-      .times = 27,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 28,
-    .value = .{
-      .group = 101,
-      .times = 28,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 29,
-    .value = .{
-      .group = 101,
-      .times = 29,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 30,
-    .value = .{
-      .group = 101,
-      .times = 30,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 31,
-    .value = .{
-      .group = 101,
-      .times = 31,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 32,
-    .value = .{
-      .group = 101,
-      .times = 32,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 33,
-    .value = .{
-      .group = 101,
-      .times = 33,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 34,
-    .value = .{
-      .group = 101,
-      .times = 34,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 35,
-    .value = .{
-      .group = 101,
-      .times = 35,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 36,
-    .value = .{
-      .group = 101,
-      .times = 36,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 37,
-    .value = .{
-      .group = 101,
-      .times = 37,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 38,
-    .value = .{
-      .group = 101,
-      .times = 38,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 39,
-    .value = .{
-      .group = 101,
-      .times = 39,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 40,
-    .value = .{
-      .group = 101,
-      .times = 40,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 41,
-    .value = .{
-      .group = 101,
-      .times = 41,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 42,
-    .value = .{
-      .group = 101,
-      .times = 42,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 43,
-    .value = .{
-      .group = 101,
-      .times = 43,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 44,
-    .value = .{
-      .group = 101,
-      .times = 44,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 45,
-    .value = .{
-      .group = 101,
-      .times = 45,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 46,
-    .value = .{
-      .group = 101,
-      .times = 46,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 47,
-    .value = .{
-      .group = 101,
-      .times = 47,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 48,
-    .value = .{
-      .group = 101,
-      .times = 48,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 49,
-    .value = .{
-      .group = 101,
-      .times = 49,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 50,
-    .value = .{
-      .group = 101,
-      .times = 50,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 51,
-    .value = .{
-      .group = 101,
-      .times = 51,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 52,
-    .value = .{
-      .group = 101,
-      .times = 52,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 53,
-    .value = .{
-      .group = 101,
-      .times = 53,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 54,
-    .value = .{
-      .group = 101,
-      .times = 54,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 55,
-    .value = .{
-      .group = 101,
-      .times = 55,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 56,
-    .value = .{
-      .group = 101,
-      .times = 56,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 57,
-    .value = .{
-      .group = 101,
-      .times = 57,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 58,
-    .value = .{
-      .group = 101,
-      .times = 58,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 59,
-    .value = .{
-      .group = 101,
-      .times = 59,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 60,
-    .value = .{
-      .group = 101,
-      .times = 60,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 61,
-    .value = .{
-      .group = 101,
-      .times = 61,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 62,
-    .value = .{
-      .group = 101,
-      .times = 62,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 63,
-    .value = .{
-      .group = 101,
-      .times = 63,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 64,
-    .value = .{
-      .group = 101,
-      .times = 64,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 65,
-    .value = .{
-      .group = 101,
-      .times = 65,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 66,
-    .value = .{
-      .group = 101,
-      .times = 66,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 67,
-    .value = .{
-      .group = 101,
-      .times = 67,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 68,
-    .value = .{
-      .group = 101,
-      .times = 68,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 69,
-    .value = .{
-      .group = 101,
-      .times = 69,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 70,
-    .value = .{
-      .group = 101,
-      .times = 70,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 71,
-    .value = .{
-      .group = 101,
-      .times = 71,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 72,
-    .value = .{
-      .group = 101,
-      .times = 72,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 73,
-    .value = .{
-      .group = 101,
-      .times = 73,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 74,
-    .value = .{
-      .group = 101,
-      .times = 74,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 75,
-    .value = .{
-      .group = 101,
-      .times = 75,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 76,
-    .value = .{
-      .group = 101,
-      .times = 76,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 77,
-    .value = .{
-      .group = 101,
-      .times = 77,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 78,
-    .value = .{
-      .group = 101,
-      .times = 78,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 79,
-    .value = .{
-      .group = 101,
-      .times = 79,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 80,
-    .value = .{
-      .group = 101,
-      .times = 80,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 81,
-    .value = .{
-      .group = 101,
-      .times = 81,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 82,
-    .value = .{
-      .group = 101,
-      .times = 82,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 83,
-    .value = .{
-      .group = 101,
-      .times = 83,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 84,
-    .value = .{
-      .group = 101,
-      .times = 84,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 85,
-    .value = .{
-      .group = 101,
-      .times = 85,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 86,
-    .value = .{
-      .group = 101,
-      .times = 86,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 87,
-    .value = .{
-      .group = 101,
-      .times = 87,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 88,
-    .value = .{
-      .group = 101,
-      .times = 88,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 89,
-    .value = .{
-      .group = 101,
-      .times = 89,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 90,
-    .value = .{
-      .group = 101,
-      .times = 90,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 91,
-    .value = .{
-      .group = 101,
-      .times = 91,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 92,
-    .value = .{
-      .group = 101,
-      .times = 92,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 93,
-    .value = .{
-      .group = 101,
-      .times = 93,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 94,
-    .value = .{
-      .group = 101,
-      .times = 94,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 95,
-    .value = .{
-      .group = 101,
-      .times = 95,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 96,
-    .value = .{
-      .group = 101,
-      .times = 96,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 97,
-    .value = .{
-      .group = 101,
-      .times = 97,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 98,
-    .value = .{
-      .group = 101,
-      .times = 98,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 99,
-    .value = .{
-      .group = 101,
-      .times = 99,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 100,
-    .value = .{
-      .group = 101,
-      .times = 100,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 101,
-    .value = .{
-      .group = 101,
-      .times = 101,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 102,
-    .value = .{
-      .group = 101,
-      .times = 102,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 103,
-    .value = .{
-      .group = 101,
-      .times = 103,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 104,
-    .value = .{
-      .group = 101,
-      .times = 104,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 105,
-    .value = .{
-      .group = 101,
-      .times = 105,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 106,
-    .value = .{
-      .group = 101,
-      .times = 106,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 107,
-    .value = .{
-      .group = 101,
-      .times = 107,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 108,
-    .value = .{
-      .group = 101,
-      .times = 108,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 109,
-    .value = .{
-      .group = 101,
-      .times = 109,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 110,
-    .value = .{
-      .group = 101,
-      .times = 110,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 111,
-    .value = .{
-      .group = 101,
-      .times = 111,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 112,
-    .value = .{
-      .group = 101,
-      .times = 112,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 113,
-    .value = .{
-      .group = 101,
-      .times = 113,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 114,
-    .value = .{
-      .group = 101,
-      .times = 114,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 115,
-    .value = .{
-      .group = 101,
-      .times = 115,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 116,
-    .value = .{
-      .group = 101,
-      .times = 116,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 117,
-    .value = .{
-      .group = 101,
-      .times = 117,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 118,
-    .value = .{
-      .group = 101,
-      .times = 118,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 119,
-    .value = .{
-      .group = 101,
-      .times = 119,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 120,
-    .value = .{
-      .group = 101,
-      .times = 120,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 121,
-    .value = .{
-      .group = 101,
-      .times = 121,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 122,
-    .value = .{
-      .group = 101,
-      .times = 122,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 123,
-    .value = .{
-      .group = 101,
-      .times = 123,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 124,
-    .value = .{
-      .group = 101,
-      .times = 124,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 125,
-    .value = .{
-      .group = 101,
-      .times = 125,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 126,
-    .value = .{
-      .group = 101,
-      .times = 126,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 127,
-    .value = .{
-      .group = 101,
-      .times = 127,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 128,
-    .value = .{
-      .group = 101,
-      .times = 128,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 129,
-    .value = .{
-      .group = 101,
-      .times = 129,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 130,
-    .value = .{
-      .group = 101,
-      .times = 130,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 131,
-    .value = .{
-      .group = 101,
-      .times = 131,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 132,
-    .value = .{
-      .group = 101,
-      .times = 132,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 133,
-    .value = .{
-      .group = 101,
-      .times = 133,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 134,
-    .value = .{
-      .group = 101,
-      .times = 134,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 135,
-    .value = .{
-      .group = 101,
-      .times = 135,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 136,
-    .value = .{
-      .group = 101,
-      .times = 136,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 137,
-    .value = .{
-      .group = 101,
-      .times = 137,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 138,
-    .value = .{
-      .group = 101,
-      .times = 138,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 139,
-    .value = .{
-      .group = 101,
-      .times = 139,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 140,
-    .value = .{
-      .group = 101,
-      .times = 140,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 141,
-    .value = .{
-      .group = 101,
-      .times = 141,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 142,
-    .value = .{
-      .group = 101,
-      .times = 142,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 143,
-    .value = .{
-      .group = 101,
-      .times = 143,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 144,
-    .value = .{
-      .group = 101,
-      .times = 144,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 145,
-    .value = .{
-      .group = 101,
-      .times = 145,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 146,
-    .value = .{
-      .group = 101,
-      .times = 146,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 147,
-    .value = .{
-      .group = 101,
-      .times = 147,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 148,
-    .value = .{
-      .group = 101,
-      .times = 148,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 149,
-    .value = .{
-      .group = 101,
-      .times = 149,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 150,
-    .value = .{
-      .group = 101,
-      .times = 150,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 151,
-    .value = .{
-      .group = 101,
-      .times = 151,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 152,
-    .value = .{
-      .group = 101,
-      .times = 152,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 153,
-    .value = .{
-      .group = 101,
-      .times = 153,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 154,
-    .value = .{
-      .group = 101,
-      .times = 154,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 155,
-    .value = .{
-      .group = 101,
-      .times = 155,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 156,
-    .value = .{
-      .group = 101,
-      .times = 156,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 157,
-    .value = .{
-      .group = 101,
-      .times = 157,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 158,
-    .value = .{
-      .group = 101,
-      .times = 158,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 159,
-    .value = .{
-      .group = 101,
-      .times = 159,
-      .prob = 10000,
-    },
-  },
-  .{
-    .key = 160,
-    .value = .{
-      .group = 102,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 161,
-    .value = .{
-      .group = 102,
-      .times = 1,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 162,
-    .value = .{
-      .group = 102,
-      .times = 2,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 163,
-    .value = .{
-      .group = 102,
-      .times = 3,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 164,
-    .value = .{
-      .group = 102,
-      .times = 4,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 165,
-    .value = .{
-      .group = 102,
-      .times = 5,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 166,
-    .value = .{
-      .group = 102,
-      .times = 6,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 167,
-    .value = .{
-      .group = 102,
-      .times = 7,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 168,
-    .value = .{
-      .group = 102,
-      .times = 8,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 169,
-    .value = .{
-      .group = 102,
-      .times = 9,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 170,
-    .value = .{
-      .group = 102,
-      .times = 10,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 171,
-    .value = .{
-      .group = 102,
-      .times = 11,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 172,
-    .value = .{
-      .group = 102,
-      .times = 12,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 173,
-    .value = .{
-      .group = 102,
-      .times = 13,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 174,
-    .value = .{
-      .group = 102,
-      .times = 14,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 175,
-    .value = .{
-      .group = 102,
-      .times = 15,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 176,
-    .value = .{
-      .group = 102,
-      .times = 16,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 177,
-    .value = .{
-      .group = 102,
-      .times = 17,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 178,
-    .value = .{
-      .group = 102,
-      .times = 18,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 179,
-    .value = .{
-      .group = 102,
-      .times = 19,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 180,
-    .value = .{
-      .group = 102,
-      .times = 20,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 181,
-    .value = .{
-      .group = 102,
-      .times = 21,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 182,
-    .value = .{
-      .group = 102,
-      .times = 22,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 183,
-    .value = .{
-      .group = 102,
-      .times = 23,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 184,
-    .value = .{
-      .group = 102,
-      .times = 24,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 185,
-    .value = .{
-      .group = 102,
-      .times = 25,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 186,
-    .value = .{
-      .group = 102,
-      .times = 26,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 187,
-    .value = .{
-      .group = 102,
-      .times = 27,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 188,
-    .value = .{
-      .group = 102,
-      .times = 28,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 189,
-    .value = .{
-      .group = 102,
-      .times = 29,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 190,
-    .value = .{
-      .group = 102,
-      .times = 30,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 191,
-    .value = .{
-      .group = 102,
-      .times = 31,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 192,
-    .value = .{
-      .group = 102,
-      .times = 32,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 193,
-    .value = .{
-      .group = 102,
-      .times = 33,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 194,
-    .value = .{
-      .group = 102,
-      .times = 34,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 195,
-    .value = .{
-      .group = 102,
-      .times = 35,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 196,
-    .value = .{
-      .group = 102,
-      .times = 36,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 197,
-    .value = .{
-      .group = 102,
-      .times = 37,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 198,
-    .value = .{
-      .group = 102,
-      .times = 38,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 199,
-    .value = .{
-      .group = 102,
-      .times = 39,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 200,
-    .value = .{
-      .group = 102,
-      .times = 40,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 201,
-    .value = .{
-      .group = 102,
-      .times = 41,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 202,
-    .value = .{
-      .group = 102,
-      .times = 42,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 203,
-    .value = .{
-      .group = 102,
-      .times = 43,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 204,
-    .value = .{
-      .group = 102,
-      .times = 44,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 205,
-    .value = .{
-      .group = 102,
-      .times = 45,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 206,
-    .value = .{
-      .group = 102,
-      .times = 46,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 207,
-    .value = .{
-      .group = 102,
-      .times = 47,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 208,
-    .value = .{
-      .group = 102,
-      .times = 48,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 209,
-    .value = .{
-      .group = 102,
-      .times = 49,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 210,
-    .value = .{
-      .group = 102,
-      .times = 50,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 211,
-    .value = .{
-      .group = 102,
-      .times = 51,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 212,
-    .value = .{
-      .group = 102,
-      .times = 52,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 213,
-    .value = .{
-      .group = 102,
-      .times = 53,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 214,
-    .value = .{
-      .group = 102,
-      .times = 54,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 215,
-    .value = .{
-      .group = 102,
-      .times = 55,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 216,
-    .value = .{
-      .group = 102,
-      .times = 56,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 217,
-    .value = .{
-      .group = 102,
-      .times = 57,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 218,
-    .value = .{
-      .group = 102,
-      .times = 58,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 219,
-    .value = .{
-      .group = 102,
-      .times = 59,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 220,
-    .value = .{
-      .group = 102,
-      .times = 60,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 221,
-    .value = .{
-      .group = 102,
-      .times = 61,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 222,
-    .value = .{
-      .group = 102,
-      .times = 62,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 223,
-    .value = .{
-      .group = 102,
-      .times = 63,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 224,
-    .value = .{
-      .group = 102,
-      .times = 64,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 225,
-    .value = .{
-      .group = 102,
-      .times = 65,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 226,
-    .value = .{
-      .group = 102,
-      .times = 66,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 227,
-    .value = .{
-      .group = 102,
-      .times = 67,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 228,
-    .value = .{
-      .group = 102,
-      .times = 68,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 229,
-    .value = .{
-      .group = 102,
-      .times = 69,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 230,
-    .value = .{
-      .group = 102,
-      .times = 70,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 231,
-    .value = .{
-      .group = 102,
-      .times = 71,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 232,
-    .value = .{
-      .group = 102,
-      .times = 72,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 233,
-    .value = .{
-      .group = 102,
-      .times = 73,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 234,
-    .value = .{
-      .group = 102,
-      .times = 74,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 235,
-    .value = .{
-      .group = 102,
-      .times = 75,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 236,
-    .value = .{
-      .group = 102,
-      .times = 76,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 237,
-    .value = .{
-      .group = 102,
-      .times = 77,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 238,
-    .value = .{
-      .group = 102,
-      .times = 78,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 239,
-    .value = .{
-      .group = 102,
-      .times = 79,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 240,
-    .value = .{
-      .group = 102,
-      .times = 80,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 241,
-    .value = .{
-      .group = 102,
-      .times = 81,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 242,
-    .value = .{
-      .group = 102,
-      .times = 82,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 243,
-    .value = .{
-      .group = 102,
-      .times = 83,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 244,
-    .value = .{
-      .group = 102,
-      .times = 84,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 245,
-    .value = .{
-      .group = 102,
-      .times = 85,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 246,
-    .value = .{
-      .group = 102,
-      .times = 86,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 247,
-    .value = .{
-      .group = 102,
-      .times = 87,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 248,
-    .value = .{
-      .group = 102,
-      .times = 88,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 249,
-    .value = .{
-      .group = 102,
-      .times = 89,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 250,
-    .value = .{
-      .group = 102,
-      .times = 90,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 251,
-    .value = .{
-      .group = 102,
-      .times = 91,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 252,
-    .value = .{
-      .group = 102,
-      .times = 92,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 253,
-    .value = .{
-      .group = 102,
-      .times = 93,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 254,
-    .value = .{
-      .group = 102,
-      .times = 94,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 255,
-    .value = .{
-      .group = 102,
-      .times = 95,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 256,
-    .value = .{
-      .group = 102,
-      .times = 96,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 257,
-    .value = .{
-      .group = 102,
-      .times = 97,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 258,
-    .value = .{
-      .group = 102,
-      .times = 98,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 259,
-    .value = .{
-      .group = 102,
-      .times = 99,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 260,
-    .value = .{
-      .group = 102,
-      .times = 100,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 261,
-    .value = .{
-      .group = 102,
-      .times = 101,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 262,
-    .value = .{
-      .group = 102,
-      .times = 102,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 263,
-    .value = .{
-      .group = 102,
-      .times = 103,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 264,
-    .value = .{
-      .group = 102,
-      .times = 104,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 265,
-    .value = .{
-      .group = 102,
-      .times = 105,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 266,
-    .value = .{
-      .group = 102,
-      .times = 106,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 267,
-    .value = .{
-      .group = 102,
-      .times = 107,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 268,
-    .value = .{
-      .group = 102,
-      .times = 108,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 269,
-    .value = .{
-      .group = 102,
-      .times = 109,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 270,
-    .value = .{
-      .group = 102,
-      .times = 110,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 271,
-    .value = .{
-      .group = 102,
-      .times = 111,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 272,
-    .value = .{
-      .group = 102,
-      .times = 112,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 273,
-    .value = .{
-      .group = 102,
-      .times = 113,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 274,
-    .value = .{
-      .group = 102,
-      .times = 114,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 275,
-    .value = .{
-      .group = 102,
-      .times = 115,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 276,
-    .value = .{
-      .group = 102,
-      .times = 116,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 277,
-    .value = .{
-      .group = 102,
-      .times = 117,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 278,
-    .value = .{
-      .group = 102,
-      .times = 118,
-      .prob = 200,
-    },
-  },
-  .{
-    .key = 279,
-    .value = .{
-      .group = 102,
-      .times = 119,
-      .prob = 10000,
-    },
-  },
+    .{
+        .key = 0,
+        .value = .{
+            .group = 101,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 1,
+        .value = .{
+            .group = 101,
+            .times = 1,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 2,
+        .value = .{
+            .group = 101,
+            .times = 2,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 3,
+        .value = .{
+            .group = 101,
+            .times = 3,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 4,
+        .value = .{
+            .group = 101,
+            .times = 4,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 5,
+        .value = .{
+            .group = 101,
+            .times = 5,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 6,
+        .value = .{
+            .group = 101,
+            .times = 6,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 7,
+        .value = .{
+            .group = 101,
+            .times = 7,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 8,
+        .value = .{
+            .group = 101,
+            .times = 8,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 9,
+        .value = .{
+            .group = 101,
+            .times = 9,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 10,
+        .value = .{
+            .group = 101,
+            .times = 10,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 11,
+        .value = .{
+            .group = 101,
+            .times = 11,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 12,
+        .value = .{
+            .group = 101,
+            .times = 12,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 13,
+        .value = .{
+            .group = 101,
+            .times = 13,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 14,
+        .value = .{
+            .group = 101,
+            .times = 14,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 15,
+        .value = .{
+            .group = 101,
+            .times = 15,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 16,
+        .value = .{
+            .group = 101,
+            .times = 16,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 17,
+        .value = .{
+            .group = 101,
+            .times = 17,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 18,
+        .value = .{
+            .group = 101,
+            .times = 18,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 19,
+        .value = .{
+            .group = 101,
+            .times = 19,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 20,
+        .value = .{
+            .group = 101,
+            .times = 20,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 21,
+        .value = .{
+            .group = 101,
+            .times = 21,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 22,
+        .value = .{
+            .group = 101,
+            .times = 22,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 23,
+        .value = .{
+            .group = 101,
+            .times = 23,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 24,
+        .value = .{
+            .group = 101,
+            .times = 24,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 25,
+        .value = .{
+            .group = 101,
+            .times = 25,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 26,
+        .value = .{
+            .group = 101,
+            .times = 26,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 27,
+        .value = .{
+            .group = 101,
+            .times = 27,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 28,
+        .value = .{
+            .group = 101,
+            .times = 28,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 29,
+        .value = .{
+            .group = 101,
+            .times = 29,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 30,
+        .value = .{
+            .group = 101,
+            .times = 30,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 31,
+        .value = .{
+            .group = 101,
+            .times = 31,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 32,
+        .value = .{
+            .group = 101,
+            .times = 32,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 33,
+        .value = .{
+            .group = 101,
+            .times = 33,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 34,
+        .value = .{
+            .group = 101,
+            .times = 34,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 35,
+        .value = .{
+            .group = 101,
+            .times = 35,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 36,
+        .value = .{
+            .group = 101,
+            .times = 36,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 37,
+        .value = .{
+            .group = 101,
+            .times = 37,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 38,
+        .value = .{
+            .group = 101,
+            .times = 38,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 39,
+        .value = .{
+            .group = 101,
+            .times = 39,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 40,
+        .value = .{
+            .group = 101,
+            .times = 40,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 41,
+        .value = .{
+            .group = 101,
+            .times = 41,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 42,
+        .value = .{
+            .group = 101,
+            .times = 42,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 43,
+        .value = .{
+            .group = 101,
+            .times = 43,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 44,
+        .value = .{
+            .group = 101,
+            .times = 44,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 45,
+        .value = .{
+            .group = 101,
+            .times = 45,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 46,
+        .value = .{
+            .group = 101,
+            .times = 46,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 47,
+        .value = .{
+            .group = 101,
+            .times = 47,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 48,
+        .value = .{
+            .group = 101,
+            .times = 48,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 49,
+        .value = .{
+            .group = 101,
+            .times = 49,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 50,
+        .value = .{
+            .group = 101,
+            .times = 50,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 51,
+        .value = .{
+            .group = 101,
+            .times = 51,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 52,
+        .value = .{
+            .group = 101,
+            .times = 52,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 53,
+        .value = .{
+            .group = 101,
+            .times = 53,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 54,
+        .value = .{
+            .group = 101,
+            .times = 54,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 55,
+        .value = .{
+            .group = 101,
+            .times = 55,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 56,
+        .value = .{
+            .group = 101,
+            .times = 56,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 57,
+        .value = .{
+            .group = 101,
+            .times = 57,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 58,
+        .value = .{
+            .group = 101,
+            .times = 58,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 59,
+        .value = .{
+            .group = 101,
+            .times = 59,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 60,
+        .value = .{
+            .group = 101,
+            .times = 60,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 61,
+        .value = .{
+            .group = 101,
+            .times = 61,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 62,
+        .value = .{
+            .group = 101,
+            .times = 62,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 63,
+        .value = .{
+            .group = 101,
+            .times = 63,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 64,
+        .value = .{
+            .group = 101,
+            .times = 64,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 65,
+        .value = .{
+            .group = 101,
+            .times = 65,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 66,
+        .value = .{
+            .group = 101,
+            .times = 66,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 67,
+        .value = .{
+            .group = 101,
+            .times = 67,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 68,
+        .value = .{
+            .group = 101,
+            .times = 68,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 69,
+        .value = .{
+            .group = 101,
+            .times = 69,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 70,
+        .value = .{
+            .group = 101,
+            .times = 70,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 71,
+        .value = .{
+            .group = 101,
+            .times = 71,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 72,
+        .value = .{
+            .group = 101,
+            .times = 72,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 73,
+        .value = .{
+            .group = 101,
+            .times = 73,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 74,
+        .value = .{
+            .group = 101,
+            .times = 74,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 75,
+        .value = .{
+            .group = 101,
+            .times = 75,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 76,
+        .value = .{
+            .group = 101,
+            .times = 76,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 77,
+        .value = .{
+            .group = 101,
+            .times = 77,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 78,
+        .value = .{
+            .group = 101,
+            .times = 78,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 79,
+        .value = .{
+            .group = 101,
+            .times = 79,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 80,
+        .value = .{
+            .group = 101,
+            .times = 80,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 81,
+        .value = .{
+            .group = 101,
+            .times = 81,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 82,
+        .value = .{
+            .group = 101,
+            .times = 82,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 83,
+        .value = .{
+            .group = 101,
+            .times = 83,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 84,
+        .value = .{
+            .group = 101,
+            .times = 84,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 85,
+        .value = .{
+            .group = 101,
+            .times = 85,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 86,
+        .value = .{
+            .group = 101,
+            .times = 86,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 87,
+        .value = .{
+            .group = 101,
+            .times = 87,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 88,
+        .value = .{
+            .group = 101,
+            .times = 88,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 89,
+        .value = .{
+            .group = 101,
+            .times = 89,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 90,
+        .value = .{
+            .group = 101,
+            .times = 90,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 91,
+        .value = .{
+            .group = 101,
+            .times = 91,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 92,
+        .value = .{
+            .group = 101,
+            .times = 92,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 93,
+        .value = .{
+            .group = 101,
+            .times = 93,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 94,
+        .value = .{
+            .group = 101,
+            .times = 94,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 95,
+        .value = .{
+            .group = 101,
+            .times = 95,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 96,
+        .value = .{
+            .group = 101,
+            .times = 96,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 97,
+        .value = .{
+            .group = 101,
+            .times = 97,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 98,
+        .value = .{
+            .group = 101,
+            .times = 98,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 99,
+        .value = .{
+            .group = 101,
+            .times = 99,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 100,
+        .value = .{
+            .group = 101,
+            .times = 100,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 101,
+        .value = .{
+            .group = 101,
+            .times = 101,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 102,
+        .value = .{
+            .group = 101,
+            .times = 102,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 103,
+        .value = .{
+            .group = 101,
+            .times = 103,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 104,
+        .value = .{
+            .group = 101,
+            .times = 104,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 105,
+        .value = .{
+            .group = 101,
+            .times = 105,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 106,
+        .value = .{
+            .group = 101,
+            .times = 106,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 107,
+        .value = .{
+            .group = 101,
+            .times = 107,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 108,
+        .value = .{
+            .group = 101,
+            .times = 108,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 109,
+        .value = .{
+            .group = 101,
+            .times = 109,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 110,
+        .value = .{
+            .group = 101,
+            .times = 110,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 111,
+        .value = .{
+            .group = 101,
+            .times = 111,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 112,
+        .value = .{
+            .group = 101,
+            .times = 112,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 113,
+        .value = .{
+            .group = 101,
+            .times = 113,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 114,
+        .value = .{
+            .group = 101,
+            .times = 114,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 115,
+        .value = .{
+            .group = 101,
+            .times = 115,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 116,
+        .value = .{
+            .group = 101,
+            .times = 116,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 117,
+        .value = .{
+            .group = 101,
+            .times = 117,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 118,
+        .value = .{
+            .group = 101,
+            .times = 118,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 119,
+        .value = .{
+            .group = 101,
+            .times = 119,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 120,
+        .value = .{
+            .group = 101,
+            .times = 120,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 121,
+        .value = .{
+            .group = 101,
+            .times = 121,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 122,
+        .value = .{
+            .group = 101,
+            .times = 122,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 123,
+        .value = .{
+            .group = 101,
+            .times = 123,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 124,
+        .value = .{
+            .group = 101,
+            .times = 124,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 125,
+        .value = .{
+            .group = 101,
+            .times = 125,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 126,
+        .value = .{
+            .group = 101,
+            .times = 126,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 127,
+        .value = .{
+            .group = 101,
+            .times = 127,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 128,
+        .value = .{
+            .group = 101,
+            .times = 128,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 129,
+        .value = .{
+            .group = 101,
+            .times = 129,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 130,
+        .value = .{
+            .group = 101,
+            .times = 130,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 131,
+        .value = .{
+            .group = 101,
+            .times = 131,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 132,
+        .value = .{
+            .group = 101,
+            .times = 132,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 133,
+        .value = .{
+            .group = 101,
+            .times = 133,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 134,
+        .value = .{
+            .group = 101,
+            .times = 134,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 135,
+        .value = .{
+            .group = 101,
+            .times = 135,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 136,
+        .value = .{
+            .group = 101,
+            .times = 136,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 137,
+        .value = .{
+            .group = 101,
+            .times = 137,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 138,
+        .value = .{
+            .group = 101,
+            .times = 138,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 139,
+        .value = .{
+            .group = 101,
+            .times = 139,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 140,
+        .value = .{
+            .group = 101,
+            .times = 140,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 141,
+        .value = .{
+            .group = 101,
+            .times = 141,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 142,
+        .value = .{
+            .group = 101,
+            .times = 142,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 143,
+        .value = .{
+            .group = 101,
+            .times = 143,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 144,
+        .value = .{
+            .group = 101,
+            .times = 144,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 145,
+        .value = .{
+            .group = 101,
+            .times = 145,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 146,
+        .value = .{
+            .group = 101,
+            .times = 146,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 147,
+        .value = .{
+            .group = 101,
+            .times = 147,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 148,
+        .value = .{
+            .group = 101,
+            .times = 148,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 149,
+        .value = .{
+            .group = 101,
+            .times = 149,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 150,
+        .value = .{
+            .group = 101,
+            .times = 150,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 151,
+        .value = .{
+            .group = 101,
+            .times = 151,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 152,
+        .value = .{
+            .group = 101,
+            .times = 152,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 153,
+        .value = .{
+            .group = 101,
+            .times = 153,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 154,
+        .value = .{
+            .group = 101,
+            .times = 154,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 155,
+        .value = .{
+            .group = 101,
+            .times = 155,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 156,
+        .value = .{
+            .group = 101,
+            .times = 156,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 157,
+        .value = .{
+            .group = 101,
+            .times = 157,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 158,
+        .value = .{
+            .group = 101,
+            .times = 158,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 159,
+        .value = .{
+            .group = 101,
+            .times = 159,
+            .prob = 10000,
+        },
+    },
+    .{
+        .key = 160,
+        .value = .{
+            .group = 102,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 161,
+        .value = .{
+            .group = 102,
+            .times = 1,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 162,
+        .value = .{
+            .group = 102,
+            .times = 2,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 163,
+        .value = .{
+            .group = 102,
+            .times = 3,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 164,
+        .value = .{
+            .group = 102,
+            .times = 4,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 165,
+        .value = .{
+            .group = 102,
+            .times = 5,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 166,
+        .value = .{
+            .group = 102,
+            .times = 6,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 167,
+        .value = .{
+            .group = 102,
+            .times = 7,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 168,
+        .value = .{
+            .group = 102,
+            .times = 8,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 169,
+        .value = .{
+            .group = 102,
+            .times = 9,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 170,
+        .value = .{
+            .group = 102,
+            .times = 10,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 171,
+        .value = .{
+            .group = 102,
+            .times = 11,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 172,
+        .value = .{
+            .group = 102,
+            .times = 12,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 173,
+        .value = .{
+            .group = 102,
+            .times = 13,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 174,
+        .value = .{
+            .group = 102,
+            .times = 14,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 175,
+        .value = .{
+            .group = 102,
+            .times = 15,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 176,
+        .value = .{
+            .group = 102,
+            .times = 16,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 177,
+        .value = .{
+            .group = 102,
+            .times = 17,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 178,
+        .value = .{
+            .group = 102,
+            .times = 18,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 179,
+        .value = .{
+            .group = 102,
+            .times = 19,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 180,
+        .value = .{
+            .group = 102,
+            .times = 20,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 181,
+        .value = .{
+            .group = 102,
+            .times = 21,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 182,
+        .value = .{
+            .group = 102,
+            .times = 22,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 183,
+        .value = .{
+            .group = 102,
+            .times = 23,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 184,
+        .value = .{
+            .group = 102,
+            .times = 24,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 185,
+        .value = .{
+            .group = 102,
+            .times = 25,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 186,
+        .value = .{
+            .group = 102,
+            .times = 26,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 187,
+        .value = .{
+            .group = 102,
+            .times = 27,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 188,
+        .value = .{
+            .group = 102,
+            .times = 28,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 189,
+        .value = .{
+            .group = 102,
+            .times = 29,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 190,
+        .value = .{
+            .group = 102,
+            .times = 30,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 191,
+        .value = .{
+            .group = 102,
+            .times = 31,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 192,
+        .value = .{
+            .group = 102,
+            .times = 32,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 193,
+        .value = .{
+            .group = 102,
+            .times = 33,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 194,
+        .value = .{
+            .group = 102,
+            .times = 34,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 195,
+        .value = .{
+            .group = 102,
+            .times = 35,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 196,
+        .value = .{
+            .group = 102,
+            .times = 36,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 197,
+        .value = .{
+            .group = 102,
+            .times = 37,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 198,
+        .value = .{
+            .group = 102,
+            .times = 38,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 199,
+        .value = .{
+            .group = 102,
+            .times = 39,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 200,
+        .value = .{
+            .group = 102,
+            .times = 40,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 201,
+        .value = .{
+            .group = 102,
+            .times = 41,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 202,
+        .value = .{
+            .group = 102,
+            .times = 42,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 203,
+        .value = .{
+            .group = 102,
+            .times = 43,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 204,
+        .value = .{
+            .group = 102,
+            .times = 44,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 205,
+        .value = .{
+            .group = 102,
+            .times = 45,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 206,
+        .value = .{
+            .group = 102,
+            .times = 46,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 207,
+        .value = .{
+            .group = 102,
+            .times = 47,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 208,
+        .value = .{
+            .group = 102,
+            .times = 48,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 209,
+        .value = .{
+            .group = 102,
+            .times = 49,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 210,
+        .value = .{
+            .group = 102,
+            .times = 50,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 211,
+        .value = .{
+            .group = 102,
+            .times = 51,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 212,
+        .value = .{
+            .group = 102,
+            .times = 52,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 213,
+        .value = .{
+            .group = 102,
+            .times = 53,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 214,
+        .value = .{
+            .group = 102,
+            .times = 54,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 215,
+        .value = .{
+            .group = 102,
+            .times = 55,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 216,
+        .value = .{
+            .group = 102,
+            .times = 56,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 217,
+        .value = .{
+            .group = 102,
+            .times = 57,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 218,
+        .value = .{
+            .group = 102,
+            .times = 58,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 219,
+        .value = .{
+            .group = 102,
+            .times = 59,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 220,
+        .value = .{
+            .group = 102,
+            .times = 60,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 221,
+        .value = .{
+            .group = 102,
+            .times = 61,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 222,
+        .value = .{
+            .group = 102,
+            .times = 62,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 223,
+        .value = .{
+            .group = 102,
+            .times = 63,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 224,
+        .value = .{
+            .group = 102,
+            .times = 64,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 225,
+        .value = .{
+            .group = 102,
+            .times = 65,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 226,
+        .value = .{
+            .group = 102,
+            .times = 66,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 227,
+        .value = .{
+            .group = 102,
+            .times = 67,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 228,
+        .value = .{
+            .group = 102,
+            .times = 68,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 229,
+        .value = .{
+            .group = 102,
+            .times = 69,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 230,
+        .value = .{
+            .group = 102,
+            .times = 70,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 231,
+        .value = .{
+            .group = 102,
+            .times = 71,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 232,
+        .value = .{
+            .group = 102,
+            .times = 72,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 233,
+        .value = .{
+            .group = 102,
+            .times = 73,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 234,
+        .value = .{
+            .group = 102,
+            .times = 74,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 235,
+        .value = .{
+            .group = 102,
+            .times = 75,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 236,
+        .value = .{
+            .group = 102,
+            .times = 76,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 237,
+        .value = .{
+            .group = 102,
+            .times = 77,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 238,
+        .value = .{
+            .group = 102,
+            .times = 78,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 239,
+        .value = .{
+            .group = 102,
+            .times = 79,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 240,
+        .value = .{
+            .group = 102,
+            .times = 80,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 241,
+        .value = .{
+            .group = 102,
+            .times = 81,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 242,
+        .value = .{
+            .group = 102,
+            .times = 82,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 243,
+        .value = .{
+            .group = 102,
+            .times = 83,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 244,
+        .value = .{
+            .group = 102,
+            .times = 84,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 245,
+        .value = .{
+            .group = 102,
+            .times = 85,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 246,
+        .value = .{
+            .group = 102,
+            .times = 86,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 247,
+        .value = .{
+            .group = 102,
+            .times = 87,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 248,
+        .value = .{
+            .group = 102,
+            .times = 88,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 249,
+        .value = .{
+            .group = 102,
+            .times = 89,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 250,
+        .value = .{
+            .group = 102,
+            .times = 90,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 251,
+        .value = .{
+            .group = 102,
+            .times = 91,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 252,
+        .value = .{
+            .group = 102,
+            .times = 92,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 253,
+        .value = .{
+            .group = 102,
+            .times = 93,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 254,
+        .value = .{
+            .group = 102,
+            .times = 94,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 255,
+        .value = .{
+            .group = 102,
+            .times = 95,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 256,
+        .value = .{
+            .group = 102,
+            .times = 96,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 257,
+        .value = .{
+            .group = 102,
+            .times = 97,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 258,
+        .value = .{
+            .group = 102,
+            .times = 98,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 259,
+        .value = .{
+            .group = 102,
+            .times = 99,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 260,
+        .value = .{
+            .group = 102,
+            .times = 100,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 261,
+        .value = .{
+            .group = 102,
+            .times = 101,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 262,
+        .value = .{
+            .group = 102,
+            .times = 102,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 263,
+        .value = .{
+            .group = 102,
+            .times = 103,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 264,
+        .value = .{
+            .group = 102,
+            .times = 104,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 265,
+        .value = .{
+            .group = 102,
+            .times = 105,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 266,
+        .value = .{
+            .group = 102,
+            .times = 106,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 267,
+        .value = .{
+            .group = 102,
+            .times = 107,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 268,
+        .value = .{
+            .group = 102,
+            .times = 108,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 269,
+        .value = .{
+            .group = 102,
+            .times = 109,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 270,
+        .value = .{
+            .group = 102,
+            .times = 110,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 271,
+        .value = .{
+            .group = 102,
+            .times = 111,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 272,
+        .value = .{
+            .group = 102,
+            .times = 112,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 273,
+        .value = .{
+            .group = 102,
+            .times = 113,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 274,
+        .value = .{
+            .group = 102,
+            .times = 114,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 275,
+        .value = .{
+            .group = 102,
+            .times = 115,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 276,
+        .value = .{
+            .group = 102,
+            .times = 116,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 277,
+        .value = .{
+            .group = 102,
+            .times = 117,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 278,
+        .value = .{
+            .group = 102,
+            .times = 118,
+            .prob = 200,
+        },
+    },
+    .{
+        .key = 279,
+        .value = .{
+            .group = 102,
+            .times = 119,
+            .prob = 10000,
+        },
+    },
 }

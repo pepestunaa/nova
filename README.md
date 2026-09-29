@@ -21,7 +21,7 @@ This project is not affiliated with the game's developers or publisher.
 
 ## Compatibility
 
-**Current supported client version:** `1.13.0.137`
+**Current supported client version:** `1.13.0.139`
 
 The server is tested against the version above. Game updates may take time to
 receive compatible resources or protocol changes, and the repository is not

@@ -86,17 +86,17 @@ const LevelCapData = struct {
 };
 
 const AdvanceData = struct {
-    shape: [advance_level_count]AdvanceStep,
+    shape: [advance_group_count][advance_level_count]AdvanceStep,
     materials: [advance_group_count][advance_material_count]u32,
-    material_set_count: usize,
+    config_count: usize,
     groups: [advance_group_count]MaterialMapping,
     group_count: usize,
 };
 
 const SkillData = struct {
-    shape: [skill_level_count]SkillStep,
+    shape: [skill_group_count][skill_level_count]SkillStep,
     materials: [skill_group_count][skill_material_count]u32,
-    material_set_count: usize,
+    config_count: usize,
     groups: [skill_group_count]MaterialMapping,
     group_count: usize,
     max_required_advance: u8,
@@ -204,16 +204,20 @@ fn writeExpItems(writer: *Io.Writer) void {
 }
 
 fn writeAdvanceCurves(writer: *Io.Writer, data: AdvanceData) void {
-    writer.print("pub const advance_shape = [_]AdvanceStep{{\n", .{}) catch unreachable;
-    for (data.shape) |row| {
-        writer.print("    .{{ .gold = {d}, .costs = ", .{row.gold}) catch unreachable;
-        writeCosts(writer, row.costs);
-        writer.writeAll(" },\n") catch unreachable;
+    writer.print("pub const advance_shape = [_][{d}]AdvanceStep{{\n", .{advance_level_count}) catch unreachable;
+    for (data.shape[0..data.config_count]) |curve| {
+        writer.writeAll("    .{\n") catch unreachable;
+        for (curve) |row| {
+            writer.print("        .{{ .gold = {d}, .costs = ", .{row.gold}) catch unreachable;
+            writeCosts(writer, row.costs);
+            writer.writeAll(" },\n") catch unreachable;
+        }
+        writer.writeAll("    },\n") catch unreachable;
     }
     writer.writeAll("};\n\npub const advance_materials = [_][" ++
         std.fmt.comptimePrint("{d}", .{advance_material_count}) ++
         "]u32{\n") catch unreachable;
-    for (data.materials[0..data.material_set_count]) |material_set| {
+    for (data.materials[0..data.config_count]) |material_set| {
         writer.writeAll("    .{ ") catch unreachable;
         for (material_set, 0..) |item_id, i| writer.print(
             "{d}{s} ",
@@ -225,19 +229,23 @@ fn writeAdvanceCurves(writer: *Io.Writer, data: AdvanceData) void {
 }
 
 fn writeSkillCurves(writer: *Io.Writer, data: SkillData) void {
-    writer.print("pub const skill_shape = [_]SkillStep{{\n", .{}) catch unreachable;
-    for (data.shape) |row| {
-        writer.print(
-            "    .{{ .required_advance = {d}, .gold = {d}, .costs = ",
-            .{ row.required_advance, row.gold },
-        ) catch unreachable;
-        writeCosts(writer, row.costs);
-        writer.writeAll(" },\n") catch unreachable;
+    writer.print("pub const skill_shape = [_][{d}]SkillStep{{\n", .{skill_level_count}) catch unreachable;
+    for (data.shape[0..data.config_count]) |curve| {
+        writer.writeAll("    .{\n") catch unreachable;
+        for (curve) |row| {
+            writer.print(
+                "        .{{ .required_advance = {d}, .gold = {d}, .costs = ",
+                .{ row.required_advance, row.gold },
+            ) catch unreachable;
+            writeCosts(writer, row.costs);
+            writer.writeAll(" },\n") catch unreachable;
+        }
+        writer.writeAll("    },\n") catch unreachable;
     }
     writer.writeAll("};\n\npub const skill_materials = [_][" ++
         std.fmt.comptimePrint("{d}", .{skill_material_count}) ++
         "]u32{\n") catch unreachable;
-    for (data.materials[0..data.material_set_count]) |material_set| {
+    for (data.materials[0..data.config_count]) |material_set| {
         writer.writeAll("    .{ ") catch unreachable;
         for (material_set, 0..) |item_id, i| writer.print(
             "{d}{s} ",
@@ -360,8 +368,8 @@ fn buildLevelCaps() !LevelCapData {
 
 fn buildAdvances() !AdvanceData {
     var result: AdvanceData = undefined;
-    result.material_set_count = 0;
     result.group_count = 0;
+    result.config_count = 0;
     var current: [advance_level_count]AdvanceEntry = undefined;
     var current_group: u32 = 0;
     var current_count: usize = 0;
@@ -396,35 +404,29 @@ fn finishAdvance(
     if (count != advance_level_count)
         return error.InvalidAdvanceCount;
     const normalized = normalizeAdvance(curve);
-    if (result.group_count == 0) {
-        for (curve, normalized.costs, 0..) |row, costs, index| result.shape[index] = .{
-            .gold = row.gold,
-            .costs = costs,
-        };
-    } else {
-        for (curve, normalized.costs, 0..) |row, costs, index|
-            if (!std.meta.eql(
-                result.shape[index],
-                AdvanceStep{ .gold = row.gold, .costs = costs },
-            ))
-                return error.InconsistentAdvanceShape;
-    }
+    var shape: [advance_level_count]AdvanceStep = undefined;
+    for (curve, normalized.costs, 0..) |row, costs, index| shape[index] = .{
+        .gold = row.gold,
+        .costs = costs,
+    };
 
-    var material_set: usize = 0;
-    while (material_set < result.material_set_count and
-        !std.meta.eql(result.materials[material_set], normalized.materials)) material_set += 1;
-    if (material_set == result.material_set_count) {
-        result.materials[material_set] = normalized.materials;
-        result.material_set_count += 1;
+    var config_index: usize = 0;
+    while (config_index < result.config_count and
+        (!std.meta.eql(result.shape[config_index], shape) or
+            !std.meta.eql(result.materials[config_index], normalized.materials))) config_index += 1;
+    if (config_index == result.config_count) {
+        result.shape[config_index] = shape;
+        result.materials[config_index] = normalized.materials;
+        result.config_count += 1;
     }
-    result.groups[result.group_count] = .{ .group = group, .material_set = @intCast(material_set) };
+    result.groups[result.group_count] = .{ .group = group, .material_set = @intCast(config_index) };
     result.group_count += 1;
 }
 
 fn buildSkills() !SkillData {
     var result: SkillData = undefined;
-    result.material_set_count = 0;
     result.group_count = 0;
+    result.config_count = 0;
     result.max_required_advance = 0;
     var current: [skill_level_count]SkillEntry = undefined;
     var current_group: u32 = 0;
@@ -473,33 +475,23 @@ fn finishSkill(
     if (count != skill_level_count)
         return error.InvalidSkillUpgradeCount;
     const normalized = normalizeSkill(curve);
-    if (result.group_count == 0) {
-        for (curve, normalized.costs, 0..) |row, costs, index| result.shape[index] = .{
-            .required_advance = row.required_advance,
-            .gold = row.gold,
-            .costs = costs,
-        };
-    } else {
-        for (curve, normalized.costs, 0..) |row, costs, index|
-            if (!std.meta.eql(
-                result.shape[index],
-                SkillStep{
-                    .required_advance = row.required_advance,
-                    .gold = row.gold,
-                    .costs = costs,
-                },
-            ))
-                return error.InconsistentSkillShape;
-    }
+    var shape: [skill_level_count]SkillStep = undefined;
+    for (curve, normalized.costs, 0..) |row, costs, index| shape[index] = .{
+        .required_advance = row.required_advance,
+        .gold = row.gold,
+        .costs = costs,
+    };
 
-    var material_set: usize = 0;
-    while (material_set < result.material_set_count and
-        !std.meta.eql(result.materials[material_set], normalized.materials)) material_set += 1;
-    if (material_set == result.material_set_count) {
-        result.materials[material_set] = normalized.materials;
-        result.material_set_count += 1;
+    var config_index: usize = 0;
+    while (config_index < result.config_count and
+        (!std.meta.eql(result.shape[config_index], shape) or
+            !std.meta.eql(result.materials[config_index], normalized.materials))) config_index += 1;
+    if (config_index == result.config_count) {
+        result.shape[config_index] = shape;
+        result.materials[config_index] = normalized.materials;
+        result.config_count += 1;
     }
-    result.groups[result.group_count] = .{ .group = group, .material_set = @intCast(material_set) };
+    result.groups[result.group_count] = .{ .group = group, .material_set = @intCast(config_index) };
     result.group_count += 1;
 }
 
@@ -507,13 +499,11 @@ fn normalizeAdvance(curve: [advance_level_count]AdvanceEntry) struct {
     costs: [advance_level_count]Costs,
     materials: [advance_material_count]u32,
 } {
-    var materials: [advance_material_count]u32 = undefined;
+    var materials: [advance_material_count]u32 = @splat(0);
     var material_count: usize = 0;
     var costs: [advance_level_count]Costs = undefined;
     for (curve, 0..) |row, index|
         costs[index] = normalizeCosts(row.costs, &materials, &material_count);
-    std.debug.assert(material_count == materials.len);
-
     return .{ .costs = costs, .materials = materials };
 }
 
@@ -521,13 +511,11 @@ fn normalizeSkill(curve: [skill_level_count]SkillEntry) struct {
     costs: [skill_level_count]Costs,
     materials: [skill_material_count]u32,
 } {
-    var materials: [skill_material_count]u32 = undefined;
+    var materials: [skill_material_count]u32 = @splat(0);
     var material_count: usize = 0;
     var costs: [skill_level_count]Costs = undefined;
     for (curve, 0..) |row, index|
         costs[index] = normalizeCosts(row.costs, &materials, &material_count);
-    std.debug.assert(material_count == materials.len);
-
     return .{ .costs = costs, .materials = materials };
 }
 

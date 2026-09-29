@@ -528,6 +528,9 @@ pub const PacketId = enum(i16) {
     gacha_newbie_info_succeed_ack = 6023,
     gacha_newbie_info_failed_ack = 6024,
     gacha_spin_sync_ack = 6025,
+    gacha_reward_get_req = 6026,
+    gacha_reward_get_succeed_ack = 6027,
+    gacha_reward_get_failed_ack = 6028,
     tower_book_fate_card_detail_req = 6101,
     tower_book_fate_card_detail_succeed_ack = 6102,
     tower_book_fate_card_detail_failed_ack = 6103,
@@ -747,6 +750,9 @@ pub const PacketId = enum(i16) {
     activity_ice_cream_level_settle_req = 8411,
     activity_ice_cream_level_settle_succeed_ack = 8412,
     activity_ice_cream_level_settle_failed_ack = 8413,
+    activity_penguin_card_endless_level_save_req = 8416,
+    activity_penguin_card_endless_level_save_succeed_ack = 8417,
+    activity_penguin_card_endless_level_save_failed_ack = 8418,
     mail_list_req = 9001,
     mail_list_succeed_ack = 9002,
     mail_list_failed_ack = 9003,
@@ -3099,6 +3105,18 @@ pub const message_names = [_]MessageName{
         .message_name = "GachaSpinSyncResp",
     },
     .{
+        .id = .gacha_reward_get_req,
+        .message_name = "UI32",
+    },
+    .{
+        .id = .gacha_reward_get_succeed_ack,
+        .message_name = "ChangeInfo",
+    },
+    .{
+        .id = .gacha_reward_get_failed_ack,
+        .message_name = "Error",
+    },
+    .{
         .id = .tower_book_fate_card_detail_req,
         .message_name = "Nil",
     },
@@ -3975,6 +3993,18 @@ pub const message_names = [_]MessageName{
         .message_name = "Error",
     },
     .{
+        .id = .activity_penguin_card_endless_level_save_req,
+        .message_name = "ActivityPenguinCardEndlessLevelSaveReq",
+    },
+    .{
+        .id = .activity_penguin_card_endless_level_save_succeed_ack,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .activity_penguin_card_endless_level_save_failed_ack,
+        .message_name = "Error",
+    },
+    .{
         .id = .mail_list_req,
         .message_name = "Nil",
     },
@@ -4732,7 +4762,7 @@ pub const message_names = [_]MessageName{
     },
     .{
         .id = .score_boss_reset_score_notify,
-        .message_name = "ScoreBossInfo",
+        .message_name = "Nil",
     },
     .{
         .id = .activity_mining_apply_req,
@@ -5991,6 +6021,13 @@ const request_responses = [_]RequestResponses{
         },
     },
     .{
+        .request = .gacha_reward_get_req,
+        .responses = .{
+            .success = .gacha_reward_get_succeed_ack,
+            .failure = .gacha_reward_get_failed_ack,
+        },
+    },
+    .{
         .request = .tower_book_fate_card_detail_req,
         .responses = .{
             .success = .tower_book_fate_card_detail_succeed_ack,
@@ -6499,6 +6536,13 @@ const request_responses = [_]RequestResponses{
         .responses = .{
             .success = .activity_ice_cream_level_settle_succeed_ack,
             .failure = .activity_ice_cream_level_settle_failed_ack,
+        },
+    },
+    .{
+        .request = .activity_penguin_card_endless_level_save_req,
+        .responses = .{
+            .success = .activity_penguin_card_endless_level_save_succeed_ack,
+            .failure = .activity_penguin_card_endless_level_save_failed_ack,
         },
     },
     .{

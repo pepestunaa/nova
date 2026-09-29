@@ -155,7 +155,7 @@ fn filterDaily(comptime fixed: bool) [countDaily(fixed)]Definition {
         result[index] = definition;
         index += 1;
     }
-    
+
     return result;
 }
 
@@ -165,7 +165,7 @@ fn countDaily(comptime fixed: bool) usize {
         if (definition.daily_fixed == fixed)
             count += 1;
     }
-    
+
     return count;
 }
 

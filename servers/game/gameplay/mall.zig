@@ -103,7 +103,8 @@ pub fn nextReset(refresh_type: tables.MallRefreshType, now: i64) i64 {
 pub fn packageOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: []const u8, now: i64, shop: Config.Shop) !Receipt {
     if (!shop.enable)
         return error.PurchasesDisabled;
-    const package = tables.mall_package.get(id) orelse return error.PackageNotListed;
+    const package = tables.mall_package.get(id) orelse
+        return error.PackageNotListed;
     if (package.entry.starts_at != 0 and now < package.entry.starts_at)
         return error.PackageNotListed;
     if (package.entry.ends_at != 0 and now >= package.entry.ends_at)
@@ -125,9 +126,17 @@ pub fn packageOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: []con
             try receipt.append(reward.id, reward.quantity);
         }
     }
-    try player.recordMallPurchase(allocator, .package, package.key, 1, nextReset(package.entry.refresh_type, now), now);
+    try player.recordMallPurchase(
+        allocator,
+        .package,
+        package.key,
+        1,
+        nextReset(package.entry.refresh_type, now),
+        now,
+    );
     if (handbook_changed)
         mutation.recordHandbookType(tables.handbook.skin_type);
+
     return receipt;
 }
 

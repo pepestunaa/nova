@@ -47,21 +47,25 @@ pub const characters = [_]Character{
     .{ .id = 134, .grade = 1, .advance_materials = 0, .skill_materials = 7 },
     .{ .id = 135, .grade = 1, .advance_materials = 0, .skill_materials = 10 },
     .{ .id = 137, .grade = 1, .advance_materials = 0, .skill_materials = 14 },
-    .{ .id = 140, .grade = 1, .advance_materials = 2, .skill_materials = 15 },
+    .{ .id = 139, .grade = 1, .advance_materials = 1, .skill_materials = 15 },
+    .{ .id = 140, .grade = 1, .advance_materials = 2, .skill_materials = 16 },
     .{ .id = 141, .grade = 1, .advance_materials = 1, .skill_materials = 2 },
     .{ .id = 142, .grade = 2, .advance_materials = 1, .skill_materials = 3 },
-    .{ .id = 143, .grade = 1, .advance_materials = 1, .skill_materials = 16 },
+    .{ .id = 143, .grade = 1, .advance_materials = 1, .skill_materials = 17 },
     .{ .id = 144, .grade = 1, .advance_materials = 1, .skill_materials = 6 },
-    .{ .id = 145, .grade = 1, .advance_materials = 0, .skill_materials = 17 },
-    .{ .id = 147, .grade = 2, .advance_materials = 2, .skill_materials = 18 },
-    .{ .id = 149, .grade = 1, .advance_materials = 1, .skill_materials = 19 },
-    .{ .id = 150, .grade = 2, .advance_materials = 1, .skill_materials = 20 },
-    .{ .id = 155, .grade = 1, .advance_materials = 0, .skill_materials = 21 },
-    .{ .id = 156, .grade = 1, .advance_materials = 0, .skill_materials = 22 },
-    .{ .id = 157, .grade = 1, .advance_materials = 2, .skill_materials = 23 },
-    .{ .id = 158, .grade = 1, .advance_materials = 1, .skill_materials = 24 },
-    .{ .id = 159, .grade = 1, .advance_materials = 0, .skill_materials = 25 },
+    .{ .id = 145, .grade = 1, .advance_materials = 0, .skill_materials = 18 },
+    .{ .id = 147, .grade = 2, .advance_materials = 2, .skill_materials = 19 },
+    .{ .id = 149, .grade = 1, .advance_materials = 1, .skill_materials = 20 },
+    .{ .id = 150, .grade = 2, .advance_materials = 1, .skill_materials = 21 },
+    .{ .id = 155, .grade = 1, .advance_materials = 0, .skill_materials = 22 },
+    .{ .id = 156, .grade = 1, .advance_materials = 0, .skill_materials = 23 },
+    .{ .id = 157, .grade = 1, .advance_materials = 2, .skill_materials = 24 },
+    .{ .id = 158, .grade = 1, .advance_materials = 1, .skill_materials = 25 },
+    .{ .id = 159, .grade = 1, .advance_materials = 0, .skill_materials = 26 },
     .{ .id = 160, .grade = 1, .advance_materials = 1, .skill_materials = 13 },
+    .{ .id = 997, .grade = 1, .advance_materials = 3, .skill_materials = 27 },
+    .{ .id = 998, .grade = 1, .advance_materials = 3, .skill_materials = 27 },
+    .{ .id = 999, .grade = 1, .advance_materials = 3, .skill_materials = 27 },
 };
 
 pub const level_costs = [_]LevelCost{
@@ -175,113 +179,445 @@ pub const exp_items = [_]ExpItem{
     .{ .item_id = 30004, .exp = 20000 },
 };
 
-pub const advance_shape = [_]AdvanceStep{
+pub const advance_shape = [_][9]AdvanceStep{
     .{
-        .gold = 7900,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 5 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 7900,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 5 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
             },
-            .count = 1,
+        },
+        .{
+            .gold = 19800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 5 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 44400,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 10 },
+                    .{ .material = 1, .quantity = 15 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 66600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 15 },
+                    .{ .material = 1, .quantity = 25 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 146100,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 20 },
+                    .{ .material = 1, .quantity = 40 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 291600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 30 },
+                    .{ .material = 1, .quantity = 55 },
+                    .{ .material = 2, .quantity = 20 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .gold = 560200,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 1, .quantity = 75 },
+                    .{ .material = 2, .quantity = 30 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 1, .quantity = 95 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
         },
     },
     .{
-        .gold = 19800,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 5 },
-                .{ .material = 1, .quantity = 10 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 7900,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 5 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
             },
-            .count = 2,
+        },
+        .{
+            .gold = 19800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 5 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 44400,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 10 },
+                    .{ .material = 1, .quantity = 15 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 66600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 15 },
+                    .{ .material = 1, .quantity = 25 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 146100,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 20 },
+                    .{ .material = 1, .quantity = 40 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 291600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 30 },
+                    .{ .material = 1, .quantity = 55 },
+                    .{ .material = 2, .quantity = 20 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .gold = 560200,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 1, .quantity = 75 },
+                    .{ .material = 2, .quantity = 30 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 1, .quantity = 95 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
         },
     },
     .{
-        .gold = 44400,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 10 },
-                .{ .material = 1, .quantity = 15 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 7900,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 5 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
             },
-            .count = 2,
+        },
+        .{
+            .gold = 19800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 5 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 44400,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 10 },
+                    .{ .material = 1, .quantity = 15 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 66600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 15 },
+                    .{ .material = 1, .quantity = 25 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 146100,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 20 },
+                    .{ .material = 1, .quantity = 40 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 291600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 30 },
+                    .{ .material = 1, .quantity = 55 },
+                    .{ .material = 2, .quantity = 20 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .gold = 560200,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 1, .quantity = 75 },
+                    .{ .material = 2, .quantity = 30 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 1, .quantity = 95 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
         },
     },
     .{
-        .gold = 66600,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 15 },
-                .{ .material = 1, .quantity = 25 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 7900,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 2,
         },
-    },
-    .{
-        .gold = 146100,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 20 },
-                .{ .material = 1, .quantity = 40 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 19800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 2,
         },
-    },
-    .{
-        .gold = 291600,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 30 },
-                .{ .material = 1, .quantity = 55 },
-                .{ .material = 2, .quantity = 20 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 44400,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 3,
         },
-    },
-    .{
-        .gold = 560200,
-        .costs = .{
-            .entries = .{
-                .{ .material = 1, .quantity = 75 },
-                .{ .material = 2, .quantity = 30 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 66600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 2,
         },
-    },
-    .{
-        .gold = 1121300,
-        .costs = .{
-            .entries = .{
-                .{ .material = 1, .quantity = 95 },
-                .{ .material = 2, .quantity = 50 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 146100,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 2,
         },
-    },
-    .{
-        .gold = 1121300,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .gold = 291600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 0,
+        },
+        .{
+            .gold = 560200,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .gold = 1121300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
         },
     },
 };
@@ -290,137 +626,3704 @@ pub const advance_materials = [_][3]u32{
     .{ 20081, 20082, 20083 },
     .{ 20071, 20072, 20073 },
     .{ 20091, 20092, 20093 },
+    .{ 0, 0, 0 },
 };
 
-pub const skill_shape = [_]SkillStep{
+pub const skill_shape = [_][10]SkillStep{
     .{
-        .required_advance = 0,
-        .gold = 0,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 0,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 1,
-        .gold = 13300,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 6 },
-                .{ .material = 1, .quantity = 2 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 2,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 2,
-        .gold = 17600,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 12 },
-                .{ .material = 1, .quantity = 6 },
-                .{ .material = 0, .quantity = 0 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 2,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 3,
-        .gold = 49800,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 24 },
-                .{ .material = 2, .quantity = 3 },
-                .{ .material = 1, .quantity = 10 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 3,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 4,
-        .gold = 100000,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 38 },
-                .{ .material = 2, .quantity = 8 },
-                .{ .material = 1, .quantity = 24 },
-                .{ .material = 0, .quantity = 0 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 3,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 5,
-        .gold = 400000,
-        .costs = .{
-            .entries = .{
-                .{ .material = 0, .quantity = 70 },
-                .{ .material = 2, .quantity = 14 },
-                .{ .material = 3, .quantity = 6 },
-                .{ .material = 1, .quantity = 55 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 4,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 6,
-        .gold = 900000,
-        .costs = .{
-            .entries = .{
-                .{ .material = 4, .quantity = 1 },
-                .{ .material = 2, .quantity = 50 },
-                .{ .material = 3, .quantity = 18 },
-                .{ .material = 1, .quantity = 232 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 4,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 7,
-        .gold = 1600000,
-        .costs = .{
-            .entries = .{
-                .{ .material = 4, .quantity = 2 },
-                .{ .material = 2, .quantity = 90 },
-                .{ .material = 3, .quantity = 34 },
-                .{ .material = 1, .quantity = 323 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 4,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 8,
-        .gold = 2300000,
-        .costs = .{
-            .entries = .{
-                .{ .material = 4, .quantity = 3 },
-                .{ .material = 2, .quantity = 140 },
-                .{ .material = 3, .quantity = 50 },
-                .{ .material = 1, .quantity = 478 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 4,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
         },
     },
     .{
-        .required_advance = 8,
-        .gold = 3400000,
-        .costs = .{
-            .entries = .{
-                .{ .material = 4, .quantity = 6 },
-                .{ .material = 2, .quantity = 200 },
-                .{ .material = 3, .quantity = 70 },
-                .{ .material = 1, .quantity = 927 },
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
             },
-            .count = 4,
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 55 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 232 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 323 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 478 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 927 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 1,
+            },
         },
     },
 };
@@ -441,6 +4344,7 @@ pub const skill_materials = [_][5]u32{
     .{ 32001, 32000, 32002, 32003, 20023 },
     .{ 32001, 32000, 32002, 32003, 20063 },
     .{ 32021, 32000, 32022, 32023, 21043 },
+    .{ 32001, 32000, 32002, 32003, 21063 },
     .{ 32021, 32000, 32022, 32023, 20003 },
     .{ 32001, 32000, 32002, 32003, 20043 },
     .{ 32021, 32000, 32022, 32023, 21013 },
@@ -452,6 +4356,7 @@ pub const skill_materials = [_][5]u32{
     .{ 32011, 32000, 32012, 32013, 20013 },
     .{ 32001, 32000, 32002, 32003, 21023 },
     .{ 32011, 32000, 32012, 32013, 21003 },
+    .{ 32000, 0, 0, 0, 0 },
 };
 
 pub const grades = [_]Grade{

@@ -1,22 +1,22 @@
 .{
-  .{
-    .id = 1,
-    .item_id = 30001,
-    .exp_value = 1000,
-  },
-  .{
-    .id = 2,
-    .item_id = 30002,
-    .exp_value = 5000,
-  },
-  .{
-    .id = 3,
-    .item_id = 30003,
-    .exp_value = 10000,
-  },
-  .{
-    .id = 4,
-    .item_id = 30004,
-    .exp_value = 20000,
-  },
+    .{
+        .id = 1,
+        .item_id = 30001,
+        .exp_value = 1000,
+    },
+    .{
+        .id = 2,
+        .item_id = 30002,
+        .exp_value = 5000,
+    },
+    .{
+        .id = 3,
+        .item_id = 30003,
+        .exp_value = 10000,
+    },
+    .{
+        .id = 4,
+        .item_id = 30004,
+        .exp_value = 20000,
+    },
 }

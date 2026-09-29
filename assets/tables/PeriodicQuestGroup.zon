@@ -1,57 +1,57 @@
 .{
-  .{
-    .key = 0,
-    .value = .{
-      .belong = 101002,
-      .group_id = 1,
+    .{
+        .key = 0,
+        .value = .{
+            .belong = 101002,
+            .group_id = 1,
+        },
     },
-  },
-  .{
-    .key = 1,
-    .value = .{
-      .belong = 101002,
-      .group_id = 2,
-      .unlock_time = 1,
+    .{
+        .key = 1,
+        .value = .{
+            .belong = 101002,
+            .group_id = 2,
+            .unlock_time = 1,
+        },
     },
-  },
-  .{
-    .key = 2,
-    .value = .{
-      .belong = 101002,
-      .group_id = 3,
-      .unlock_time = 2,
+    .{
+        .key = 2,
+        .value = .{
+            .belong = 101002,
+            .group_id = 3,
+            .unlock_time = 2,
+        },
     },
-  },
-  .{
-    .key = 3,
-    .value = .{
-      .belong = 101002,
-      .group_id = 4,
-      .unlock_time = 3,
+    .{
+        .key = 3,
+        .value = .{
+            .belong = 101002,
+            .group_id = 4,
+            .unlock_time = 3,
+        },
     },
-  },
-  .{
-    .key = 4,
-    .value = .{
-      .belong = 101002,
-      .group_id = 5,
-      .unlock_time = 4,
+    .{
+        .key = 4,
+        .value = .{
+            .belong = 101002,
+            .group_id = 5,
+            .unlock_time = 4,
+        },
     },
-  },
-  .{
-    .key = 5,
-    .value = .{
-      .belong = 101002,
-      .group_id = 6,
-      .unlock_time = 5,
+    .{
+        .key = 5,
+        .value = .{
+            .belong = 101002,
+            .group_id = 6,
+            .unlock_time = 5,
+        },
     },
-  },
-  .{
-    .key = 6,
-    .value = .{
-      .belong = 101002,
-      .group_id = 7,
-      .unlock_time = 6,
+    .{
+        .key = 6,
+        .value = .{
+            .belong = 101002,
+            .group_id = 7,
+            .unlock_time = 6,
+        },
     },
-  },
 }
