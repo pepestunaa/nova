@@ -9,7 +9,7 @@ const tables = @import("../tables.zig");
 
 //
 
-const probability_scale = 10_000;
+const probability_scale = 100_000;
 const default_seed = 0x9e3779b97f4a7c15;
 
 pub const max_pull_count = 10;
@@ -278,7 +278,8 @@ fn drawBannerCard(
     const storage = banner.storage;
     const a_guaranteed = banner.a_type_guarantee_pulls != 0 and
         state.a_misses + 1 >= banner.a_type_guarantee_pulls;
-    const a_probability = tables.gacha.aTypeProbability(storage.a_type_group, state.a_misses);
+    // const a_probability = tables.gacha.aTypeProbability(storage.a_type_group, state.a_misses);
+    const a_probability = probability_scale;
     const roll = nextRandom(&state.rng_state) % probability_scale;
 
     const rarity: tables.gacha.Rarity = if (a_guaranteed or roll < a_probability) .five_star else if (state.b_misses >= 9 or
@@ -325,11 +326,14 @@ fn drawBannerCard(
 }
 
 fn selectAPool(state: *StorageState, banner: *const tables.gacha.Banner) PoolSelection {
-    const storage = banner.storage;
-    const force_featured = storage.a_up_guarantee_pulls != 0 and
-        state.a_up_misses + 1 >= storage.a_up_guarantee_pulls;
-    const featured = banner.a_up_pool.len != 0 and (force_featured or
-        nextRandom(&state.rng_state) % probability_scale < storage.a_up_probability);
+    _ = state;
+
+    // const storage = banner.storage;
+    // const force_featured = storage.a_up_guarantee_pulls != 0 and
+    //     state.a_up_misses + 1 >= storage.a_up_guarantee_pulls;
+    // const featured = banner.a_up_pool.len != 0 and (force_featured or
+    //     nextRandom(&state.rng_state) % probability_scale < storage.a_up_probability);
+    const featured = banner.a_up_pool.len != 0;
     if (featured)
         return .{ .entries = banner.a_up_pool, .up = true };
 
