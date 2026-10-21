@@ -9,6 +9,10 @@ skip_tutorial: bool,
 /// to be listed here to keep the client from asking for data the server does
 /// not implement.
 extra_guide_groups: []const u32,
+/// Gallery (Handbook) types whose bitmap is sent to the client. The
+/// 1.13.0.143 client resolves the gallery rows of every type it caches and
+/// logs an error for each skin its own table does not contain.
+gallery_types: []const u32,
 /// Logs every request the client sends, with its numeric ID, its protocol
 /// name and the payload size. Needed to see which requests a feature uses
 /// when the protocol table does not cover the client version.

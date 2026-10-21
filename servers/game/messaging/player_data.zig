@@ -1,6 +1,7 @@
 const gameplay = @import("../gameplay.zig");
 const handbook_view = @import("../view/handbook.zig");
 const Player = @import("../store/Player.zig");
+const config: @import("../Config.zig") = @import("config");
 const player_view = @import("../view/player.zig");
 const proto = @import("proto");
 const Scope = @import("../Scope.zig");
@@ -31,6 +32,14 @@ pub fn player_data_req(scope: *Scope) !void {
 }
 
 pub const response = struct {
+    fn sendsGalleryType(handbook_type: usize) bool {
+        for (config.gallery_types) |enabled| {
+            if (enabled == handbook_type) return true;
+        }
+
+        return false;
+    }
+
     pub fn send(scope: *Scope) !void {
         const player: *const Player = scope.player;
         const now = scope.now;
@@ -252,10 +261,25 @@ pub const response = struct {
         }
         for (player.board.slice(), 0..) |entry, index| board[index] = entry.handbook_id;
         for (&handbook_bitmaps, 0..) |*bitmap, handbook_type| {
+            if (!sendsGalleryType(handbook_type)) continue;
+
             if (handbook_view.info(player, handbook_type, bitmap)) |info| {
                 handbook_infos[handbook_count] = info;
                 handbook_count += 1;
             }
+        }
+
+        const log = scope.logger(.player_data_req);
+        for (player.handbook.slice()) |unlock| {
+            const entry = tables.handbook.get(unlock.handbook_id) orelse
+                continue;
+            log.debug(
+                "gallery unlock id={d} type={d} index={d} skin={d}",
+                .{ entry.id, entry.type, entry.index, entry.skin_id },
+            );
+        }
+        for (handbook_infos[0..handbook_count]) |info| {
+            log.info("gallery bitmap type={d} bytes={x}", .{ info.Type, info.Data });
         }
 
         var character_count: usize = 0;
