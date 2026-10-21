@@ -2,6 +2,7 @@ const std = @import("std");
 const Io = std.Io;
 
 const change_info = @import("../view/change_info.zig");
+const config: @import("../Config.zig") = @import("config");
 const gacha = @import("../gameplay/gacha.zig");
 const Player = @import("../store/Player.zig");
 const proto = @import("proto");
@@ -30,8 +31,23 @@ pub fn gacha_spin_req(scope: *Scope) !void {
     const log = scope.logger(.gacha_spin_req);
     const request = try scope.source.read(proto.pb.GachaSpinReq);
 
-    const banner = tables.gacha.banner(request.Id) orelse
-        return scope.reject(.invalid_req);
+    const requested_id = request.Id;
+    const banner: tables.gacha.Banner = if (tables.gacha.banner(requested_id)) |known| known.* else blk: {
+        if (!config.gacha_unknown_banner_fallback)
+            return scope.reject(.invalid_req);
+
+        // The client can be newer than the tables and offer banners this
+        // server has no data for. Serving the shared pools of the closest
+        // banner keeps the pull working instead of rejecting it.
+        const fallback = tables.gacha.fallbackBanner(requested_id) orelse
+            return scope.reject(.invalid_req);
+
+        log.warn(
+            "banner {d} is not in the server tables, serving the shared pools of pity group {d}",
+            .{ requested_id, fallback.storage_id },
+        );
+        break :blk fallback;
+    };
     const pull_count: u8 = switch (request.Mode) {
         1 => 1,
         2 => tables.gacha_newbie.cards_per_spin,
@@ -69,9 +85,9 @@ pub fn gacha_spin_req(scope: *Scope) !void {
     };
 
     const now = scope.timestamp;
-    const banner_state = try getOrCreateBannerState(scope, banner);
-    const storage_state = try getOrCreateStorageState(scope, banner, now);
-    const spin = try gacha.spinBanner(storage_state, banner, pull_count);
+    const banner_state = try getOrCreateBannerState(scope, requested_id);
+    const storage_state = try getOrCreateStorageState(scope, &banner, now);
+    const spin = try gacha.spinBanner(storage_state, &banner, pull_count);
     banner_state.total_pulls +|= pull_count;
     banner_state.daily_pulls +|= pull_count;
     banner_state.a_up_count +|= spin.a_up_count;
@@ -81,7 +97,7 @@ pub fn gacha_spin_req(scope: *Scope) !void {
     if (banner.storage.give_item) |item| {
         try reward.grantRecruitmentItem(scope.mutation(), scope.gpa, &receipt, item.id, side_reward_quantity);
     }
-    try appendHistory(scope, banner, now.toSeconds(), &spin);
+    try appendHistory(scope, &banner, now.toSeconds(), &spin);
 
     var card_messages: [tables.gacha_newbie.cards_per_spin]proto.pb.GachaCard = undefined;
     for (spin.slice(), 0..) |card, index|
@@ -167,14 +183,14 @@ pub fn gacha_guarantee_reward_receive_req(scope: *Scope) !void {
 
 fn getOrCreateBannerState(
     scope: *Scope,
-    banner: *const tables.gacha.Banner,
+    id: u32,
 ) !*Player.GachaBanner {
     const player = scope.mutation().modify(.{});
-    if (findBannerState(player, banner.id)) |state|
+    if (findBannerState(player, id)) |state|
         return state;
 
     var state: Player.GachaBanner = undefined;
-    gacha.initializeBanner(&state, banner.id);
+    gacha.initializeBanner(&state, id);
     try player.gacha_banners.append(scope.gpa, state);
 
     return &player.gacha_banners.entries[player.gacha_banners.len - 1];

@@ -9,6 +9,11 @@ skip_tutorial: bool,
 /// to be listed here to keep the client from asking for data the server does
 /// not implement.
 extra_guide_groups: []const u32,
+/// Serves a Recruitment banner the client asks for but the tables do not
+/// contain. The client version can be newer than the tables, and rejecting
+/// the pull leaves the player with an "illegal request" popup. When this is
+/// disabled the request is rejected instead.
+gacha_unknown_banner_fallback: bool,
 /// Gallery (Handbook) types whose bitmap is sent to the client. The
 /// 1.13.0.143 client resolves the gallery rows of every type it caches and
 /// logs an error for each skin its own table does not contain.

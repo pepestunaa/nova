@@ -2,6 +2,8 @@ const generated = @import("generated/assets/gacha");
 const acquire_rewards = generated.acquire_rewards;
 const a_type_probabilities = generated.a_type_probabilities;
 
+const std = @import("std");
+
 const character = @import("character.zig");
 const disc = @import("disc.zig");
 const lookup = @import("lookup.zig");
@@ -66,6 +68,45 @@ pub const newbie_gacha = struct {
 pub fn banner(id: u32) ?*const Banner {
     const row = by_banner_id.find(id) orelse return null;
     return &banners[row];
+}
+
+/// Builds a banner for a banner id this server has no data for. The client
+/// version can be newer than the tables, and the client offers banners the
+/// tables do not contain. The banner uses the shared pools of the closest
+/// banner in the same pity group, and leaves the featured character out
+/// because the server has no data for it.
+pub fn fallbackBanner(id: u32) ?Banner {
+    const storage_id = storageForBannerId(id);
+    if (storage_id == 0) return null;
+
+    var template: ?*const Banner = null;
+    var best_distance: u64 = std.math.maxInt(u64);
+    for (&banners) |*entry| {
+        if (entry.storage_id != storage_id) continue;
+
+        const distance: u64 = @abs(@as(i64, entry.id) - @as(i64, id));
+        if (distance < best_distance) {
+            template = entry;
+            best_distance = distance;
+        }
+    }
+
+    const source = template orelse return null;
+
+    var result = source.*;
+    result.id = id;
+    result.a_up_pool = &.{};
+    return result;
+}
+
+/// The pity group a banner id belongs to. Character banners use storage 1 and
+/// Trekker banners use storage 3.
+fn storageForBannerId(id: u32) u32 {
+    return switch (id / 10000) {
+        1 => 1,
+        2 => 3,
+        else => 0,
+    };
 }
 
 pub fn aTypeProbability(group: u32, pulls_without_a: u32) u32 {
