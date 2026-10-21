@@ -43,6 +43,7 @@ const namespaces: []const type = &.{
     @import("messaging/quest.zig"),
     @import("messaging/quest_tower_reward_receive.zig"),
     @import("messaging/score_boss.zig"),
+    @import("messaging/soldier.zig"),
     @import("messaging/star_tower.zig"),
     @import("messaging/star_tower_apply.zig"),
     @import("messaging/star_tower_book.zig"),

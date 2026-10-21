@@ -503,6 +503,9 @@ pub const PacketId = enum(i16) {
     soldier_partner_trace_req = 5316,
     soldier_partner_trace_succeed_ack = 5317,
     soldier_partner_trace_failed_ack = 5318,
+    soldier_partner_trace_info_req = 5319,
+    soldier_partner_trace_info_succeed_ack = 5320,
+    soldier_partner_trace_info_failed_ack = 5321,
     gacha_spin_req = 6001,
     gacha_spin_succeed_ack = 6002,
     gacha_spin_failed_ack = 6003,
@@ -753,6 +756,9 @@ pub const PacketId = enum(i16) {
     activity_penguin_card_endless_level_save_req = 8416,
     activity_penguin_card_endless_level_save_succeed_ack = 8417,
     activity_penguin_card_endless_level_save_failed_ack = 8418,
+    activity_dust_dawn_info_req = 8419,
+    activity_dust_dawn_info_succeed_ack = 8420,
+    activity_dust_dawn_info_failed_ack = 8421,
     mail_list_req = 9001,
     mail_list_succeed_ack = 9002,
     mail_list_failed_ack = 9003,
@@ -846,6 +852,12 @@ pub const PacketId = enum(i16) {
     activity_cg_read_req = 9501,
     activity_cg_read_succeed_ack = 9502,
     activity_cg_read_failed_ack = 9503,
+    player_dorm_info_req = 9510,
+    player_dorm_info_succeed_ack = 9511,
+    player_dorm_info_failed_ack = 9512,
+    player_dorm_room_info_req = 9516,
+    player_dorm_room_info_succeed_ack = 9517,
+    player_dorm_room_info_failed_ack = 9518,
     activity_levels_apply_req = 9601,
     activity_levels_apply_succeed_ack = 9602,
     activity_levels_apply_failed_ack = 9603,
@@ -3005,6 +3017,18 @@ pub const message_names = [_]MessageName{
         .message_name = "Error",
     },
     .{
+        .id = .soldier_partner_trace_info_req,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .soldier_partner_trace_info_succeed_ack,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .soldier_partner_trace_info_failed_ack,
+        .message_name = "Error",
+    },
+    .{
         .id = .gacha_spin_req,
         .message_name = "GachaSpinReq",
     },
@@ -4005,6 +4029,18 @@ pub const message_names = [_]MessageName{
         .message_name = "Error",
     },
     .{
+        .id = .activity_dust_dawn_info_req,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .activity_dust_dawn_info_succeed_ack,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .activity_dust_dawn_info_failed_ack,
+        .message_name = "Error",
+    },
+    .{
         .id = .mail_list_req,
         .message_name = "Nil",
     },
@@ -4374,6 +4410,30 @@ pub const message_names = [_]MessageName{
     },
     .{
         .id = .activity_cg_read_failed_ack,
+        .message_name = "Error",
+    },
+    .{
+        .id = .player_dorm_info_req,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .player_dorm_info_succeed_ack,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .player_dorm_info_failed_ack,
+        .message_name = "Error",
+    },
+    .{
+        .id = .player_dorm_room_info_req,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .player_dorm_room_info_succeed_ack,
+        .message_name = "Nil",
+    },
+    .{
+        .id = .player_dorm_room_info_failed_ack,
         .message_name = "Error",
     },
     .{
@@ -5965,6 +6025,13 @@ const request_responses = [_]RequestResponses{
         },
     },
     .{
+        .request = .soldier_partner_trace_info_req,
+        .responses = .{
+            .success = .soldier_partner_trace_info_succeed_ack,
+            .failure = .soldier_partner_trace_info_failed_ack,
+        },
+    },
+    .{
         .request = .gacha_spin_req,
         .responses = .{
             .success = .gacha_spin_succeed_ack,
@@ -6546,6 +6613,13 @@ const request_responses = [_]RequestResponses{
         },
     },
     .{
+        .request = .activity_dust_dawn_info_req,
+        .responses = .{
+            .success = .activity_dust_dawn_info_succeed_ack,
+            .failure = .activity_dust_dawn_info_failed_ack,
+        },
+    },
+    .{
         .request = .mail_list_req,
         .responses = .{
             .success = .mail_list_succeed_ack,
@@ -6760,6 +6834,20 @@ const request_responses = [_]RequestResponses{
         .responses = .{
             .success = .activity_cg_read_succeed_ack,
             .failure = .activity_cg_read_failed_ack,
+        },
+    },
+    .{
+        .request = .player_dorm_info_req,
+        .responses = .{
+            .success = .player_dorm_info_succeed_ack,
+            .failure = .player_dorm_info_failed_ack,
+        },
+    },
+    .{
+        .request = .player_dorm_room_info_req,
+        .responses = .{
+            .success = .player_dorm_room_info_succeed_ack,
+            .failure = .player_dorm_room_info_failed_ack,
         },
     },
     .{

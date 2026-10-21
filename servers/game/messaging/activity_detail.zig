@@ -4,6 +4,11 @@ const tables = @import("../tables.zig");
 
 //
 
+pub fn activity_dust_dawn_info_req(scope: *Scope) !void {
+    _ = try scope.source.read(proto.pb.Nil);
+    try scope.respondEmpty();
+}
+
 pub fn activity_detail_req(scope: *Scope) !void {
     _ = try scope.source.read(proto.pb.Nil);
     var quests: [tables.periodic_quest.list.len]proto.pb.ActivityQuest = undefined;
