@@ -4,6 +4,10 @@ Server emulator for Stella Sora.
 
 This project is not affiliated with the game's developers or publisher.
 
+Nova is a fork of [Astralis](https://git.xeondev.com/nyan/astralis) by nyan,
+which is licensed under the GNU Affero General Public License v3. The original
+copyright and license notices are kept in the `LICENSE` file.
+
 ## Contents
 
 - [Compatibility](#compatibility)

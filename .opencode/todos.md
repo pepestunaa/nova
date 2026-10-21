@@ -11,8 +11,10 @@
 - [x] Reproduce the new-banner bug: client asks for banner 10162, server rejected it
 - [x] Fix it: serve the shared pools of the pity group for unknown banners (config `gacha_unknown_banner_fallback`)
 - [x] Verify in the client: pull on banner 10162 completes, no "illegal request", no new client errors
+- [x] Rename the project to Nova (binaries, scripts, install URLs, docs)
+- [x] Commit the work as focused commits and push it to github.com/pepestunaa/nova
 - [ ] Add the real 1.13.0.143 data for character 162 and banner 10162 (Character, Gacha, GachaPkg, Handbook, Item, Talent, Potential tables)
 - [ ] Identify packet 5401 (sent on every scene transition, payload 08 01)
 - [ ] Play a stage end to end and implement the missing `*_apply_req` / `*_settle_req` handlers
 - [ ] Refresh the remaining assets/tables/*.zon from the 1.13.0.143 client (needs the encrypted data.arcx / lua.arcx extracted)
-- [ ] Commit the Astralis changes and the asterism patch
+- [ ] Push the client patch (asterism) to a repository of its own if it should leave the upstream
