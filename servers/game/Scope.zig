@@ -182,6 +182,28 @@ pub fn respondFailure(scope: *const Scope, message: anytype) Error!void {
 /// server failures continue to propagate as Zig errors.
 pub fn reject(scope: *const Scope, code: tables.error_code.Code) Error!void {
     try ensureUnmodified(&scope.mutation_state);
+
+    // The client shows the error code as a generic message such as
+    // "illegal request", so the server has to log which request was rejected
+    // and why, otherwise the reason is only visible in the client.
+    const log = std.log.scoped(.rejected);
+    if (scope.playerId()) |uid| {
+        log.warn("[uid={d}] rejected {s} ({d}) with {s} ({d})", .{
+            uid,
+            @tagName(scope.source.id),
+            @intFromEnum(scope.source.id),
+            @tagName(code),
+            @intFromEnum(code),
+        });
+    } else {
+        log.warn("[uid=?] rejected {s} ({d}) with {s} ({d})", .{
+            @tagName(scope.source.id),
+            @intFromEnum(scope.source.id),
+            @tagName(code),
+            @intFromEnum(code),
+        });
+    }
+
     try scope.respondFailure(proto.pb.Error{
         .Code = @intCast(@intFromEnum(code)),
     });
@@ -277,8 +299,14 @@ pub const Response = struct {
     }
 
     pub fn appendEmpty(response: *Response, id: proto.PacketId) Response.Error!void {
+        return response.appendRawEmpty(@intFromEnum(id));
+    }
+
+    /// Writes a packet that exists only in the client's newer protocol, so it
+    /// has no `PacketId` tag in this build.
+    pub fn appendRawEmpty(response: *Response, raw_id: i16) Response.Error!void {
         const start = try response.beginFrame();
-        try response.writer.writeInt(i16, @intFromEnum(id), .big);
+        try response.writer.writeInt(i16, raw_id, .big);
         response.frames[response.len] = .{ .start = start, .can_chain = false };
         response.len += 1;
     }
