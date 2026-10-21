@@ -3,6 +3,7 @@ pub const activity = @import("gameplay/activity.zig");
 pub const character_progression = @import("gameplay/character_progression.zig");
 pub const energy = @import("gameplay/energy.zig");
 pub const gacha = @import("gameplay/gacha.zig");
+pub const guide = @import("gameplay/guide.zig");
 pub const handbook = @import("gameplay/handbook.zig");
 pub const lineup_tutorial = @import("gameplay/lineup_tutorial.zig");
 pub const mall = @import("gameplay/mall.zig");

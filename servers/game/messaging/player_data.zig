@@ -22,6 +22,7 @@ pub fn player_data_req(scope: *Scope) !void {
     try gameplay.missions.login(scope.mutation(), scope.gpa, scope.now);
     _ = gameplay.energy.refresh(scope.mutation(), scope.now);
     _ = try gameplay.handbook.ensureDefaultSkins(scope.mutation(), scope.gpa);
+    _ = try gameplay.guide.ensureExtraGuides(scope.mutation(), scope.gpa);
 
     try response.send(scope);
     const today = gameplay.mall.cardDay(scope.now);

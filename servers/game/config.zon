@@ -10,6 +10,11 @@
     // (to avoid having an error in the client)
     .skip_tutorial = true,
 
+    // Guide groups that the bundled guide table does not contain. Group 521
+    // is the Dorm guide, which the 1.13 client runs on its own and which
+    // asks for Dorm data the server does not implement.
+    .extra_guide_groups = .{ 521 },
+
     .shop = .{
         // Enables purchases from every Shop page. Product lists remain
         // available when disabled so the client can render the Shop normally.
