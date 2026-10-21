@@ -10,3 +10,6 @@
 !/tools/serve_all.zig
 
 /store/
+
+# Local agent state, not project source.
+/.opencode/
