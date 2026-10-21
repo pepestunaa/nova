@@ -173,7 +173,7 @@ pub fn build(b: *std.Build) void {
     );
 
     const game_server = b.addExecutable(.{
-        .name = "astralis-game-server",
+        .name = "nova-game-server",
         .root_module = b.createModule(
             .{
                 .root_source_file = b.path("servers/game/main.zig"),
@@ -209,7 +209,7 @@ pub fn build(b: *std.Build) void {
     //
 
     const sdk_server = b.addExecutable(.{
-        .name = "astralis-sdk-server",
+        .name = "nova-sdk-server",
         .root_module = b.createModule(
             .{
                 .root_source_file = b.path("servers/sdk/main.zig"),

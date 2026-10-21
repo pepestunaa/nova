@@ -12,7 +12,7 @@ $Setup = Join-Path $PSScriptRoot "setup.ps1"
 
 $Zig = & $Setup -Yes:$Yes
 if (-not $Zig) {
-    throw "Astralis setup did not return a Zig executable."
+    throw "Nova setup did not return a Zig executable."
 }
 
 if ($ServerArgs.Count -ne 0 -and $ServerArgs[0] -eq "--") {
@@ -27,7 +27,7 @@ try {
         & $Zig build -Doptimize=ReleaseSafe serve-all
     }
     if ($LASTEXITCODE -ne 0) {
-        throw "Astralis exited with code $LASTEXITCODE."
+        throw "Nova exited with code $LASTEXITCODE."
     }
 } finally {
     Pop-Location

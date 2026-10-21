@@ -40,7 +40,7 @@ fn encodeAgent(
     game_server_address: []const u8,
 ) ![]const u8 {
     var cursor: usize = 0;
-    try writeBytes(buffer, &cursor, 1, "Astralis");
+    try writeBytes(buffer, &cursor, 1, "Nova");
     try writeBytesParts(
         buffer,
         &cursor,

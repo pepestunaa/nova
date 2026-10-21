@@ -1,7 +1,7 @@
 .{
-    .name = .astralis,
+    .name = .nova,
     .version = "0.0.1",
     .minimum_zig_version = "0.16.0",
-    .fingerprint = 0x8261bc8eb8cc2f6,
+    .fingerprint = 0xfae65c8fdc62fb8d,
     .paths = .{""},
 }

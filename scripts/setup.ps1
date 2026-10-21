@@ -28,7 +28,7 @@ function Invoke-WithoutProgress([scriptblock]$Command) {
 
 function Get-RequiredZigVersion {
     if (-not (Test-Path -LiteralPath $Manifest -PathType Leaf)) {
-        throw "Astralis does not contain build.zig.zon."
+        throw "Nova does not contain build.zig.zon."
     }
     $Match = [regex]::Match(
         (Get-Content -LiteralPath $Manifest -Raw),
@@ -96,7 +96,7 @@ function Find-AnyZig {
 function Install-Zvm([string]$RequiredVersion) {
     $CurrentVersion = Find-AnyZig
     $Prompt = if ($CurrentVersion) {
-        "Found Zig $CurrentVersion, but Astralis needs $RequiredVersion. Install zvm?"
+        "Found Zig $CurrentVersion, but Nova needs $RequiredVersion. Install zvm?"
     } else {
         "Zig $RequiredVersion is required. Install zvm?"
     }

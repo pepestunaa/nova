@@ -32,11 +32,11 @@ confirm()
     esac
 }
 
-[ -d "$root/.git" ] || fail 'update.sh must be run from an Astralis Git checkout.'
-command -v git >/dev/null 2>&1 || fail 'Git is required to update Astralis.'
+[ -d "$root/.git" ] || fail 'update.sh must be run from an Nova Git checkout.'
+command -v git >/dev/null 2>&1 || fail 'Git is required to update Nova.'
 
 changes=$(git -C "$root" status --porcelain=v1 --untracked-files=all) ||
-    fail 'Could not inspect the Astralis checkout.'
+    fail 'Could not inspect the Nova checkout.'
 customized_configs=''
 blocking_changes=''
 
@@ -60,7 +60,7 @@ EOF
 fi
 
 if [ -n "$blocking_changes" ]; then
-    printf 'Astralis has local changes that cannot be migrated automatically:\n' >&2
+    printf 'Nova has local changes that cannot be migrated automatically:\n' >&2
     while IFS= read -r line; do
         printf '    %s\n' "$line" >&2
     done <<EOF
@@ -71,7 +71,7 @@ fi
 
 upstream=$(git -C "$root" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null) ||
     fail 'The current branch has no upstream branch configured.'
-git -C "$root" fetch --prune origin || fail 'Could not fetch Astralis updates.'
+git -C "$root" fetch --prune origin || fail 'Could not fetch Nova updates.'
 git -C "$root" merge-base --is-ancestor HEAD "$upstream" ||
     fail "The local branch cannot be fast-forwarded to $upstream."
 
@@ -94,7 +94,7 @@ EOF
         fail 'Update cancelled; the customized configs were left untouched.'
 
     timestamp=$(date '+%Y%m%d-%H%M%S')
-    backup=$(dirname -- "$root")/Astralis-config-backup-$timestamp-$$
+    backup=$(dirname -- "$root")/Nova-config-backup-$timestamp-$$
     temporary=$(mktemp -d) || fail 'Could not create a temporary update directory.'
     mkdir -p -- "$backup" || fail "Could not create '$backup'."
     has_conflict=false
@@ -120,7 +120,7 @@ EOF
 
     if "$has_conflict"; then
         printf 'Your config files were backed up to:\n    %s\n' "$backup" >&2
-        fail 'The customized configs conflict with the update. Astralis was not updated.'
+        fail 'The customized configs conflict with the update. Nova was not updated.'
     fi
 
     while IFS= read -r config; do
@@ -140,14 +140,14 @@ if ! git -C "$root" merge --ff-only "$upstream"; then
 $customized_configs
 EOF
     fi
-    fail "Astralis could not be fast-forwarded to $upstream."
+    fail "Nova could not be fast-forwarded to $upstream."
 fi
 
 if [ -n "$customized_configs" ]; then
     while IFS= read -r config; do
         name=$(printf '%s' "$config" | tr '/' '-')
         cp -- "$temporary/$name.merged" "$root/$config" ||
-            fail "Astralis was updated, but the merged $config could not be restored. Your backup is at $backup."
+            fail "Nova was updated, but the merged $config could not be restored. Your backup is at $backup."
     done <<EOF
 $customized_configs
 EOF
@@ -156,4 +156,4 @@ fi
 cleanup
 temporary=''
 trap - 0 HUP INT TERM
-printf 'Astralis is up to date.\n'
+printf 'Nova is up to date.\n'

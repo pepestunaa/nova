@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-repository_url='https://git.xeondev.com/nyan/astralis.git'
+repository_url='https://github.com/pepestunaa/nova.git'
 branch='main'
-project_name='Astralis'
+project_name='Nova'
 checkout_arg=''
 yes=false
 
@@ -70,8 +70,8 @@ if [ -n "$installer_path" ] && [ -f "$installer_path" ]; then
     if [ -d "$local_root/.git" ] &&
         [ -f "$local_root/build.zig.zon" ] &&
         [ -f "$installer_dir/start.sh" ]; then
-        printf 'Astralis is already installed at %s.\n' "$local_root"
-        if confirm 'Start Astralis from this checkout?'; then
+        printf 'Nova is already installed at %s.\n' "$local_root"
+        if confirm 'Start Nova from this checkout?'; then
             if [ -t 1 ]; then
                 printf '\033[2J\033[3J\033[H'
             fi
@@ -94,11 +94,11 @@ normalize_remote()
 assert_checkout()
 {
     checkout=$1
-    [ -d "$checkout/.git" ] || fail "'$checkout' already exists and is not an Astralis Git checkout."
+    [ -d "$checkout/.git" ] || fail "'$checkout' already exists and is not an Nova Git checkout."
     origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
         fail "The checkout at '$checkout' has no readable origin remote."
     [ "$(normalize_remote "$origin")" = "$(normalize_remote "$repository_url")" ] ||
-        fail "The checkout at '$checkout' does not use the Astralis repository as its origin."
+        fail "The checkout at '$checkout' does not use the Nova repository as its origin."
     current_branch=$(git -C "$checkout" branch --show-current 2>/dev/null) ||
         fail "Could not read the branch for '$checkout'."
     [ "$current_branch" = "$branch" ] ||
@@ -115,7 +115,7 @@ if [ -n "$checkout_arg" ]; then
     selected=$checkout_arg
 else
     default_parent=${HOME:-$PWD}
-    selected=$(read_tty "Where should Astralis be installed? [$default_parent]: ")
+    selected=$(read_tty "Where should Nova be installed? [$default_parent]: ")
     [ -n "$selected" ] || selected=$default_parent
 fi
 
@@ -148,10 +148,10 @@ if [ -e "$checkout" ]; then
 fi
 
 if "$needs_clone"; then
-    printf '\nAstralis will be installed at:\n    %s\n' "$checkout"
+    printf '\nNova will be installed at:\n    %s\n' "$checkout"
     confirm 'Continue?' || fail 'Installation cancelled.'
     git clone --depth=1 --branch "$branch" --single-branch -- "$repository_url" "$checkout" ||
-        fail 'Git could not clone Astralis.'
+        fail 'Git could not clone Nova.'
 fi
 
 if "$yes"; then
@@ -159,7 +159,7 @@ if "$yes"; then
 else
     zig_path=$(sh "$checkout/scripts/setup.sh")
 fi
-[ -n "$zig_path" ] || fail 'Astralis setup did not return a Zig executable.'
+[ -n "$zig_path" ] || fail 'Nova setup did not return a Zig executable.'
 
-printf '\n[OK] Astralis is ready at %s\n' "$checkout"
+printf '\n[OK] Nova is ready at %s\n' "$checkout"
 printf 'Start it with:\n    sh "%s/scripts/start.sh"\n' "$checkout"

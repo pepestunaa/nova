@@ -26,17 +26,17 @@ function Invoke-Git([Parameter(ValueFromRemainingArguments)][string[]]$Arguments
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $Root ".git") -PathType Container)) {
-    throw "update.ps1 must be run from an Astralis Git checkout."
+    throw "update.ps1 must be run from an Nova Git checkout."
 }
 
 if (-not (Get-Command git -CommandType Application -ErrorAction SilentlyContinue)) {
-    throw "Git is required to update Astralis."
+    throw "Git is required to update Nova."
 }
 
 $StatusLines = @(& git -C $Root status --porcelain=v1 --untracked-files=all)
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Could not inspect the Astralis checkout."
+    throw "Could not inspect the Nova checkout."
 }
 
 $CustomizedConfigs = [System.Collections.Generic.List[string]]::new()
@@ -57,7 +57,7 @@ foreach ($Line in $StatusLines) {
 }
 
 if ($BlockingChanges.Count -ne 0) {
-    Write-Host "Astralis has local changes that cannot be migrated automatically:" -ForegroundColor Yellow
+    Write-Host "Nova has local changes that cannot be migrated automatically:" -ForegroundColor Yellow
     foreach ($Change in $BlockingChanges) {
         Write-Host "    $Change"
     }
@@ -88,8 +88,8 @@ try {
         }
 
         $Timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
-        $Backup = Join-Path (Split-Path -Parent $Root) "Astralis-config-backup-$Timestamp-$PID"
-        $Temporary = Join-Path $env:TEMP "astralis-update-$([guid]::NewGuid().ToString('N'))"
+        $Backup = Join-Path (Split-Path -Parent $Root) "Nova-config-backup-$Timestamp-$PID"
+        $Temporary = Join-Path $env:TEMP "nova-update-$([guid]::NewGuid().ToString('N'))"
         [IO.Directory]::CreateDirectory($Backup) | Out-Null
         [IO.Directory]::CreateDirectory($Temporary) | Out-Null
 
@@ -124,7 +124,7 @@ try {
         if ($HasConflict) {
             Write-Host "Your config files were backed up to:" -ForegroundColor Yellow
             Write-Host "    $Backup"
-            throw "The customized configs conflict with the update. Astralis was not updated."
+            throw "The customized configs conflict with the update. Nova was not updated."
         }
 
         Invoke-Git restore --worktree -- @CustomizedConfigs
@@ -137,7 +137,7 @@ try {
                 Copy-Item -LiteralPath (Join-Path $Backup $Config.Replace('/', '-')) -Destination (Join-Path $Root $Config) -Force
             }
         }
-        throw "Astralis could not be fast-forwarded to $Upstream."
+        throw "Nova could not be fast-forwarded to $Upstream."
     }
 
     foreach ($Config in $CustomizedConfigs) {
@@ -149,4 +149,4 @@ try {
     }
 }
 
-Write-Host "Astralis is up to date." -ForegroundColor Green
+Write-Host "Nova is up to date." -ForegroundColor Green

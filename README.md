@@ -1,4 +1,4 @@
-# Astralis
+# Nova
 
 Server emulator for Stella Sora. 
 
@@ -29,7 +29,7 @@ guaranteed to support the latest client version.
 
 ## Getting started
 
-The client needs [Asterism](#client-patch) (client patch) before it can connect to Astralis.
+The client needs [Asterism](#client-patch) (client patch) before it can connect to Nova.
 Once you have that, choose whichever setup method suits you:
 
 - [Prebuilt executables](#prebuilt-executables) if you want to download and run
@@ -44,7 +44,7 @@ provided scripts), then launch the patched client.
 
 ## What works
 
-Astralis currently focuses on Recruitment and Ascension.
+Nova currently focuses on Recruitment and Ascension.
 
 ### Recruitment
 
@@ -91,23 +91,23 @@ It makes the game request from your local server instead of the official server.
 
 ## Prebuilt executables
 
-Prebuilt binaries are available from the [release page](https://git.xeondev.com/nyan/astralis/releases), 
+Prebuilt binaries are available from the [release page](https://github.com/pepestunaa/nova/releases), 
 extract the compressed file anywhere, then run both server executables from the
 extracted folder.
 
 ## Automatic setup
 
-The installer downloads Astralis and prepares the right Zig version for you. On
+The installer downloads Nova and prepares the right Zig version for you. On
 Windows, open PowerShell and run:
 
 ```powershell
-irm https://git.xeondev.com/nyan/astralis/raw/branch/main/scripts/install.ps1 | iex
+irm https://github.com/pepestunaa/nova/raw/branch/main/scripts/install.ps1 | iex
 ```
 
 On Linux, run:
 
 ```sh
-curl -fsSL https://git.xeondev.com/nyan/astralis/raw/branch/main/scripts/install.sh | sh
+curl -fsSL https://github.com/pepestunaa/nova/raw/branch/main/scripts/install.sh | sh
 ```
 
 Windows can install Git automatically. On Linux, the installer will tell you
@@ -119,7 +119,7 @@ Once installation finishes, Windows users can double-click
 `scripts/start.cmd`. On Linux, run `sh scripts/start.sh`.
 
 Use `scripts/update.cmd` on Windows or `sh scripts/update.sh` on Linux to update
-Astralis. The updater will preserve customized server configs when they can be
+Nova. The updater will preserve customized server configs when they can be
 merged safely, and will never discard other local changes.
 
 ## Manual setup
@@ -127,8 +127,8 @@ merged safely, and will never discard other local changes.
 You will need Git and Zig `0.16.0`. Clone the repository and enter its directory:
 
 ```sh
-git clone --depth=1 https://git.xeondev.com/nyan/astralis.git
-cd astralis
+git clone --depth=1 https://github.com/pepestunaa/nova.git
+cd nova
 ```
 
 Build the servers with:
@@ -174,9 +174,9 @@ the [technical documentation index](docs/README.md).
 
 ## Bug reports
 
-Please report bugs in the [issue tracker](https://git.xeondev.com/nyan/astralis/issues).
+Please report bugs in the [issue tracker](https://github.com/pepestunaa/nova/issues).
 Include steps to reproduce the problem, what you expected to happen, what
-happened instead, and the relevant server or client logs (if any). Mention the Astralis
+happened instead, and the relevant server or client logs (if any). Mention the Nova
 and Asterism version or commit you are using.
 
 You can also report issues in the [Reversed Rooms Discord server](https://discord.xeondev.com/).

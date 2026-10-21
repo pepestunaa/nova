@@ -6,9 +6,9 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$RepositoryUrl = "https://git.xeondev.com/nyan/astralis.git"
+$RepositoryUrl = "https://github.com/pepestunaa/nova.git"
 $Branch = "main"
-$ProjectName = "Astralis"
+$ProjectName = "Nova"
 $GitReleaseApi = "https://api.github.com/repos/git-for-windows/git/releases/latest"
 
 function Confirm-Action([string]$Prompt) {
@@ -24,8 +24,8 @@ if ($PSScriptRoot) {
     if ((Test-Path -LiteralPath (Join-Path $LocalRoot ".git") -PathType Container) -and
         (Test-Path -LiteralPath (Join-Path $LocalRoot "build.zig.zon") -PathType Leaf) -and
         (Test-Path -LiteralPath $LocalStart -PathType Leaf)) {
-        Write-Host "Astralis is already installed at $LocalRoot." -ForegroundColor Cyan
-        if (Confirm-Action "Start Astralis from this checkout?") {
+        Write-Host "Nova is already installed at $LocalRoot." -ForegroundColor Cyan
+        if (Confirm-Action "Start Nova from this checkout?") {
             Clear-Host
             & $LocalStart -Yes:$Yes
         }
@@ -176,7 +176,7 @@ function Select-Checkout {
     try {
         Add-Type -AssemblyName System.Windows.Forms
         $Dialog = [System.Windows.Forms.FolderBrowserDialog]::new()
-        $Dialog.Description = "Choose where Astralis should be installed"
+        $Dialog.Description = "Choose where Nova should be installed"
         $Dialog.SelectedPath = $DefaultParent
     } catch {
         $Dialog = $null
@@ -192,7 +192,7 @@ function Select-Checkout {
             $Dialog.Dispose()
         }
     } else {
-        $Selected = Read-Host "Where should Astralis be installed? [$DefaultParent]"
+        $Selected = Read-Host "Where should Nova be installed? [$DefaultParent]"
         if ([string]::IsNullOrWhiteSpace($Selected)) {
             $Selected = $DefaultParent
         }
@@ -215,11 +215,11 @@ function Normalize-Remote([string]$Remote) {
 
 function Assert-Checkout([string]$Git, [string]$Checkout) {
     if (-not (Test-Path -LiteralPath (Join-Path $Checkout ".git") -PathType Container)) {
-        throw "'$Checkout' already exists and is not an Astralis Git checkout."
+        throw "'$Checkout' already exists and is not an Nova Git checkout."
     }
     $Origin = (& $Git -C $Checkout remote get-url origin).Trim()
     if ($LASTEXITCODE -ne 0 -or (Normalize-Remote $Origin) -ine (Normalize-Remote $RepositoryUrl)) {
-        throw "The checkout at '$Checkout' does not use the Astralis repository as its origin."
+        throw "The checkout at '$Checkout' does not use the Nova repository as its origin."
     }
     $CurrentBranch = (& $Git -C $Checkout branch --show-current).Trim()
     if ($LASTEXITCODE -ne 0 -or $CurrentBranch -cne $Branch) {
@@ -243,7 +243,7 @@ if (Test-Path -LiteralPath $Checkout) {
 }
 
 if ($NeedsClone) {
-    Write-Host "`nAstralis will be installed at:" -ForegroundColor Cyan
+    Write-Host "`nNova will be installed at:" -ForegroundColor Cyan
     Write-Host "    $Checkout" -ForegroundColor DarkGray
     if (-not (Confirm-Action "Continue?")) {
         throw "Installation cancelled."
@@ -252,16 +252,16 @@ if ($NeedsClone) {
     [IO.Directory]::CreateDirectory((Split-Path -Parent $Checkout)) | Out-Null
     & $Git clone --depth=1 --branch $Branch --single-branch -- $RepositoryUrl $Checkout
     if ($LASTEXITCODE -ne 0) {
-        throw "Git could not clone Astralis (exit code $LASTEXITCODE)."
+        throw "Git could not clone Nova (exit code $LASTEXITCODE)."
     }
 }
 
 $Setup = Join-Path $Checkout "scripts\setup.ps1"
 if (-not (Test-Path -LiteralPath $Setup -PathType Leaf)) {
-    throw "The Astralis checkout does not contain scripts\setup.ps1."
+    throw "The Nova checkout does not contain scripts\setup.ps1."
 }
 $null = & $Setup -Yes:$Yes
 
-Write-Host "`n[OK] Astralis is ready at $Checkout" -ForegroundColor Green
+Write-Host "`n[OK] Nova is ready at $Checkout" -ForegroundColor Green
 Write-Host "Start it by running:" -ForegroundColor Gray
 Write-Host "    $(Join-Path $Checkout 'scripts\start.cmd')" -ForegroundColor Cyan

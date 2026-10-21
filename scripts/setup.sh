@@ -70,7 +70,7 @@ find_zig()
 }
 
 [ -f "$manifest" ] || {
-    printf 'Astralis does not contain build.zig.zon.\n' >&2
+    printf 'Nova does not contain build.zig.zon.\n' >&2
     exit 1
 }
 required_version=$(sed -n 's/^[[:space:]]*\.minimum_zig_version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$manifest")
@@ -86,7 +86,7 @@ if ! find_zig "$required_version"; then
         current_version=$($current_zig version 2>/dev/null || true)
     fi
     if [ -n "$current_version" ]; then
-        prompt="Found Zig $current_version, but Astralis needs $required_version. Install zvm?"
+        prompt="Found Zig $current_version, but Nova needs $required_version. Install zvm?"
     else
         prompt="Zig $required_version is required. Install zvm?"
     fi
