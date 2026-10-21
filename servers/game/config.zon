@@ -15,6 +15,10 @@
     // asks for Dorm data the server does not implement.
     .extra_guide_groups = .{ 521 },
 
+    // Logs every request the client sends, with its numeric ID and payload
+    // size. Keep this enabled while testing new client versions.
+    .trace_packets = true,
+
     .shop = .{
         // Enables purchases from every Shop page. Product lists remain
         // available when disabled so the client can render the Shop normally.

@@ -9,6 +9,10 @@ skip_tutorial: bool,
 /// to be listed here to keep the client from asking for data the server does
 /// not implement.
 extra_guide_groups: []const u32,
+/// Logs every request the client sends, with its numeric ID, its protocol
+/// name and the payload size. Needed to see which requests a feature uses
+/// when the protocol table does not cover the client version.
+trace_packets: bool,
 shop: Shop,
 server_garble_key: []const u8,
 

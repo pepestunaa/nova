@@ -224,7 +224,7 @@ fn handle(
     };
 
     if (packet_id != .player_ping_req)
-        logReceived(packet_name, packet.payload.len, request_session);
+        logReceived(packet_id, packet_name, packet.payload.len, request_session);
 
     if (request_session == null and packet_id != .ike_req) {
         log.warn("received non-IKE initial packet {s}", .{packet_name});
@@ -297,12 +297,18 @@ fn handle(
     messaging.dispatch(&scope) catch |err| switch (err) {
         error.UnhandledMessage => {
             if (std.mem.eql(u8, packet_name, "unknown")) {
-                log.warn("unknown packet ID {d}", .{@intFromEnum(packet_id)});
+                logUnknownPacket(@intFromEnum(packet_id), packet.payload);
             } else {
                 log.warn("unhandled packet {s}", .{packet_name});
             }
 
-            return try respondPacketForRequest(request, io, request_session, "", buffers);
+            return try respondUnhandledPacket(
+                request,
+                io,
+                request_session,
+                packet_id,
+                buffers,
+            );
         },
         else => {
             log.warn("failed to process packet {s}: {t}", .{
@@ -361,15 +367,51 @@ fn handle(
     try respondPacketForRequest(request, io, request_session, response_body, buffers);
 }
 
-fn logReceived(packet_name: []const u8, payload_len: usize, request_session: ?session) void {
+fn logUnknownPacket(packet_id: i16, payload: []const u8) void {
+    const digits = "0123456789abcdef";
+    var encoded: [512]u8 = undefined;
+    var length: usize = 0;
+    for (payload) |byte| {
+        if (length + 2 > encoded.len) break;
+        encoded[length] = digits[byte >> 4];
+        encoded[length + 1] = digits[byte & 0x0f];
+        length += 2;
+    }
+
+    log.warn("unknown packet ID {d}, payload ({d} bytes): {s}{s}", .{
+        packet_id,
+        payload.len,
+        encoded[0..length],
+        if (length < payload.len * 2) "..." else "",
+    });
+}
+
+fn logReceived(
+    packet_id: proto.PacketId,
+    packet_name: []const u8,
+    payload_len: usize,
+    request_session: ?session,
+) void {
+    if (!config.trace_packets) return;
+
     const player_id: ?u64 = if (request_session) |current| switch (current.player_id) {
         .none => null,
         else => @intFromEnum(current.player_id),
     } else null;
+    const raw_id = @intFromEnum(packet_id);
     if (player_id) |uid| {
-        log.debug("[uid={d}] received {s}, payload {d} bytes", .{ uid, packet_name, payload_len });
+        log.info("[uid={d}] received {d} ({s}), payload {d} bytes", .{
+            uid,
+            raw_id,
+            packet_name,
+            payload_len,
+        });
     } else {
-        log.debug("[uid=?] received {s}, payload {d} bytes", .{ packet_name, payload_len });
+        log.info("[uid=?] received {d} ({s}), payload {d} bytes", .{
+            raw_id,
+            packet_name,
+            payload_len,
+        });
     }
 }
 
@@ -439,6 +481,37 @@ fn respondTokenExpired(
 
     // The request plaintext has been consumed, so its buffer can hold the
     // chained response.
+    var chained: std.heap.FixedBufferAllocator = .init(&buffers.plain);
+    const body = try response.finish(chained.allocator());
+
+    return respondPacketForRequest(request, io, request_session, body, buffers);
+}
+
+/// The 1.13.0.143 client sends requests that do not exist in the bundled
+/// protocol. Answering with a mapped success packet, or request ID + 1 when no
+/// mapping exists, keeps the response parseable and lets unimplemented
+/// features fail softly instead of dropping the client back to login.
+fn respondUnhandledPacket(
+    request: *std.http.Server.Request,
+    io: Io,
+    request_session: ?session,
+    packet_id: proto.PacketId,
+    buffers: *Buffers,
+) !void {
+    var writer = Io.Writer.fixed(&buffers.staging);
+    var response: Scope.Response = .{ .writer = &writer };
+
+    if (net_msg_id.responsesFor(packet_id)) |responses| {
+        log.info("acking known-unhandled {d} with {d}", .{ @intFromEnum(packet_id), @intFromEnum(responses.success) });
+        try response.appendEmpty(responses.success);
+    } else {
+        const raw_id = @intFromEnum(packet_id);
+        if (raw_id < 0 or raw_id == std.math.maxInt(i16))
+            return respondPacketForRequest(request, io, request_session, "", buffers);
+        log.info("acking unknown packet {d} with {d}", .{ raw_id, raw_id + 1 });
+        try response.appendRawEmpty(raw_id + 1);
+    }
+
     var chained: std.heap.FixedBufferAllocator = .init(&buffers.plain);
     const body = try response.finish(chained.allocator());
 
