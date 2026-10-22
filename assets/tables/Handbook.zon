@@ -2456,6 +2456,22 @@
         .cond = 61,
     },
     .{
+        .id = 416201,
+        .index = 186,
+        .type = 1,
+        .char_id = 162,
+        .skin_id = 16201,
+        .cond = 10,
+    },
+    .{
+        .id = 416202,
+        .index = 187,
+        .type = 1,
+        .char_id = 162,
+        .skin_id = 16202,
+        .cond = 13,
+    },
+    .{
         .id = 499701,
         .index = 174,
         .type = 1,

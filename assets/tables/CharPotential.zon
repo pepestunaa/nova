@@ -1680,6 +1680,48 @@
         },
     },
     .{
+        .id = 162,
+        .master_specific_potential_ids = .{
+            516201,
+            516202,
+            516203,
+            516204,
+        },
+        .assist_specific_potential_ids = .{
+            516221,
+            516222,
+            516223,
+            516224,
+        },
+        .common_potential_ids = .{
+            516241,
+            516242,
+            516243,
+        },
+        .master_normal_potential_ids = .{
+            516205,
+            516206,
+            516207,
+            516208,
+            516209,
+            516210,
+            516211,
+            516212,
+            516213,
+        },
+        .assist_normal_potential_ids = .{
+            516225,
+            516226,
+            516227,
+            516228,
+            516229,
+            516230,
+            516231,
+            516232,
+            516233,
+        },
+    },
+    .{
         .id = 997,
         .master_specific_potential_ids = .{
             599701,

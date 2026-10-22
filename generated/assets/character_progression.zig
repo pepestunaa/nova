@@ -63,6 +63,7 @@ pub const characters = [_]Character{
     .{ .id = 158, .grade = 1, .advance_materials = 1, .skill_materials = 25 },
     .{ .id = 159, .grade = 1, .advance_materials = 0, .skill_materials = 26 },
     .{ .id = 160, .grade = 1, .advance_materials = 1, .skill_materials = 13 },
+    .{ .id = 162, .grade = 1, .advance_materials = 2, .skill_materials = 28 },
     .{ .id = 997, .grade = 1, .advance_materials = 3, .skill_materials = 27 },
     .{ .id = 998, .grade = 1, .advance_materials = 3, .skill_materials = 27 },
     .{ .id = 999, .grade = 1, .advance_materials = 3, .skill_materials = 27 },
@@ -4326,6 +4327,138 @@ pub const skill_shape = [_][10]SkillStep{
             },
         },
     },
+    .{
+        .{
+            .required_advance = 0,
+            .gold = 0,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 0,
+            },
+        },
+        .{
+            .required_advance = 1,
+            .gold = 13300,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 6 },
+                    .{ .material = 1, .quantity = 2 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 2,
+            .gold = 17600,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 12 },
+                    .{ .material = 1, .quantity = 6 },
+                    .{ .material = 0, .quantity = 0 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 2,
+            },
+        },
+        .{
+            .required_advance = 3,
+            .gold = 49800,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 24 },
+                    .{ .material = 2, .quantity = 3 },
+                    .{ .material = 1, .quantity = 10 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 4,
+            .gold = 100000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 38 },
+                    .{ .material = 2, .quantity = 8 },
+                    .{ .material = 1, .quantity = 24 },
+                    .{ .material = 0, .quantity = 0 },
+                },
+                .count = 3,
+            },
+        },
+        .{
+            .required_advance = 5,
+            .gold = 400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 0, .quantity = 70 },
+                    .{ .material = 2, .quantity = 14 },
+                    .{ .material = 3, .quantity = 6 },
+                    .{ .material = 1, .quantity = 55 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 6,
+            .gold = 900000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 1 },
+                    .{ .material = 2, .quantity = 50 },
+                    .{ .material = 3, .quantity = 18 },
+                    .{ .material = 1, .quantity = 232 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 7,
+            .gold = 1600000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 2 },
+                    .{ .material = 2, .quantity = 90 },
+                    .{ .material = 3, .quantity = 34 },
+                    .{ .material = 1, .quantity = 323 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 2300000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 3 },
+                    .{ .material = 2, .quantity = 140 },
+                    .{ .material = 3, .quantity = 50 },
+                    .{ .material = 1, .quantity = 478 },
+                },
+                .count = 4,
+            },
+        },
+        .{
+            .required_advance = 8,
+            .gold = 3400000,
+            .costs = .{
+                .entries = .{
+                    .{ .material = 4, .quantity = 6 },
+                    .{ .material = 2, .quantity = 200 },
+                    .{ .material = 3, .quantity = 70 },
+                    .{ .material = 1, .quantity = 927 },
+                },
+                .count = 4,
+            },
+        },
+    },
 };
 
 pub const skill_materials = [_][5]u32{
@@ -4357,6 +4490,7 @@ pub const skill_materials = [_][5]u32{
     .{ 32001, 32000, 32002, 32003, 21023 },
     .{ 32011, 32000, 32012, 32013, 21003 },
     .{ 32000, 0, 0, 0, 0 },
+    .{ 32021, 32000, 32022, 32023, 20053 },
 };
 
 pub const grades = [_]Grade{

@@ -3132,6 +3132,65 @@ const package_2111002 = [_]PackageEntry{
     .{ .goods_id = 213020, .weight = 100 },
 };
 
+const package_1016211 = [_]PackageEntry{
+    .{ .goods_id = 162, .weight = 100 },
+};
+
+const package_1016212 = [_]PackageEntry{
+    .{ .goods_id = 107, .weight = 100 },
+    .{ .goods_id = 116, .weight = 100 },
+};
+
+const package_1016201 = [_]PackageEntry{
+    .{ .goods_id = 125, .weight = 100 },
+    .{ .goods_id = 141, .weight = 100 },
+    .{ .goods_id = 119, .weight = 100 },
+    .{ .goods_id = 132, .weight = 100 },
+    .{ .goods_id = 135, .weight = 100 },
+    .{ .goods_id = 149, .weight = 100 },
+    .{ .goods_id = 156, .weight = 100 },
+    .{ .goods_id = 144, .weight = 100 },
+    .{ .goods_id = 155, .weight = 100 },
+};
+
+const package_1016202 = [_]PackageEntry{
+    .{ .goods_id = 113, .weight = 100 },
+    .{ .goods_id = 111, .weight = 100 },
+    .{ .goods_id = 127, .weight = 100 },
+    .{ .goods_id = 103, .weight = 100 },
+    .{ .goods_id = 108, .weight = 100 },
+    .{ .goods_id = 126, .weight = 100 },
+    .{ .goods_id = 112, .weight = 100 },
+    .{ .goods_id = 120, .weight = 100 },
+    .{ .goods_id = 123, .weight = 100 },
+    .{ .goods_id = 150, .weight = 100 },
+    .{ .goods_id = 117, .weight = 100 },
+    .{ .goods_id = 147, .weight = 100 },
+    .{ .goods_id = 118, .weight = 100 },
+    .{ .goods_id = 142, .weight = 100 },
+};
+
+const package_1016203 = [_]PackageEntry{
+    .{ .goods_id = 213003, .weight = 100 },
+    .{ .goods_id = 213004, .weight = 100 },
+    .{ .goods_id = 213005, .weight = 100 },
+    .{ .goods_id = 213006, .weight = 100 },
+    .{ .goods_id = 213007, .weight = 100 },
+    .{ .goods_id = 213008, .weight = 100 },
+    .{ .goods_id = 213009, .weight = 100 },
+    .{ .goods_id = 213010, .weight = 100 },
+    .{ .goods_id = 213011, .weight = 100 },
+    .{ .goods_id = 213012, .weight = 100 },
+    .{ .goods_id = 213013, .weight = 100 },
+    .{ .goods_id = 213014, .weight = 100 },
+    .{ .goods_id = 213015, .weight = 100 },
+    .{ .goods_id = 213016, .weight = 100 },
+    .{ .goods_id = 213017, .weight = 100 },
+    .{ .goods_id = 213018, .weight = 100 },
+    .{ .goods_id = 213019, .weight = 100 },
+    .{ .goods_id = 213020, .weight = 100 },
+};
+
 pub const acquire_rewards = [_]AcquireRewardDefinition{
     .{ .item_stype = 3, .item_rarity = 1, .acquire_times = 1, .reward = null },
     .{ .item_stype = 3, .item_rarity = 1, .acquire_times = 2, .reward = .{ .resource_id = 24, .quantity = 200 } },
@@ -3939,6 +3998,35 @@ pub const banners = [_]Banner{
         .c_pool = &package_100,
         .claim_reward_pulls = 120,
         .claim_reward = .{ .resource_id = 160, .quantity = 1 },
+        .first_ten_reward_multiplier = 3,
+    },
+    .{
+        .id = 10162,
+        .gacha_type = 8,
+        .storage_id = 1,
+        .storage = .{
+            .id = 1,
+            .ticket_id = 502,
+            .tickets_per_pull = 1,
+            .currency_id = 2,
+            .currency_per_ticket = 300,
+            .a_type_group = 101,
+            .a_up_probability = 5000,
+            .a_up_guarantee_pulls = 160,
+            .b_probability = 800,
+            .b_up_probability = 2500,
+            .b_guarantee_probability = 2500,
+            .give_item = .{ .id = 602, .quantity = 30 },
+        },
+        .a_type_guarantee_pulls = 160,
+        .a_pool = &package_1016201,
+        .a_up_pool = &package_1016211,
+        .b_pool = &package_1016203,
+        .b_up_pool = &package_1016212,
+        .b_guarantee_pool = &package_1016202,
+        .c_pool = &package_100,
+        .claim_reward_pulls = 120,
+        .claim_reward = .{ .resource_id = 162, .quantity = 1 },
         .first_ten_reward_multiplier = 3,
     },
     .{
@@ -5073,6 +5161,7 @@ pub const banner_ids = [_]u32{
     10158,
     10159,
     10160,
+    10162,
     11110,
     11119,
     11133,
