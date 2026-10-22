@@ -120,9 +120,9 @@ pub fn expItem(item_id: u32) ?u32 {
 }
 
 pub fn advance(material_set: u8, target_level: u8) ?Advance {
-    if (target_level == 0 or target_level > generated.advance_shape.len)
+    if (material_set >= generated.advance_shape.len)
         return null;
-    if (material_set >= generated.advance_materials.len)
+    if (target_level == 0 or target_level > generated.advance_shape[material_set].len)
         return null;
     const step = generated.advance_shape[material_set][target_level - 1];
     var costs: [generated.max_costs]Cost = undefined;
@@ -136,9 +136,9 @@ pub fn advance(material_set: u8, target_level: u8) ?Advance {
 }
 
 pub fn skillUpgrade(material_set: u8, target_level: u8) ?SkillUpgrade {
-    if (target_level == 0 or target_level > generated.skill_shape.len)
+    if (material_set >= generated.skill_shape.len)
         return null;
-    if (material_set >= generated.skill_materials.len)
+    if (target_level == 0 or target_level > generated.skill_shape[material_set].len)
         return null;
     const step = generated.skill_shape[material_set][target_level - 1];
     var costs: [generated.max_costs]Cost = undefined;
@@ -260,4 +260,17 @@ fn maximumOptional(comptime rows: anytype, comptime field: []const u8) u32 {
     }
 
     return result;
+}
+
+test "advance reaches every step of a material set" {
+    try std.testing.expect(advance(2, 5) != null);
+    try std.testing.expect(advance(2, 9) != null);
+    try std.testing.expect(advance(2, 10) == null);
+    try std.testing.expect(advance(generated.advance_shape.len, 1) == null);
+}
+
+test "skill upgrade rejects a target past the last step" {
+    try std.testing.expect(skillUpgrade(28, 10) != null);
+    try std.testing.expect(skillUpgrade(28, 11) == null);
+    try std.testing.expect(skillUpgrade(generated.skill_shape.len, 1) == null);
 }
