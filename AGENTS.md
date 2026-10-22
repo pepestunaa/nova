@@ -209,12 +209,20 @@ format, an unexplained request, or the address a patch writes to. Use the REA
 MCP tools for those instead of guessing from the server side, and say which
 part of an answer came from the binary.
 
+The tools come from the `rea` MCP server and appear as `tools.rea.*`. Whether
+they exist at all is a property of the machine, not of this repository: if a
+session has no `rea` tools, say so instead of describing analysis that never
+ran. When they are present, confirm the provider before planning around it:
+`binary_session` with `{}` returns `capabilities`, and each provider group
+reports `available` plus a `reason` when it is not. The native group needs a
+disassembler that is actually installed and reachable.
+
 The client is a Unity IL2CPP build, so the useful artifacts are native:
 
 | Artifact | What it answers |
 | --- | --- |
 | `GameAssembly.dll` | IL2CPP game code: packet handling, archive reader, table parser |
-| `StellaSora_Data/il2cpp_data/Metadata/global-metadata.dat` | Class, method and field names |
+| `StellaSora_Data/il2cpp_data/Metadata/global-metadata.dat` | IL2CPP name metadata. Not a native target these tools open: search it as a blob and confirm any name found against `GameAssembly.dll` |
 | `Persistent_Store/Tables/data.arcx` | The game tables, in a `BARf` container |
 | `Persistent_Store/Scripts/lua.arcx` | The Lua scripts, in a `BARf` container |
 
@@ -235,6 +243,19 @@ Workflow:
    `export_evidence_bundle` for a durable record.
 6. `close_binary` when done. The Ghidra project is temporary and deleted on
    close, so anything worth keeping has to be exported.
+
+Handling the results:
+
+- A large result can be truncated by the client before it reaches the model.
+  Treat a preview as incomplete: `inspect_analysis_view` with the returned
+  evidence id gives a summary, one section or a stable page, and
+  `get_evidence_bundle` finds the parent id when it was lost.
+- `export_evidence_bundle` needs an absolute path. Export into a git-ignored
+  directory such as `.opencode/evidence/`, not into the repository: decompiled
+  client code should not be published with the server.
+- When a change follows from binary analysis, cite the evidence id in the
+  commit message or the task list, and keep the `record_unknown` entries as
+  open questions instead of rounding them into a conclusion.
 
 Constraints observed on this target:
 
