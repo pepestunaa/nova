@@ -1,5 +1,7 @@
 # Nova
 
+![banner](docs/image.png)
+
 Server emulator for Stella Sora. 
 
 This project is not affiliated with the game's developers or publisher.
