@@ -230,3 +230,7 @@ Options that exist for client compatibility work:
 The current task list lives in `.opencode/todos.md`, which is local and
 git-ignored. Durable gaps are tracked in the README's "Still in progress"
 section; do not duplicate them here.
+
+Machine-specific details for the local test setup, such as install paths, log
+locations and the client patch values, are in `.opencode/notes.md` when that
+file exists. It is git-ignored for the same reason.
