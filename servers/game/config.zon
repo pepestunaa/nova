@@ -21,9 +21,10 @@
     .gacha_unknown_banner_fallback = true,
 
     // Gallery (Handbook) types whose bitmap is sent to the client. The
-    // 1.13.0.143 client resolves the gallery rows of every type it caches
-    // and logs an error for each skin its own table does not contain.
-    .gallery_types = .{ 1, 2, 3, 5 },
+    // client resolves the gallery rows of every type it caches and logs an
+    // error for each row its own table does not contain. Type 8 is the
+    // decor gallery the 2.0.0.144 client added.
+    .gallery_types = .{ 1, 2, 3, 5, 8 },
 
     // Logs every request the client sends, with its numeric ID and payload
     // size. Keep this enabled while testing new client versions.
