@@ -180,6 +180,8 @@ pub fn grantMonthlyDaily(mutation: *Mutation, allocator: std.mem.Allocator, toda
 pub fn monthlyCardOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: []const u8, today: i64, shop: Config.Shop) !MonthlyOrder {
     if (!shop.enable)
         return error.PurchasesDisabled;
+    if (!shop.topup_enable)
+        return error.TopupDisabled;
     const card = tables.mall_monthly_card.get(id) orelse return error.ProductNotFound;
     const current = mutation.read();
     if (current.pendingMallOrder(.monthly_card, card.key) != null)
@@ -244,6 +246,8 @@ pub fn gemConvert(mutation: *Mutation, allocator: std.mem.Allocator, requested: 
 pub fn gemOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: []const u8, now: i64, shop: Config.Shop) !GemOrder {
     if (!shop.enable)
         return error.PurchasesDisabled;
+    if (!shop.topup_enable)
+        return error.TopupDisabled;
     const product = tables.mall_gem.get(id) orelse return error.ProductNotFound;
     const current = mutation.read();
     const sequence = current.pendingMallOrder(.gem, product.key) orelse blk: {

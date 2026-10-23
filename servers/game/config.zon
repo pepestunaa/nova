@@ -35,6 +35,12 @@
         // available when disabled so the client can render the Shop normally.
         .enable = true,
 
+        // Accepts real-money topup orders. The client answers the order
+        // response by calling the Steam SDK pay, which blocks the game
+        // forever on a private server, so this stays disabled until a
+        // client patch handles the pay callback itself.
+        .topup_enable = false,
+
         // Includes packages whose configured de-list time has passed.
         .show_historical_packages = false,
 

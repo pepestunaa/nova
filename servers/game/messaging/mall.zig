@@ -15,6 +15,7 @@ pub fn change(scope: *Scope, receipt: gameplay.mall.Receipt) !proto.pb.ChangeInf
 pub fn errorCode(err: anyerror) ?tables.error_code.Code {
     return switch (err) {
         error.PurchasesDisabled => .service_unavailable,
+        error.TopupDisabled => .service_unavailable,
         error.PackageNotListed => .mall_package_not_listed,
         error.PackageDelisted => .mall_package_delisted,
         error.PackageStockLimit => .mall_package_stock_limit,

@@ -28,6 +28,11 @@ server_garble_key: []const u8,
 pub const Shop = struct {
     enable: bool,
     show_historical_packages: bool,
+    /// Accepts real-money topup orders (Lumina packs, monthly cards). The
+    /// client answers the order response by calling the Steam SDK pay, which
+    /// blocks the game forever on a private server, so the order has to be
+    /// refused before the client reaches that call.
+    topup_enable: bool,
     daily_mall_rewards: [2]Reward,
 };
 
