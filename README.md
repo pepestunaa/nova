@@ -27,11 +27,14 @@ copyright and license notices are kept in the `LICENSE` file.
 
 ## Compatibility
 
-**Current supported client version:** `1.13.0.139`
+**Current supported client version:** `2.0.0.144`
 
-The server is tested against the version above. Game updates may take time to
-receive compatible resources or protocol changes, and the repository is not
-guaranteed to support the latest client version.
+The server is tested against the version above. Most bundled game tables
+still come from `1.13.0.139` and `1.13.0.143`; the tables the newer client
+added are being extracted one at a time, so a few items, characters and shop
+products can be missing. Game updates may take time to receive compatible
+resources or protocol changes, and the repository is not guaranteed to
+support the latest client version.
 
 ## Getting started
 
@@ -50,45 +53,79 @@ provided scripts), then launch the patched client.
 
 ## What works
 
-Nova currently focuses on Recruitment and Ascension.
+Nova currently focuses on the core single-player progression loop, Recruitment,
+and Ascension. The server also provides compatibility responses for several
+client systems that are not implemented yet, so the current client can reach
+the main menu without getting stuck on those requests.
 
 ### Recruitment
 
-- Newbie and regular gacha banners, including pulls, costs, rewards, guarantees, and collection progress.
+- Newbie and regular Recruitment banners, including pulls, costs, rewards,
+  guarantees, pity storage, and collection progress.
+- Unknown banners can use the shared pools for their pity group, which keeps
+  newer client banners usable when their table rows have not been extracted
+  yet.
+- The current development configuration selects the featured five-star pool
+  for pulls rather than using the configured featured probability.
 
-### Character progression
+### Character and Disc progression
 
-- Leveling, skill upgrades, talents.
+- Character leveling, advancement, skill upgrades, talents, and potential
+  nodes.
+- Disc strengthening, promotion, and limit breaks.
+- Handbook and gallery unlocks, including the decor gallery rows added by the
+  `2.0.0.144` client.
 
-### Daily and weekly missions
+### Missions and progression
 
 - Daily and weekly mission lists, scheduled resets, and individual or bulk
   reward claims.
 - Progress for login, Ascension entry/completion and battles, character and
   Disc level-ups, and the daily shop reward.
-- Daily and weekly activity rewards.
+- Daily and weekly activity rewards, achievements, and client-reported
+  progression events.
+- Monolith Research upgrades and Research Project quests and rewards for
+  supported Ascension actions.
 
 ### Ascension
 
 - Starting, resuming, leaving, and completing runs.
-- Combat rooms, events, recovery rooms, shops, Potentials, Musical Notes, Harmony Skills, and the Enhancement Machine.
-- Journey Tickets, first-clear and give-up rewards, NPC affinity, and Ascension records.
+- Combat rooms, events, recovery rooms, shops, Potentials, Musical Notes,
+  Harmony Skills, and the Enhancement Machine.
+- Journey Tickets, first-clear and give-up rewards, NPC affinity, and
+  Ascension records.
 - Record saving, dismantling, locking, naming, and preferences.
-- Monolith Research upgrades, plus Research Project quests and rewards for supported Ascension actions.
+
+### Shop and account systems
+
+- Account creation and login, player profiles, names, signatures, titles,
+  head icons, formations, and basic friend state.
+- Shop listings, daily shop rewards, gem conversion, monthly cards, packages,
+  and in-game shop purchases.
+- Real-money gem and monthly-card topups are disabled by default. Package
+  orders grant their configured rewards directly; enabling real-money topups
+  requires a client patch that handles the Steam payment callback.
 
 ## Still in progress
 
-Some parts are not complete yet, or may still differ from the
-official server:
+Some parts are not complete yet, or may still differ from the official server:
 
-- A few advanced Monolith Research effects and unusual Ascension events need more refinement.
-- Fate Cards and Cataclysm Survivor are not implemented yet.
+- A few advanced Monolith Research effects and unusual Ascension events need
+  more refinement.
+- Fate Cards and Cataclysm Survivor are not implemented yet. The Fate Card
+  detail response is only an empty compatibility response.
+- Potential presets, Dorm, phone contacts, partner-trace details, and some
+  activity detail systems are only partially implemented or acknowledged for
+  client compatibility.
 - Daily missions use the observed 10 fixed entries plus 2 rotating entries.
   The official selection formula is unknown, so the exact pair sequence may
   differ.
 - Some daily and weekly missions are tied to systems or activities that are not
-  implemented (at least yet), so those missions will not progress for now.
+  implemented, so those missions will not progress for now.
 - Character emblems are not implemented yet.
+- The bundled tables are not yet fully refreshed for client `2.0.0.144`.
+  Character, item, and shop rows introduced by that client may be unavailable
+  until the remaining archive tables are extracted.
 
 ## Client patch
 
