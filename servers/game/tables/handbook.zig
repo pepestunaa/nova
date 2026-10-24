@@ -57,6 +57,9 @@ pub fn get(id: u32) ?Entry {
 pub const skin_type = 1;
 /// Gallery type 2 contains Runic Discs and uses the Runic Disc ID directly.
 pub const disc_type = 2;
+/// Gallery type 8 contains dorm decor and uses the furniture item ID
+/// directly; the entry is discovered by owning the item.
+pub const decor_type = 8;
 const character_unlock_condition = 10;
 const advance_skin_unlock_condition = 13;
 

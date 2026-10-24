@@ -13,7 +13,7 @@
     // Guide groups that the bundled guide table does not contain. Group 521
     // is the Dorm guide, which the 1.13 client runs on its own and which
     // asks for Dorm data the server does not implement.
-    .extra_guide_groups = .{ 521 },
+    .extra_guide_groups = .{521},
 
     // Serves a Recruitment banner the client asks for but the tables do not
     // contain, using the closest banner in the same pity group. Set this to
@@ -35,11 +35,12 @@
         // available when disabled so the client can render the Shop normally.
         .enable = true,
 
-        // Accepts real-money topup orders. The client answers the order
-        // response by calling the Steam SDK pay, which blocks the game
-        // forever on a private server, so this stays disabled until a
-        // client patch handles the pay callback itself.
-        .topup_enable = false,
+        // Accepts real-money topup orders. The Steam SDK pay is answered
+        // instantly by the Asterism patch (SDKManager.Pay synthesizes the
+        // success response), so the order completes without Steam. Set this
+        // to false when running an unpatched client, where the pay call
+        // would block the game forever.
+        .topup_enable = true,
 
         // Includes packages whose configured de-list time has passed.
         .show_historical_packages = false,

@@ -115,14 +115,21 @@ pub fn packageOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: []con
     const player = mutation.modify(.{});
     var receipt: Receipt = .{};
     var handbook_changed = false;
+    var decor_changed = false;
     for (package.entry.rewards[0..package.entry.reward_count]) |reward| {
         if (tables.handbook.skin(reward.id)) |skin| {
             handbook_changed = (try player.unlockHandbook(allocator, skin.id)) or handbook_changed;
-        } else if (tables.item.isResource(reward.id)) {
-            try player.addResource(allocator, reward.id, reward.quantity);
-            try receipt.append(reward.id, reward.quantity);
         } else {
-            try player.addItem(allocator, reward.id, reward.quantity);
+            // Decor rewards carry their handbook row on the item itself.
+            if (tables.handbook.get(reward.id)) |entry| {
+                if (entry.type == tables.handbook.decor_type)
+                    decor_changed = (try player.unlockHandbook(allocator, entry.id)) or decor_changed;
+            }
+            if (tables.item.isResource(reward.id)) {
+                try player.addResource(allocator, reward.id, reward.quantity);
+            } else {
+                try player.addItem(allocator, reward.id, reward.quantity);
+            }
             try receipt.append(reward.id, reward.quantity);
         }
     }
@@ -136,6 +143,8 @@ pub fn packageOrder(mutation: *Mutation, allocator: std.mem.Allocator, id: []con
     );
     if (handbook_changed)
         mutation.recordHandbookType(tables.handbook.skin_type);
+    if (decor_changed)
+        mutation.recordHandbookType(tables.handbook.decor_type);
 
     return receipt;
 }

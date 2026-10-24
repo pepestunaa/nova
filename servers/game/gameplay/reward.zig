@@ -112,6 +112,12 @@ pub fn grantItem(
         return;
 
     const player = mutation.modify(.{});
+    // Decor items double as their own handbook entry.
+    if (tables.handbook.get(template_id)) |entry| {
+        if (entry.type == tables.handbook.decor_type and
+            try player.unlockHandbook(allocator, entry.id))
+            mutation.recordHandbookType(tables.handbook.decor_type);
+    }
     try applyRewardItemDelta(player, allocator, receipt, template_id, quantity);
 }
 
