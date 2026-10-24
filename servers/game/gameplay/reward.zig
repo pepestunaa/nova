@@ -112,8 +112,13 @@ pub fn grantItem(
         return;
 
     const player = mutation.modify(.{});
-    // Decor items double as their own handbook entry.
-    if (tables.handbook.get(template_id)) |entry| {
+    // Skin and decor items double as their own Gallery entry: owning the item
+    // is what unlocks the entry, and the entry is what the client treats as
+    // ownership of the skin or decor.
+    if (tables.handbook.skin(template_id)) |entry| {
+        if (try player.unlockHandbook(allocator, entry.id))
+            mutation.recordHandbookType(tables.handbook.skin_type);
+    } else if (tables.handbook.get(template_id)) |entry| {
         if (entry.type == tables.handbook.decor_type and
             try player.unlockHandbook(allocator, entry.id))
             mutation.recordHandbookType(tables.handbook.decor_type);

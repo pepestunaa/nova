@@ -215,14 +215,21 @@ pub fn nickname(player: *const Player) []const u8 {
     return player.basic.nickname.view();
 }
 
+/// Reports whether a Gallery entry is unlocked.
+pub fn hasHandbook(player: *const Player, handbook_id: u32) bool {
+    for (player.handbook.slice()) |unlock| {
+        if (unlock.handbook_id == handbook_id) return true;
+    }
+
+    return false;
+}
+
 /// Unlocks a configured Gallery entry.
 pub fn unlockHandbook(player: *Player, allocator: Allocator, handbook_id: u32) !bool {
     if (tables.handbook.get(handbook_id) == null)
         return false;
 
-    for (player.handbook.slice()) |unlock| {
-        if (unlock.handbook_id == handbook_id) return false;
-    }
+    if (player.hasHandbook(handbook_id)) return false;
 
     try player.handbook.append(allocator, .{ .handbook_id = handbook_id });
 

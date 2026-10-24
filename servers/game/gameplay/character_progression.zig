@@ -308,12 +308,23 @@ pub fn unlockTalent(mutation: *Mutation, talent_id: u32, receipt: *TalentReceipt
 pub fn setSkin(mutation: *Mutation, character_id: u32, skin_id: u32) Error!void {
     const definition = tables.character_progression.character(character_id) orelse
         return error.InvalidCharacter;
-    const character = mutation.read().characters.get(character_id) orelse
+    const player = mutation.read();
+    const character = player.characters.get(character_id) orelse
         return error.InvalidCharacter;
-    if (skin_id != definition.default_skin_id and
-        (skin_id != definition.advance_skin_id or
-            character.advance() < definition.advance_skin_unlock_level))
-        return error.ConditionsNotMet;
+
+    if (skin_id == definition.default_skin_id) {
+        // The base skin comes with the Trekker itself.
+    } else if (skin_id == definition.advance_skin_id) {
+        if (character.advance() < definition.advance_skin_unlock_level)
+            return error.ConditionsNotMet;
+    } else {
+        // Every further skin is unlocked through its type-1 Gallery entry,
+        // which is also the ownership the client equips skins against.
+        const entry = tables.handbook.skin(skin_id) orelse
+            return error.ConditionsNotMet;
+        if (entry.character_id != character_id or !player.hasHandbook(entry.id))
+            return error.ConditionsNotMet;
+    }
     if (character.skin == skin_id)
         return;
     mutation.modify(.{ .characters = true }).characters.getMut(character_id).?.skin = skin_id;
