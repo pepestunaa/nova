@@ -379,4 +379,16 @@
         .item_qty = 300,
         .display_mode = 1,
     },
+    .{
+        .id = "30005",
+        .name = "MallShop.30005.1",
+        .desc = "MallShop.30005.2",
+        .group_id = 3,
+        .sort = 5,
+        .exchange_item_id = 2,
+        .exchange_item_qty = 10,
+        .item_id = 81011,
+        .item_qty = 1,
+        .display_mode = 1,
+    },
 }
